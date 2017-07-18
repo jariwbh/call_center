@@ -1,3 +1,4 @@
+import { BaThemeSpinner } from './../../../../theme/services/baThemeSpinner/baThemeSpinner.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
@@ -67,8 +68,9 @@ constructor(
     private confirmationService: ConfirmationService,
     private _authService: AuthService,
     private _managepeopleService: ManagepeopleService,
+     private _spinner: BaThemeSpinner,
     ) {
-
+     _spinner.show();
     if (this._authService.auth_id === '') {
       this.authId = null;
     } else {
@@ -108,7 +110,7 @@ constructor(
                 }
                 this._districtBasedOnProvince[index].push(element.district);
                 });
-                
+                this._spinner.hide();
             });
     }
 
@@ -125,7 +127,7 @@ constructor(
                 }
                 this._areaBasedOnProvince[index].push(element.area);
                 });
-                
+                this._spinner.hide();
             });
     }
 
@@ -145,6 +147,7 @@ constructor(
                 }
                 //initialize to page 1
                 this.setPage(1);
+                this._spinner.hide();
             });
     }
 

@@ -1,3 +1,4 @@
+import { BaThemeSpinner } from './../../../../theme/services/baThemeSpinner/baThemeSpinner.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -54,7 +55,9 @@ export class ManageActivityComponent {
     private _configuration: Configuration,
     private _authService: AuthService,
     private _fieldsService: FieldsService,
+    private _spinner: BaThemeSpinner,
   ) {
+    _spinner.show();
     this.serverPath = this._configuration.Server;
         
         if (this._authService.auth_id === '') {
@@ -327,7 +330,7 @@ export class ManageActivityComponent {
         } else {
           this.noRecoredFound = false;
         }
-        
+        this._spinner.hide();
       });
   }
   getAllActivities() {
@@ -353,6 +356,7 @@ export class ManageActivityComponent {
           this.noRecoredFound = false;
         }
       //console.log(this._allActivites);
+      this._spinner.hide();
       });
   }
 
