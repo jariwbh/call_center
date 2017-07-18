@@ -17,8 +17,6 @@ import { Message } from 'primeng/primeng';
 import { AuthService } from '../../../../../core/services/common/auth.service';
 import { Configuration } from '../../../../../app.constants';
 
-import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from '../../../../../theme/services';
-
 @Component({
   selector: 'nga-form-activity',
   templateUrl: './form.html',
