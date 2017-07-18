@@ -1,3 +1,4 @@
+import { BaThemeSpinner } from './../../../../../theme/services/baThemeSpinner/baThemeSpinner.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -29,8 +30,9 @@ constructor(
     private _activityService: ActivityService,
     private _authService: AuthService,
     private _configuration: Configuration,
+     private _spinner: BaThemeSpinner,
   ) { 
-    
+    _spinner.show();
     this.serverPath = this._configuration.Server;
     
     
@@ -84,6 +86,7 @@ constructor(
           }
           
         }
+        this._spinner.hide();
       });
   }
 

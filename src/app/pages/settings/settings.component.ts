@@ -1,3 +1,4 @@
+import { BaThemeSpinner } from './../../theme/services/baThemeSpinner/baThemeSpinner.service';
 
 import { forEach } from '@angular/router/src/utils/collection';
 
@@ -46,7 +47,10 @@ export class Settings {
   constructor(fb: FormBuilder,
     private _router: Router,
     private _Settings: SettingsService,
-    private _AuthService: AuthService) {
+    private _AuthService: AuthService,
+   private _spinner: BaThemeSpinner,
+  ) {
+    _spinner.show();
     this._SettingModel.userCountofSocial = new SocialCountModel();
     this._SettingModel.noOfUserInSocial = [];
     this.getAllProvince();
@@ -145,6 +149,7 @@ export class Settings {
           });
         }
       }
+      this._spinner.hide();
     });
   }
 
@@ -167,6 +172,7 @@ export class Settings {
       if (data) {
         this.areaList = data;
       }
+      this._spinner.hide();
     });
   }
   onChange(province) {
