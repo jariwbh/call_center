@@ -23,6 +23,8 @@ import {
 
 import { ConfirmationService } from 'primeng/primeng';
 
+import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from '../../../../../theme/services';
+
 @Component({
   selector: 'nga-add-user-form',
   templateUrl: './form.html',
@@ -51,6 +53,7 @@ export class FormComponent {
   _lookupVisibiity = false;
 
   labelnameVisibility = false;
+  emailVisibility = false;
 
   _completedStep = 1;
   _choiceCount = 1;
@@ -110,8 +113,9 @@ export class FormComponent {
     private confirmationService: ConfirmationService,
     private _configuration: Configuration,
     private _userloginService: UserloginService,
+    private _spinner: BaThemeSpinner,
   ) {
-
+      this._spinner.show();
       if (this._authService.auth_id === '') {
         this.authId = null;
       } else {
@@ -393,6 +397,7 @@ export class FormComponent {
               this.formStatus = 'edit';
               this.getAdminDetailBasedonID(this.bindId);
             } else {
+              this._spinner.hide();
               this.formStatus = 'add';
               this._usersModel.role = true;
             }
@@ -499,6 +504,7 @@ export class FormComponent {
             });
           }
         }
+        this._spinner.hide();
       });
   }
   onDynamicFormSubmit(value: any, isValid: boolean) {
@@ -611,23 +617,61 @@ export class FormComponent {
         this._needToSaveData['username'] = value.username;
         this._needToSaveData['password'] = value.password;
         
-        this._usersService
-          .Update(this.bindId, this._needToSaveData)
-          .subscribe(
-          data => {
-            if (data) {
-              this._needToSaveData = data['admin'];
-              this.bindId = data._id;
-            }
-            this.msgs = [];
-            this.msgs.push ({ 
-              severity: 'info', summary: 'Insert Message', detail: 'Admin has been Updated Successfully!!!' });
-            this._completedStep = 3;
-            this.informationVisibilty = false;
-            this.usernamepasswordVisibilty = false;
-            this.accesscontrolVisibilty = true;
-        });
+        this.checkEmailUniqness();
+
+        
       }
+  }
+  checkEmailUniqness() {
+    this.emailVisibility = false;
+    this._usersService
+      .GetAll()
+      .subscribe( data => {
+        if (data) {
+          if (data.length !== 0) {
+            let cnt = 0;
+            for (let i = 0; i < data.length; i++) {
+              if (this.formStatus == 'edit') {
+                if (data[i]._id == this.bindId) {
+                  data.splice(i, 1);
+                }
+              }
+              if (data[i]) {
+                if (data[i].admin) {
+                  let dbEmail = data[i].admin.email;
+                  if (dbEmail == this._needToSaveData['email'] ) {
+                    cnt++;
+                  }
+                }
+              }
+            }
+            if (cnt == 0) {
+              this._usersService
+                .Update(this.bindId, this._needToSaveData)
+                .subscribe(
+                data => {
+                  if (data) {
+                    this._needToSaveData = data['admin'];
+                    this.bindId = data._id;
+                  }
+                  this.msgs = [];
+                  this.msgs.push ({ 
+                    severity: 'info', summary: 'Insert Message', detail: 'Admin has been Updated Successfully!!!' });
+                  this._completedStep = 3;
+                  this.informationVisibilty = false;
+                  this.usernamepasswordVisibilty = false;
+                  this.accesscontrolVisibilty = true;
+              });
+            } else {
+              this.msgs = [];
+              this.msgs.push ({ 
+                  severity: 'error', summary: 'Error  Message', detail: 'Email Already Exist.!!!' });
+              this.emailVisibility = true;
+            }
+          }
+        }
+      });    
+
   }
   controlAccessonSubmit(value: any, isValid: boolean) {
     this.usernamepasswordsubmitted = true;

@@ -27,6 +27,7 @@
               novalidate>
               <div *ngFor="let fields of fieldLists" class="form-group">
                 <div [ngSwitch]="fields.fieldtype">
+
                   <div *ngIf="fields.labelname !== 'points'">
                     <label for="exampleInputname1">{{fields.displayname}}</label>
                     <span *ngIf="authRole == 'A'">
@@ -35,32 +36,51 @@
                       <a *ngIf="!fields.issystemfield" (click)="deleteFields(fields._id)" style="cursor: pointer; margin-left: 20px;"><i class="ion-trash-a"></i></a>
                     </span>
                   </div>
+
+                  <div *ngIf="fields.labelname == 'points'">
+                    <span *ngIf="authRole == 'A'">
+                      <label for="exampleInputname1">{{fields.displayname}}</label>
+                      <a style="margin-left: 20px;"> <i class="ion-locked"></i> </a>
+                    </span>  
+                  </div>
+
                   <div *ngSwitchCase="'text'">
-                      <div *ngIf="fields.labelname == 'points'" style="display: none">
-                        <div *ngIf="bindId">
-                          <input 
-                            class="form-control" 
-                            type="text" 
-                            [formControlName]="fields.labelname" 
-                            [(ngModel)]="fields.value" 
-                            readonly>
-                        </div>
-                        <div *ngIf="!bindId">
-                          <input 
-                            class="form-control" 
-                            type="text" 
-                            [formControlName]="fields.labelname" 
-                            [(ngModel)]="fields.value" 
-                            readonly
-                            [value]="0">
-                        </div>
-                        
-                        <span class="help-block sub-little-text" style="color: #ecc839">
-                          You cannt add / edit this field. [ READ ONLY PROPERTY ]
-                        </span>
+                      
+                      <div *ngIf="fields.labelname == 'points'">
+                          <div [ngClass]="authRole == 'A' ? 'show-cls' : 'hide-cls'">
+                              <div *ngIf="bindId">
+                                <input 
+                                  class="form-control" 
+                                  type="text" 
+                                  [formControlName]="fields.labelname" 
+                                  [(ngModel)]="fields.value">
+                              </div>
+                              <div *ngIf="!bindId">
+                                <input 
+                                  class="form-control" 
+                                  type="text" 
+                                  [formControlName]="fields.labelname" 
+                                  [(ngModel)]="fields.value" 
+                                  [value]="0">
+                              </div>
+                          </div>
                       </div>
                       <div *ngIf="fields.labelname !== 'points'">
-                        <input class="form-control" type="text" [formControlName]="fields.labelname" [(ngModel)]="fields.value">
+                        <div *ngIf="fields.labelname !== 'email'">
+                          <input class="form-control" type="text" [formControlName]="fields.labelname" [(ngModel)]="fields.value">
+                        </div>
+                        <div *ngIf="fields.labelname == 'email'">
+                          <input 
+                            type="email" 
+                            class="form-control" 
+                            [formControlName]="fields.labelname"
+                            [(ngModel)]="fields.value"
+                            placeholder="Email"
+                            pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+                          <div *ngIf="emailVisibility" class="alert alert-danger">
+                              Email Already Exist.
+                          </div>
+                        </div>
                       </div>
                   </div>
                   <div *ngSwitchCase="'long_text'">
@@ -212,6 +232,7 @@
                     [hidden]="dynamicForm.get([fields.labelname]).valid || (dynamicForm.get([fields.labelname]).pristine && !dynamicSubmitted)">
                     * {{fields.displayname}} is required
                   </div>
+                  
                 </div>
               </div>
               <button class="btn btn-success" type="submit">Save</button>

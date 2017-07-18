@@ -1,7 +1,69 @@
 <div class="horizontal-scroll">
-    <!-- <ba-card title="Users Detail" baCardClass="with-scroll"> -->
     <ba-card title="Admin Detail" >
-         <table class="table table-bordered">
+             
+            <p-dataTable [value]="adminlist" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt class="samarth">
+                <p-header>
+                    
+                    <div class="ui-helper-clearfix">
+                        <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none;float: left">
+                            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                            <input #gb type="text" pInputText size="50" placeholder="Global Filter">
+                        </div>
+                        <button 
+                            type="button" 
+                            class="btn btn-info"
+                            pButton 
+                            icon="fa-file-o" 
+                            iconPos="left" 
+                            label="CSV" 
+                            (click)="dt.exportCSV()" 
+                            style="float:right">
+                            CSV
+                        </button>
+                    </div>
+                </p-header>
+                <p-column field="fullname" [filter]="true" filterMatchMode="in">
+                    <ng-template pTemplate="filter" let-col>
+                        <p-multiSelect 
+                            [options]="fullnameLists" 
+                            defaultLabel="All Names" 
+                            (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" 
+                            styleClass="ui-column-filter">
+                        </p-multiSelect>
+                    </ng-template>
+                </p-column>
+                <p-column field="province" [filter]="true" filterMatchMode="in">
+                    <ng-template pTemplate="filter" let-col>
+                        <p-multiSelect 
+                            [options]="provinceLists" 
+                            defaultLabel="All Provinces" 
+                            (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" 
+                            styleClass="ui-column-filter">
+                        </p-multiSelect>
+                    </ng-template>
+                </p-column>
+                <p-column field="district" [filter]="true" filterMatchMode="in">
+                    <ng-template pTemplate="filter" let-col>
+                        <p-multiSelect 
+                            [options]="districtLists" 
+                            defaultLabel="All Districts" 
+                            (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" 
+                            styleClass="ui-column-filter">
+                        </p-multiSelect>
+                    </ng-template>
+                </p-column>
+                <p-column field="area" [filter]="true" filterMatchMode="in">
+                    <ng-template pTemplate="filter" let-col>
+                        <p-multiSelect 
+                            [options]="areaLists" 
+                            defaultLabel="All Areas" 
+                            (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" 
+                            styleClass="ui-column-filter">
+                        </p-multiSelect>
+                    </ng-template>
+                </p-column>
+            </p-dataTable> 
+          <!-- <table class="table table-bordered">
             <thead>
                 <tr>
                     <th class="align-right">Full Name</th>
@@ -19,7 +81,6 @@
                             [(ngModel)]="_selectedAdmins"
                             (onChange)="onChange($event)">
                         </p-multiSelect>
-                         <!-- <span>Selected Admins: {{_selectedAdmins}}</span>  -->
                     </td>
                     <td class="align-right">
                         <select 
@@ -63,6 +124,6 @@
                     <td class="align-right">{{ user.area }}</td>
                 </tr>
             </tbody>
-        </table>
+        </table>  -->
     </ba-card>
 </div>

@@ -11,6 +11,10 @@ import { FieldsService } from '../../core/services/dynamic-fields/fields.service
 
 import { MultiSelectModule } from 'primeng/primeng';
 
+import { DataTableModule, SharedModule } from 'primeng/primeng';
+
+import { SliderModule, DropdownModule } from 'primeng/primeng';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -19,6 +23,10 @@ import { MultiSelectModule } from 'primeng/primeng';
     NgaModule,
     routing,
     MultiSelectModule,
+    DataTableModule,
+    SharedModule,
+    SliderModule,
+    DropdownModule,
   ],
   declarations: [
     TestComponent,

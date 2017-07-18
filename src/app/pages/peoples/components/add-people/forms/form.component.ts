@@ -78,6 +78,7 @@ export class FormComponent {
    lookupError = false;
 
    location = {};
+   emailVisibility = false;
 
   constructor(
     private fb: FormBuilder,
@@ -439,27 +440,91 @@ export class FormComponent {
         
         if (cnt == 0) {
           if (this.bindId) {
-            this._managepeopleService
-              .Update(this.bindId, value)
-              .subscribe(
-              data => {
-                this.msgs = [];
-                this.msgs.push ({ 
-                  severity: 'info', summary: 'Update Message', detail: 'People has been Updated Successfully!!!' });
-                this._router.navigate(['/pages/peoples/manage-people']);
-            });
+              this._managepeopleService
+                .GetAll()
+                .subscribe(
+                  data => {
+                    let emailCnt = 0;
+                    if (data) {
+                      if (data.length !== 0) {
+                        for (let i = 0; i < data.length; i++) {
+                          if (data[i]._id == this.bindId) {
+                            data.splice(i, 1);
+                          }
+                          if (data[i]) {
+                            if (data[i].person) {
+                              let dbEmail = data[i].person.email;
+                              if (dbEmail == value.email ) {
+                                emailCnt++;
+                              }
+                            }
+                          }
+                        }
+                        if (emailCnt == 0) {
+                          this._managepeopleService
+                            .Update(this.bindId, value)
+                            .subscribe(
+                            data => {
+                              this.msgs = [];
+                              this.msgs.push ({ 
+                                severity: 'info', 
+                                summary: 'Update Message', 
+                                detail: 'People has been Updated Successfully!!!' });
+                              this._router.navigate(['/pages/peoples/manage-people']);
+                          });
+                        } else {
+                          this.msgs = [];
+                          this.msgs.push ({ 
+                              severity: 'error', 
+                              summary: 'Error  Message', 
+                              detail: 'Email Already Exist.!!!' });
+                          this.emailVisibility = true;
+                        }
+                      }
+                    }
+                  });
+            
           } else {
             if (this.authId) {
-              value.points = 0;
               this._managepeopleService
-                .Add(this.authId, value)
+                .GetAll()
                 .subscribe(
-                data => {
-                  this.msgs = [];
-                  this.msgs.push ({ 
-                    severity: 'info', summary: 'Insert Message', detail: 'People has been added Successfully!!!' });
-                  this._router.navigate(['/pages/peoples/manage-people']);
-              });
+                  data => {
+                    let emailCnt = 0;
+                    if (data) {
+                      if (data.length !== 0) {
+                        data.forEach(element => {
+                          let dbEmail = element.person.email;
+                          if (dbEmail == value.email ) {
+                            emailCnt++;
+                          }
+                        });    
+                      }
+                    }
+                    
+                    if (emailCnt == 0) {
+                        value.points = 0;
+                        this._managepeopleService
+                          .Add(this.authId, value)
+                          .subscribe(
+                          data => {
+                            this.msgs = [];
+                            this.msgs.push ({ 
+                              severity: 'info', 
+                              summary: 'Insert Message', 
+                              detail: 'People has been added Successfully!!!' });
+                            this._router.navigate(['/pages/peoples/manage-people']);
+                        });
+                    } else {
+                      this.msgs = [];
+                      this.msgs.push ({ 
+                          severity: 'error', 
+                          summary: 'Error  Message', 
+                          detail: 'Email Already Exist.!!!' });
+                      this.emailVisibility = true;
+                    }
+                  });
+              
             }
             
           }

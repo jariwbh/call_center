@@ -22,9 +22,9 @@ export class AuditService {
         this.headers.append('Accept', 'application/json');
     }
 
-    public GetAll = (id): Observable<any> => {
+    public GetAll = (): Observable<any> => {
         return this.http
-           .get(this.actionUrl + 'audit/' + id)
+           .get(this.actionUrl + 'audit/')
            .map(res => <any>res.json());
     }
 

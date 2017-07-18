@@ -11,6 +11,7 @@ import { AppTranslationModule } from '../../../../app.translation.module';
 import { AuditService } from '../../../../core/services/audit/audit.service';
 
 import { MultiSelectModule } from 'primeng/primeng';
+import { PagerService } from '../../../../core/services/common/pager.service';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { MultiSelectModule } from 'primeng/primeng';
   ],
   providers: [
     AuditService,
+    PagerService,
   ],
 })
 export class UserHistoryModule {}

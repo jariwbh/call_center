@@ -4,7 +4,10 @@
   <div class="row">
     <div class="col-md-10">
       <ba-card title="USER PROFILE" baCardClass="with-scroll">
-          <form class="form-horizontal">
+          <div *ngIf="!displayFieldLists" style="margin: auto;width: 50%;padding: 10px;"> 
+              <img src="assets/img/loader1.gif" style="height: 100px; width: 100px;">
+          </div>
+          <form class="form-horizontal" *ngIf="displayFieldLists">
               <div *ngFor="let fields of fieldLists">
                   <div class="form-group row" [ngSwitch]="fields.fieldtype">
                     <label for="inputEmail3" class="col-sm-4 form-control-label">{{fields.displayname}}</label>
@@ -151,6 +154,7 @@
                   </div>
               </div>
           </form>
+          
       </ba-card>
     </div>
   </div>

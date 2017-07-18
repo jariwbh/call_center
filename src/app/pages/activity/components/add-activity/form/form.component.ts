@@ -10,9 +10,13 @@ import { ActivityModel } from '../../../../../core/models/activity/activity.mode
 import { FieldsService } from '../../../../../core/services/dynamic-fields/fields.service';
 import { FieldsModel } from '../../../../../core/models/dynamic-fields/fields.model';
 
+import { PagerService } from '../../../../../core/services/common/pager.service';
+
 import { Message } from 'primeng/primeng';
 import { AuthService } from '../../../../../core/services/common/auth.service';
 import { Configuration } from '../../../../../app.constants';
+
+import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from '../../../../../theme/services';
 
 @Component({
   selector: 'nga-form-activity',
@@ -38,6 +42,8 @@ howActivityVisibilty = false;
 aboutVisibilty = false;
 
 msgs: Message[] = [];
+errorMsgs: Message[] = [];
+
 _completedStep = 1;
 
 _allEmails: any [] = [];
@@ -45,20 +51,34 @@ filteredEmailsMultiple: any[];
 
 bindId: string;
 
-_provinceLists: any[] = [];
-_districtLists: any[] = [];
-_areaLists: any[] = [];
-
-_districtBasedOnProvince: any[] = [];
-_areaBasedOnProvince: any[] = [];
-
-_districtOptionLists: any[] = [];
-_areaOptionLists: any[] = [];
-
 authId: string;
 serverPath: string;
 
 _imageLists: any [] = [];
+
+
+_allUsers: any[] = [];
+ 
+ // pager object
+    pager: any = {};
+  // paged items
+    pagedItems: any[];
+
+  _provinceLists: any[] = [];
+  _districtLists: any[] = [];
+  _areaLists: any[] = [];
+
+  _districtBasedOnProvince: any[] = [];
+  _areaBasedOnProvince: any[] = [];
+
+  _districtOptionLists: any[] = [];
+  _areaOptionLists: any[] = [];
+
+  _loadData = false;
+  _tableVisibility = true;
+
+  _selectedUsersLists: any[] = [];
+  _selectedUsers: any[] = [];
 
 constructor(
     private fb: FormBuilder,
@@ -69,6 +89,8 @@ constructor(
     private _fieldsService: FieldsService,
     private _authService: AuthService,
     private _configuration: Configuration,
+    private pagerService: PagerService,
+    private _spinner: BaThemeSpinner,
   ) { 
     
     this.serverPath = this._configuration.Server;
@@ -85,7 +107,6 @@ constructor(
 
     this.userSearchForm = fb.group({
         'persons': [this._activityModel.persons],
-        'personsLists': [this._activityModel.personsLists, Validators.required],
     });
 
     this.aboutForm = fb.group({
@@ -95,7 +116,7 @@ constructor(
         'name': [this._activityModel.name],
     });
 
-    this.getAllPersonrEmail();
+    //this.getAllPersonrEmail();
   }
 
   ngOnInit() {
@@ -104,14 +125,51 @@ constructor(
         (param: any) => {
             this.bindId = param['id'];
     });
+    this.getAllUsers();
     this.getAllProvince();
     this.getAllDistrict();
     this.getAllArea();
+
     if (this.bindId) {
       this.getActivityById(this.bindId);
     }
   }
   
+  getAllUsers() {
+      this._managepeopleService
+          .GetAll()
+          .subscribe( data => {
+          data.forEach(element => {
+              element.person['id'] = element._id;
+              this._allUsers.push(element.person);
+          });
+          if (this._allUsers.length == 0) {
+              this._tableVisibility = false;
+          } else {
+              this._tableVisibility = true;
+          }
+          //initialize to page 1
+          this.setPage(1);
+      });
+  }
+
+  setPage(page: number) {
+      if (page < 1 || page > this.pager.totalPages) {
+          return;
+      }
+      // get pager object from service
+      this.pager = this.pagerService.getPager(this._allUsers.length, page);
+      // get current page of items
+      this.pagedItems = this._allUsers.slice(this.pager.startIndex, this.pager.endIndex + 1);
+      this.pagedItems.forEach(element => {
+          this._selectedUsersLists.forEach(ele => {
+              if (ele.id == element.id) {
+                  element.disabled = true;
+              }
+          });
+      });
+  }
+
   getAllProvince() {
     this._fieldsService
           .GetAllProvince()
@@ -152,11 +210,139 @@ constructor(
   }
   
   onChangeProvince(value: any) {
-      this._districtOptionLists = [];
-      this._areaOptionLists = [];
+        this._allUsers = [];
+        this.pagedItems = [];
+        
+        this._tableVisibility = false;
+        if (value == '') {
+            this.getAllUsers();
+        } else {
+            this.FilteredUsers('province', value);
+        }
+        
 
-      this._districtOptionLists = this._districtBasedOnProvince[value];
-      this._areaOptionLists = this._areaBasedOnProvince[value];
+        this._districtOptionLists = [];
+        this._areaOptionLists = [];
+
+        this._districtOptionLists = this._districtBasedOnProvince[value];
+        this._areaOptionLists = this._areaBasedOnProvince[value];
+    }
+
+    onChangeDistrict(value: any) {
+        let areaValue = <HTMLInputElement> document.getElementById('area');
+        areaValue.value = '';
+        this._tableVisibility = false;
+        if (value == '') {
+            let proviceValue = <HTMLInputElement> document.getElementById('provice');
+            if (proviceValue) {
+                this.FilteredUsers('province', proviceValue.value);
+            } else {
+                this.getAllUsers();
+            }
+        } else {
+            this.FilteredUsers('district', value);
+        }
+        
+    }
+    onChangeArea(value: any) {
+        let districtValue = <HTMLInputElement> document.getElementById('district');
+        districtValue.value = '';
+        this._tableVisibility = false;
+        if (value == '') {
+            let proviceValue = <HTMLInputElement> document.getElementById('provice');
+            if (proviceValue) {
+                this.FilteredUsers('province', proviceValue.value);
+            } else {
+                this.getAllUsers();
+            }
+        } else {
+            this.FilteredUsers('area', value);
+        }
+        
+    }
+
+    FilteredUsers(type, value) {
+        this._loadData = true;
+        this._allUsers = [];
+    this._managepeopleService
+        .GetAll()
+        .subscribe( data => {
+            data.forEach(element => {
+                if (type == 'province') {
+                    if (element.person.province == value) {
+                        element.person['id'] = element._id;
+                        this._allUsers.push(element.person);
+                    }
+                }
+                if (type == 'district') {
+                    if (element.person.district == value) {
+                        element.person['id'] = element._id;
+                        this._allUsers.push(element.person);
+                    }
+                }
+                if (type == 'area') {
+                    if (element.person.area == value) {
+                        element.person['id'] = element._id;
+                        this._allUsers.push(element.person);
+                    }
+                }
+            });
+            setTimeout(() => {   
+                if (this._allUsers.length !== 0) {
+                    //initialize to page 1
+                    this.setPage(1);
+                }
+                this._tableVisibility = true;
+                this._loadData = false;
+            }, 1500);
+            
+        });
+    }
+  
+  addUser(users: any) {
+      this._selectedUsersLists.push(users);
+      let ischecked = <HTMLInputElement> document.getElementById('addbtn_' + users.id);
+      ischecked.disabled = true;
+  }
+
+  selectAll() {
+      let proviceValue = <HTMLInputElement> document.getElementById('provice');
+      if (proviceValue.value == '') {
+          this.errorMsgs = [];
+          this.errorMsgs.push({ severity: 'error', summary: 'Error Message', detail: 'Select provice failed' });
+      } else {
+          let districtValue = <HTMLInputElement> document.getElementById('district');
+          let areaValue = <HTMLInputElement> document.getElementById('area');
+          if (districtValue.value !== '' || areaValue.value !== '' || proviceValue.value !== '') {
+              if (this._allUsers.length !== 0) {
+                  this._allUsers.forEach(element => {
+                      let existValue = this.checkUserExistsornot(element.id, this._selectedUsersLists);
+                      if (existValue == 0) {
+                          element.disabled = true;
+                          this._selectedUsersLists.push(element);
+                      }
+                  });
+                  this.msgs = [];
+                  this.msgs.push({ 
+                      severity: 'success', summary: 'Success Message', detail: 'User Added Successfully!!',
+                  });
+              } else {
+                  this.errorMsgs = [];
+                  this.errorMsgs.push({ 
+                      severity: 'error', summary: 'Error Message', detail: 'No User Found!!',
+                  }); 
+              }
+          }
+      }
+  }
+  checkUserExistsornot(id: number, array: any) {
+      let cnt = 0;
+      for (let i in array) {
+          if (array[i].id == id) {
+              cnt++;
+          }
+      }
+      return cnt;
   }
 
   getActivityById(id: any) {
@@ -170,6 +356,7 @@ constructor(
           this.activityTypeVisibilty = false;
           this.howActivityVisibilty = false;
           this.aboutVisibilty = true;
+         
         }
       });
   }
@@ -225,37 +412,37 @@ constructor(
       }
   }
 
-  getAllPersonrEmail() {
-      this._managepeopleService
-        .GetAll()
-        .subscribe(
-        data => {
-          data.forEach(element => {
-            const id = element._id;
-            const email = element.person.email;
-            const grp = {
-              name: email,
-              code: id,
-            }; 
-            this._allEmails.push(grp);
-          });
-      });
-    }
-    filterEmailMultiple(event) {
-      const query = event.query;
-      this.filteredEmailsMultiple = this.filterEmail(query, this._allEmails);
-    }
+  // getAllPersonrEmail() {
+  //     this._managepeopleService
+  //       .GetAll()
+  //       .subscribe(
+  //       data => {
+  //         data.forEach(element => {
+  //           const id = element._id;
+  //           const email = element.person.email;
+  //           const grp = {
+  //             name: email,
+  //             code: id,
+  //           }; 
+  //           this._allEmails.push(grp);
+  //         });
+  //     });
+  //   }
+  //   filterEmailMultiple(event) {
+  //     const query = event.query;
+  //     this.filteredEmailsMultiple = this.filterEmail(query, this._allEmails);
+  //   }
     
-    filterEmail(query, emails: any[]): any[] {
-        const filtered: any[] = [];
-        emails.forEach(element => {
-          const email = element;
-          if (email.name.toLowerCase().indexOf(query.toLowerCase()) === 0) {
-                filtered.push(email);
-          }
-        });
-        return filtered;
-    }
+  //   filterEmail(query, emails: any[]): any[] {
+  //       const filtered: any[] = [];
+  //       emails.forEach(element => {
+  //         const email = element;
+  //         if (email.name.toLowerCase().indexOf(query.toLowerCase()) === 0) {
+  //               filtered.push(email);
+  //         }
+  //       });
+  //       return filtered;
+  //   }
 
   onUserSearchSubmit(value: any, isValid: boolean) {
     this.userSearchSubmitted = true;
@@ -263,10 +450,17 @@ constructor(
           this.msgs.push({ severity: 'error', summary: 'Error Message', detail: 'Validation failed' });
           return false;
       } else {
-        if (value.personsLists.length !== 0) {
+        if (this._selectedUsersLists.length == 0) {
+            this.msgs = [];
+            this.msgs.push({
+                severity: 'error', 
+                summary: 'Error Message', 
+                detail: 'Select atleast one User',
+            });
+        } else {
           this._activityModel.persons = [];
-          value.personsLists.forEach(element => {
-            this._activityModel.persons.push(element.code);
+          this._selectedUsersLists.forEach(element => {
+              this._activityModel.persons.push(element.id);
           });
           this.msgs = [];
           this.msgs.push ({ 
@@ -276,7 +470,6 @@ constructor(
           this.howActivityVisibilty = false;
           this.aboutVisibilty = true;
         }
-        
       }
   }
 
@@ -325,12 +518,27 @@ switchbox(value: any) {
       this.howActivityVisibilty = false;
       this.aboutVisibilty = false;
     } else if (value === 'howActivity') {
+      this._loadData = true;
       if (this._completedStep < 2) {
         this._completedStep = 2;
       }
       this.activityTypeVisibilty = false;
       this.howActivityVisibilty = true;
       this.aboutVisibilty = false;
+      
+      if (this.bindId) {
+          setTimeout(()=> {
+            this._selectedUsersLists = [];
+            this._activityModel.persons.forEach(element => {
+              let isChecked = <HTMLInputElement> document.getElementById('addbtn_' + element);
+              if (isChecked) {
+                isChecked.click();
+              }
+            });        
+            this._loadData = false;
+          }, 1000);
+          
+      }
     } else if (value === 'about') {
       if (this._completedStep < 3) {
         this._completedStep = 3;

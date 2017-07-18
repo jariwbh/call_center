@@ -151,7 +151,7 @@ router.route('/audit/')
     .get(function(req, res) {
 
         Audit.find({ })   
-        .populate('admin')
+        .populate('adminid')
         .sort({'date': -1})        
         .exec(function(err, audits) {
             res.json(audits);

@@ -11,6 +11,8 @@ import { ConfirmationService } from 'primeng/primeng';
 import { Message } from 'primeng/primeng';
 import { AuthService } from '../../../../core/services/common/auth.service';
 
+import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from '../../../../theme/services';
+
 @Component({
   selector: 'nga-manage-user',
   templateUrl: './manage-user.html',
@@ -45,7 +47,9 @@ export class ManageUserComponent {
     private _configuration: Configuration,
     private _confirmationService: ConfirmationService,
     private _authService: AuthService,
+    private _spinner: BaThemeSpinner,
   ) {
+    this._spinner.show();
 
     if (this._authService.auth_id === '') {
         this.authId = null;
@@ -202,6 +206,7 @@ export class ManageUserComponent {
           this.adminlist.push(element.admin);
         });
         if ( this.adminlist.length > 0) {
+            this._spinner.hide();
             this._countAdmin = true;
         } else {
             this._countAdmin = false;

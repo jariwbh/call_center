@@ -17,6 +17,8 @@ import { FieldsService } from '../../../../core/services/dynamic-fields/fields.s
 import { GrowlModule, AutoCompleteModule } from 'primeng/primeng';
 import { EditorModule, SharedModule, FileUploadModule } from 'primeng/primeng';
 
+import { PagerService } from '../../../../core/services/common/pager.service';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -38,7 +40,8 @@ import { EditorModule, SharedModule, FileUploadModule } from 'primeng/primeng';
   providers: [
     ActivityService,
     ManagepeopleService,
-    FieldsService
+    FieldsService,
+    PagerService,
   ],
 })
 export class AddActivityModule {}

@@ -36,7 +36,6 @@ constructor(
     
     this._activityDetail.name = '';
     this._activityDetail.description = '';
-    this._activityDetail.personsLists = [];
     this._activityDetail.activitytype = '';
     this._activityDetail.url = '';
     this._activityDetail.createdAt = '';
@@ -62,7 +61,6 @@ constructor(
         if (data) {
           
           this._activityDetail.name = data.name;
-          this._activityDetail.personsLists = data.personsLists;
           this._activityDetail.images = data.images;
           this._activityDetail.activitytype = data.activitytype;
           this._activityDetail.url = data.url;

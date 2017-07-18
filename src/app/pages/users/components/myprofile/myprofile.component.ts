@@ -13,6 +13,8 @@ import { AuthService } from '../../../../core/services/common/auth.service';
 
 import { Message } from 'primeng/primeng';
 
+import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from '../../../../theme/services';
+
 @Component({
   selector: 'nga-myprofile',
   templateUrl: './myprofile.html',
@@ -39,6 +41,8 @@ export class MyprofileComponent {
 
   authId: string;
 
+  displayFieldLists: boolean = false;
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -46,13 +50,15 @@ export class MyprofileComponent {
     private _usersService: UsersService,
     private _authService: AuthService,
     private _configuration: Configuration,
-    private _userloginService: UserloginService) {
+    private _userloginService: UserloginService,
+    private _spinner: BaThemeSpinner) {
 
       if (this._authService.auth_id === '') {
         this.authId = null;
       } else {
         this.authId = this._authService.auth_id;
       }
+      this._spinner.show();
   }
   ngOnInit() {
     this.getAllFields();
@@ -68,19 +74,36 @@ export class MyprofileComponent {
           .subscribe(
           data => {
             this.userData = data.admin;
-            this.fieldLists.forEach(element => {
-              if (element.fieldtype == 'image') {
-                let isImage = <HTMLInputElement> document.getElementById('image_' + element.labelname);
-                let isImageDisplay = <HTMLInputElement> document.getElementById('imagePath_' + element.labelname);
-                isImage.value = this.userData[element.labelname];
-                if (this.userData[element.labelname] != '') {
-                  isImageDisplay.src = this._configuration.Server + this.userData[element.labelname];
+            
+
+            setTimeout(() => {    
+              this.fieldLists.forEach(element => {
+                if (element.fieldtype == 'image') {
+                  let isImage = <HTMLInputElement> document.getElementById('image_' + element.labelname);
+                  let isImageDisplay = <HTMLInputElement> document.getElementById('imagePath_' + element.labelname);
+                  if (document.getElementById('image_' + element.labelname)) {
+                    isImage.value = this.userData[element.labelname];
+                  }
+                  if (this.userData[element.labelname] != '') {
+                    if (document.getElementById('imagePath_' + element.labelname)) {
+                      isImageDisplay.src = this._configuration.Server + this.userData[element.labelname];
+                    }
+                    
+                  }
                 }
-              }
-              element.value = this.userData[element.labelname];
-              element.visiblity = false;
-            });
-            this.onChangeProvince(this.userData['province']);
+                element.value = this.userData[element.labelname];
+                element.visiblity = false;
+              });
+              this.onChangeProvince(this.userData['province']);
+              if (this.fieldLists.length !== 0 ) {
+                this._spinner.hide();
+                this.displayFieldLists = true;
+              } else {
+                this.displayFieldLists = false;
+              }      
+            }, 2000);
+            
+            
         });
   }
   

@@ -10,6 +10,8 @@ import { DashboardService } from './../../core/services/dashboard/dashboard.serv
 
 import { ReportService } from './../../core/services/report/report.service';
 
+import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from '../../theme/services';
+
 @Component({
   selector: 'dashboard',
   styleUrls: ['./dashboard.scss', './chartistJs.scss'],
@@ -36,6 +38,7 @@ export class Dashboard {
     private _fieldsService: FieldsService,
     private _DashboardService: DashboardService,
     private _reportService: ReportService,
+    private _spinner: BaThemeSpinner,
   ) {
   }
 

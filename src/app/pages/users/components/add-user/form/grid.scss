@@ -20,9 +20,12 @@
   }
 }
 
+:host /deep/ {
 .show-cls {
   display: block;
 }
 .hide-cls {
   display: none;
+}
+
 }
