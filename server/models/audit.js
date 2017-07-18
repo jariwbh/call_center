@@ -5,7 +5,7 @@ var Schema       = mongoose.Schema;
 
 var AuditSchema   = new Schema({
     activity: String,
-    adminid:String,
+    adminid:{type: Schema.ObjectId, ref: 'Admin' }, 
     date: String   
 });
 

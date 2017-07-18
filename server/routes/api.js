@@ -65,7 +65,7 @@ function saveUserPoints(personid, activity, points)
                 });
 
                 var updatepoints = parseInt(data.person.points) + parseInt(points);                                    
-                console.log(updatepoints);
+                
                 Person.findOneAndUpdate({ _id: personid }, {
                     $set: {
                         "person.points": updatepoints
@@ -95,7 +95,6 @@ function saveAdminPoints(adminid, activity, points)
             });
 
             var updatepoints = parseInt(data.admin.points) + parseInt(points);                                    
-            console.log("updated :" + updatepoints);
             Admin.findOneAndUpdate({ _id: adminid }, {
                 $set: {
                     "admin.points": updatepoints
@@ -109,11 +108,11 @@ function saveAdminPoints(adminid, activity, points)
 
 function saveAudit(activity, date, adminid )
 {
-
+    const ObjectId = mong.Types.ObjectId;
     var audit = new Audit();      
     audit.activity = activity; 
     audit.date = date; 
-    audit.adminid = adminid;  
+    audit.adminid =  ObjectId(adminid);  
     
     audit.save(function(err, data) {
         if (err)
@@ -148,6 +147,17 @@ router.route('/search/activity')
         
     });
 
+router.route('/audit/')
+    .get(function(req, res) {
+
+        Audit.find({ })   
+        .populate('admin')
+        .sort({'date': -1})        
+        .exec(function(err, audits) {
+            res.json(audits);
+        });
+
+    });
 
 router.route('/audit/:adminid')
     .get(function(req, res) {
@@ -208,14 +218,12 @@ router.route('/pointadmin/:adminid')
         point.save(function(err, data) {
             if (err)
                 res.send(err);
-            console.log("saveAdminPoints 1:" + addPointPointsAdmin);
 
             saveAdminPoints(req.params.adminid, "Point added" , addPointPointsAdmin);
 
             saveAudit("Point added", Date.now(), req.params.adminid);
 
-            for (var i = 0, len = point.users.length; i < len; i++) {
-                console.log("saveAdminPoints:" + data.points);
+            for (var i = 0, len = point.users.length; i < len; i++) {                
                 saveAdminPoints(point.users[i], "Point added" , data.points);
             }
 
@@ -452,7 +460,6 @@ router.route('/lookup/area')
     .get(function(req, res) {        
         
         Area.find(function (err, docs) {            
-            //console.log(docs);
             res.json(docs);
         });
 
@@ -821,8 +828,7 @@ router.route('/admin/login')
             } else {
 
                 // if user is found and password is right
-                // create a token
-                console.log("secret:" + app.get('superSecret'));
+                // create a token                
                 var token = jwt.sign(user, app.get('superSecret'), {
                     expiresIn: 60*60*24 // expires in 24 hours
                 });
@@ -954,7 +960,7 @@ router.route('/activity/:adminid')
 router.route('/activity/:id')
     .put(function(req, res) {
         // use our bear model to find the bear we want
-        console.log(req.params.id);
+        
         Activity.findById(req.params.id, function(err, activity) {
             if (err)
                 res.send(err);
@@ -1048,7 +1054,6 @@ router.route('/upload')
         sampleFile.mv(appRoot + '/public/uploads/' + filename, function(err) {
             if (err)
             {
-                console.log(err);
                 return res.status(500).send(err);
             }
             res.send('/uploads/' + filename);
