@@ -1,3 +1,4 @@
+import { BaThemeSpinner } from './../../../../theme/services/baThemeSpinner/baThemeSpinner.service';
 import { CommonDataService } from './../../../../core/services/common/common-data.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -56,8 +57,9 @@ export class ManagePeopleComponent {
     private _configuration: Configuration,
     private _confirmationService: ConfirmationService,
     private _authService: AuthService,
+    private _spinner: BaThemeSpinner,
   ) {
-
+     _spinner.show();
     this.serverPath = this._configuration.Server;
 
     if (this._authService.auth_id === '') {
@@ -77,6 +79,7 @@ export class ManagePeopleComponent {
     } else {
       this.getAllPeople();
     }
+
   }
 
   ngOnInit() {
@@ -294,6 +297,7 @@ export class ManagePeopleComponent {
           this._CommonDataService.filterDataBy = '';
           this._CommonDataService.filterData = '';
         }
+        this._spinner.hide();
       });
   }
 
@@ -326,6 +330,7 @@ export class ManagePeopleComponent {
           }
 
         }
+        this._spinner.hide();
       });
   }
   switchView() {

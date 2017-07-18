@@ -1,3 +1,4 @@
+//import { BaThemeSpinner } from './../../../theme/services/baThemeSpinner/baThemeSpinner.service';
 
 import { Router } from '@angular/router';
 
@@ -7,6 +8,7 @@ import {PieChartService} from './pieChart.service';
 import { CommonDataService } from './../../../core/services/common/common-data.service';
 import { SettingsService } from './../../../core/services/settings/settings.service';
 import { DashboardService } from './../../../core/services/dashboard/dashboard.service';
+import { BaThemeSpinner } from './../../../theme/services/baThemeSpinner/baThemeSpinner.service';
 
 import 'easy-pie-chart/dist/jquery.easypiechart.js';
 
@@ -26,7 +28,9 @@ export class PieChart {
   constructor(private _pieChartService: PieChartService, private _CommonDataService: CommonDataService, 
    private _router: Router,
    private _Settings: SettingsService,
-    private _DashboardService: DashboardService) {
+    private _DashboardService: DashboardService,
+  private _spinner: BaThemeSpinner,
+  ) {
        this.socialCount.facebookCount = 0;
        this.socialCount.facebookSettingCount = 0;
         this.socialCount.facebookCountper = 0;
@@ -40,6 +44,7 @@ export class PieChart {
         this.socialCount.whatsAppSettingCount = 0;
         this.socialCount.whatsAppCountper = 0;
     this.charts = this._pieChartService.getData();
+    _spinner.show();
     this.loadSocialCount();
   }
 
@@ -102,6 +107,7 @@ export class PieChart {
           });
         }
       }
+      this._spinner.hide();
     });
     this.socialOptions.forEach( ele => {
       if (ele === 'facebook') {

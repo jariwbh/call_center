@@ -1,3 +1,4 @@
+import { BaThemeSpinner } from './../../../../../theme/services/baThemeSpinner/baThemeSpinner.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
@@ -88,8 +89,9 @@ export class FormComponent {
     private confirmationService: ConfirmationService,
     private _authService: AuthService,
     private _configuration: Configuration,
+     private _spinner: BaThemeSpinner,
   ) {
-
+     _spinner.show();
     if (this._authService.auth_id === '') {
       this.authId = null;
     } else {
@@ -256,6 +258,7 @@ export class FormComponent {
             if (this.bindId) {
               this.getPersonDetailBasedonID(this.bindId);
             }
+            this._spinner.hide();
         });
   }
 
@@ -333,6 +336,7 @@ export class FormComponent {
             }
           }
         });
+        this._spinner.hide();
       });
   }
   editFields(id: any) {
