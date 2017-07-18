@@ -1,3 +1,5 @@
+import { debounce } from 'rxjs/operator/debounce';
+import { forEach } from '@angular/router/src/utils/collection';
 
 import { Component } from '@angular/core';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
@@ -24,6 +26,7 @@ export class Login {
   public auth_error;
   public token;
   public Invalid = false;
+  public redirToDashboard = false;
 
   constructor(fb: FormBuilder, private userloginService: UserloginService,
     private authService: AuthService,
@@ -66,24 +69,42 @@ export class Login {
               username: this._UserLoginModel.username,
               user: data.admin.admin,
               token: data.token,
-              role: 'A',
+              role: data.admin.admin.role,
               _id: data.admin._id,
             };
             //console.log(this.token);
 
             this.authService.login(this.token);
 
-            if (this.authService.auth_role === 'A') {
+            // if (this.authService.auth_role === 'A') {
               this.form.reset();
               this.submitted = false;
-              this._router.navigate(['dashboard']);
-            } else {
-              this.auth_error = 'Only admin can sign in.';
-              this.authService.logout();
-              this._router.navigate(['login']);
-              //this.getuserdata(this.authService.auth_id);
-              //this._router.navigate(['/loader']);
-            }
+              // View Dashboard page
+              // console.log(data.admin.admin.role);
+              if (data.admin.admin.role == 'S') {
+                      if (data.admin.admin.acl) {
+                  data.admin.admin.acl.forEach(ele => {
+                     if (ele === 'View Dashboard page') {
+                        this.redirToDashboard = true;
+                     }
+                  });
+               }
+                if (this.redirToDashboard) {
+                   this._router.navigate(['dashboard']);
+                } else {
+                   this._router.navigate(['pages/points/person']);
+                }
+              } else {
+                   this._router.navigate(['dashboard']);
+              }
+              
+            // } else {
+            //   this.auth_error = 'Only admin can sign in.';
+            //   this.authService.logout();
+            //   this._router.navigate(['login']);
+            //   //this.getuserdata(this.authService.auth_id);
+            //   //this._router.navigate(['/loader']);
+            // }
           } else {
              this.Invalid = true;
               this.authService.logout();
