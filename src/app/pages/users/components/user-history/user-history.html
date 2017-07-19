@@ -40,7 +40,7 @@
                     
                         <div class="message-icon">
                             <img class="photo-icon" src="assets/img/no-profile-Image.png" *ngIf="!audit.adminid.admin.profile_picture">
-                            <img class="photo-icon" src="{{_serverPath}}{{audit.adminid.admin.profile_picture}}" *ngIf="audit.adminid.admin.profile_picture">
+                            <img class="photo-icon" src="{{_serverPath}}{{audit.adminid.admin.profile_picture}}" onError="this.src='assets/img/no-profile-Image.png';" *ngIf="audit.adminid.admin.profile_picture">
                         </div>
                         <div class="text-block text-message">
                             <div class="message-header">
