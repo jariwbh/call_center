@@ -4,9 +4,11 @@ const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
-
+var compression = require('compression');
 const app = express();
 
+// compress all responses
+app.use(compression());
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
