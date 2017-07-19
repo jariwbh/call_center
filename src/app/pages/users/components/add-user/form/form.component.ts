@@ -13,6 +13,8 @@ import { Message } from 'primeng/primeng';
 import { AuthService } from '../../../../../core/services/common/auth.service';
 import { Configuration } from '../../../../../app.constants';
 
+
+
 import {} from '@types/googlemaps';
 
 import { 
@@ -24,6 +26,9 @@ import {
 import { ConfirmationService } from 'primeng/primeng';
 
 import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from '../../../../../theme/services';
+
+import { PointsService } from '../../../../../core/services/points/points.service';
+import { PointsModel } from '../../../../../core/models/points/points.model';
 
 @Component({
   selector: 'nga-add-user-form',
@@ -39,6 +44,7 @@ export class FormComponent {
   dynamicForm: FormGroup;
   usernamepasswordForm: FormGroup;
   controlAccessForm: FormGroup;
+  _pointsModel = new PointsModel();
   _fieldsModel = new FieldsModel();
   _usersModel = new UsersModel();
   submitted: boolean;
@@ -78,6 +84,9 @@ export class FormComponent {
   _districtOptionLists: any[] = [];
   _areaOptionLists: any[] = [];
 
+  _dbPointOldValue: any;
+  _pointUsersLists: any [] = [];
+
   // Google Map Start
       options: any;
       overlays: any[] = [];
@@ -114,6 +123,7 @@ export class FormComponent {
     private _configuration: Configuration,
     private _userloginService: UserloginService,
     private _spinner: BaThemeSpinner,
+    private _pointsService: PointsService,
   ) {
       this._spinner.show();
       if (this._authService.auth_id === '') {
@@ -496,6 +506,7 @@ export class FormComponent {
         this._needToSaveData['password'] = data.admin.password;
         this._needToSaveData['cityRights'] = data.admin.cityRights;
         this._needToSaveData['acl'] = data.admin.acl;
+        this._dbPointOldValue = data.admin.points;
 
         if (data.admin.acl) {
           if (data.admin.acl.length !== 0) {
@@ -576,6 +587,7 @@ export class FormComponent {
                 });
               }
             } else {
+              
               if (this._usersModel.role) {
                 value.role = 'A';
               } else {
@@ -586,6 +598,25 @@ export class FormComponent {
               value.password = this._usersModel['password'];
               value.cityRights = this._usersModel['cityRights'];
               value.acl = this._usersModel['acl'];
+
+              // if (this.authRole == 'A') {
+              //   if (value.points > 0) {
+              //     if ( this._dbPointOldValue !== value.points ) {
+              //       let difference = parseInt(value.points) - parseInt(this._dbPointOldValue);
+              //       this._pointUsersLists = [];
+              //       this._pointUsersLists.push(this.bindId);
+              //        this._pointsModel.users = this._pointUsersLists;
+              //        this._pointsModel.points = difference.toString();
+              //        this._pointsService
+              //          .AddAdminPoint(this.authId, this._pointsModel)
+              //          .subscribe( data => {
+              //             console.log(data);
+              //             console.log('Called');
+              //          });
+              //     }
+              //   }
+              // }
+              
               this._usersService
                 .Update(this.bindId, value)
                 .subscribe(
@@ -607,6 +638,7 @@ export class FormComponent {
         }
       }
   }
+  
   onUsernamepasswordSubmit(value: any, isValid: boolean) {
     this.usernamepasswordsubmitted = true;
       if (!isValid) {
