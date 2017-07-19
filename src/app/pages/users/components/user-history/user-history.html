@@ -1,0 +1,100 @@
+<section class="userhistory">
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12">
+      <div class="col-md-12">
+        
+      </div>
+      <ba-card title="Latest USER ACTIVITY" baCardClass="with-scroll button-panel">
+        <div class="row" style="margin-bottom: 20px;"> 
+            <div class="col-sm-4">
+                <select
+                    id="selected_admin"
+                    (change)="onChange()"
+                    class="form-control">
+                    <option value="">---- Select Admin ----</option>
+                    <option *ngFor="let admin of _selectedAdmin" [value]="admin._id">{{admin.admin.fullname}}</option>
+                    
+                </select>
+            </div>
+
+            <div class="col-sm-4" >
+                <select
+                    id="type"
+                    (change)="onChange()"
+                    class="form-control">
+                    <option value="" selected>---- Select Type ----</option>
+                     <option value="Admin added">Admin added</option>
+                     <option value="Admin deleted">Admin deleted</option>
+                     <option value="Person added">Person added</option>
+                     <option value="Person deleted">Person deleted</option>
+                     <option value="Activity added">Activity added</option>
+                     <option value="Point added">Point added</option>
+                </select>
+            </div>
+        </div>
+          
+          <div class="row show-grid">
+            <div class="col-4 ">
+              <div class="feed-messages-container">
+                <div class="feed-message" *ngFor="let audit of pagedItems">
+                    
+                        <div class="message-icon">
+                            <img class="photo-icon" src="assets/img/no-profile-Image.png" *ngIf="!audit.adminid.admin.profile_picture">
+                            <img class="photo-icon" src="{{_serverPath}}{{audit.adminid.admin.profile_picture}}" onError="this.src='assets/img/no-profile-Image.png';" *ngIf="audit.adminid.admin.profile_picture">
+                        </div>
+                        <div class="text-block text-message">
+                            <div class="message-header">
+                                <span class="author">  {{audit.activity}} by {{audit.adminid.admin.fullname}} </span>
+                            </div>
+                            <div class="message-content line-clamp">
+                              {{audit.date}}
+                            </div>
+                            <div class="message-time">
+                                <div class="post-time">  </div>
+                                <div class="ago-time">  </div>
+                            </div>
+                        </div>
+                    
+                </div>
+                </div>
+                <nav class="ng2-smart-pagination-nav" >
+                      <ul *ngIf="pager.pages && pager.pages.length" class="ng2-smart-pagination pagination">
+                          <li [ngClass]="{disabled:pager.currentPage === 1}">
+                              <a (click)="setPage(1)" class="ng2-smart-page-link page-link">
+                                  <span aria-hidden="true">First</span>
+                                  <span class="sr-only">First</span>
+                              </a>
+                          </li>
+                          <li [ngClass]="{disabled:pager.currentPage === 1}">
+                              <a (click)="setPage(pager.currentPage - 1)" class="ng2-smart-page-link page-link">
+                                  <span aria-hidden="true">Previous</span>
+                                  <span class="sr-only">Previous</span>
+                              </a>
+                          </li>
+                          <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                              <a (click)="setPage(page)" class="ng2-smart-page-link page-link">
+                                  {{page}}
+                              </a>
+                          </li>
+                          <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                              <a (click)="setPage(pager.currentPage + 1)" class="ng2-smart-page-link page-link">
+                                  <span aria-hidden="true">Next</span>
+                                  <span class="sr-only">Next</span>
+                              </a>
+                          </li>
+                          <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                              <a (click)="setPage(pager.totalPages)" class="ng2-smart-page-link page-link">
+                                  <span aria-hidden="true">Last</span>
+                                  <span class="sr-only">Last</span>
+                              </a>
+                          </li>
+                      </ul>    
+                  </nav>
+              <!-- <div *ngFor="let audit of _auditLists" class="mrb15"> <i class="fa fa-user-circle-o mrr5"></i> {{audit.activity}} 
+              <span class="text-blue pdl5"> {{audit.date}} </span></div> <br> -->
+            </div>
+          </div>
+      </ba-card>
+    </div>
+  </div>
+</section>
