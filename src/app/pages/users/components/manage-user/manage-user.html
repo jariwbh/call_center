@@ -68,6 +68,22 @@
             field="{{fields.labelname}}" 
             header="{{fields.displayname}}" 
             [sortable]="true">
+             <ng-template let-col let-data="rowData" pTemplate="body" *ngIf="fields.labelname == 'facebook_url'">
+                        <span> <a target="_blank" href="{{data.facebook_url}}" style="cursor:pointer;">{{data["facebook_url"]}}</a></span>
+
+                    </ng-template>
+                      <ng-template let-col let-data="rowData" pTemplate="body" *ngIf="fields.labelname == 'twitter_url'">
+                        <span> <a target="_blank" href="{{data.twitter_url}}" style="cursor:pointer;">{{data["twitter_url"]}}</a></span>
+
+                    </ng-template>
+                      <ng-template let-col let-data="rowData" pTemplate="body" *ngIf="fields.labelname == 'telegram_url'">
+                        <span> <a target="_blank" href="{{data.telegram_url}}" style="cursor:pointer;">{{data["telegram_url"]}}</a></span>
+
+                    </ng-template>
+                       <ng-template let-col let-data="rowData" pTemplate="body" *ngIf="fields.labelname == 'whatsapp_url'">
+                        <span> <a target="_blank" href="{{data.whatsapp_url}}" style="cursor:pointer;">{{data["whatsapp_url"]}}</a></span>
+
+                    </ng-template>
         </p-column>
         <p-column styleClass="col-button">
             <ng-template pTemplate="header"> Actions </ng-template>
