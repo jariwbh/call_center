@@ -14,6 +14,8 @@ import { UsersService } from '../../../../core/services/users/users.service';
 import { GrowlModule } from 'primeng/primeng';
 import { GMapModule, CheckboxModule, SharedModule, DialogModule } from 'primeng/primeng';
 
+import { PointsService } from '../../../../core/services/points/points.service';
+
 import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
 
 import { FileUploadModule } from 'primeng/primeng';
@@ -44,6 +46,7 @@ import { MultiSelectModule } from 'primeng/primeng';
     FieldsService,
     UsersService,
     ConfirmationService,
+    PointsService,
   ],
 })
 export class AddUserModule {}

@@ -14,7 +14,7 @@ import { PagerService } from '../../../../core/services/common/pager.service';
 @Component({
   selector: 'nga-user-history',
   templateUrl: './user-history.html',
-   styleUrls: ['./user-history.css', './feed.scss'],
+   styleUrls: ['./user-history.scss', './feed.scss'],
   })
 
 export class UserHistoryComponent {
@@ -32,6 +32,10 @@ export class UserHistoryComponent {
     pagedItems: any[];
 
   _serverPath: any;
+
+  _tableVisibility: boolean = false;
+  _loadData: boolean = false;
+  noRecordFound: boolean = false;
 
   constructor(
     private _router: Router,
@@ -71,6 +75,15 @@ export class UserHistoryComponent {
               }
             });
             this._auditLists  = data;
+            if (this._auditLists.length == 0) {
+                    this._tableVisibility = false;
+                    this.noRecordFound = true;
+                    this._loadData = false;
+                } else {
+                    this._tableVisibility = true;
+                    this._loadData = false;
+                    this.noRecordFound = false;
+                }
             //initialize to page 1
             this.setPage(1);
         });
@@ -112,11 +125,17 @@ export class UserHistoryComponent {
 
   onChange() {
     
+    this._loadData = true;
+    this._tableVisibility = false;
+    this.noRecordFound = false;
+
     this.pagedItems = [];
     this._auditLists = [];
+
     let admin_value = <HTMLInputElement> document.getElementById('selected_admin');
     let type_value = <HTMLInputElement> document.getElementById('type');
-    if (admin_value.value == '' && type_value.value == '') {
+
+    if ( (admin_value.value == '') && (type_value.value == '') ) {
       this.getAllAudit();
     } else {
       if (admin_value.value == '') {
@@ -138,8 +157,20 @@ export class UserHistoryComponent {
           }
         });
       }
-    //initialize to page 1
-    this.setPage(1);
+      setTimeout(() => {   
+          if (this._auditLists.length !== 0) {
+              //initialize to page 1
+              this.setPage(1);
+              this._tableVisibility = true;
+              this._loadData = false;
+              this.noRecordFound = false;
+          } else {
+            this.noRecordFound = true;
+            this._loadData = false;
+            this._tableVisibility = false;
+          }
+          
+      }, 500);
     }
     
   }
