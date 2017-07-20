@@ -7,8 +7,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/akveo/ng2-admin.git",
-    "preinstall": "npm install -g http-server",
-    "postinstall": "npm install -g angular-cli && ng build"
   },
   "bugs": {
     "url": "https://github.com/akveo/ng2-admin/issues"
