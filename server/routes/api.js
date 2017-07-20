@@ -159,6 +159,17 @@ router.route('/audit/')
 
     });
 
+    
+router.route('/person/district/:fieldname')
+    .get(function(req, res) {
+
+        var fieldname = "person." +  req.params.fieldname;
+        Person.distinct(fieldname).exec(function(err, data){
+            res.json(data);            
+        });
+
+    });
+
 router.route('/audit/:adminid')
     .get(function(req, res) {
 
