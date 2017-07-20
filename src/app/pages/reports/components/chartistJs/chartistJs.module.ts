@@ -13,6 +13,12 @@ import { FieldsService } from './../../../../core/services/dynamic-fields/fields
 import { AppTranslationModule } from '../../../../app.translation.module';
 import { GrowlModule } from 'primeng/primeng';
 
+import { MultiSelectModule } from 'primeng/primeng';
+
+import { DataTableModule, SharedModule } from 'primeng/primeng';
+
+import { SliderModule, DropdownModule } from 'primeng/primeng';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -21,6 +27,11 @@ import { GrowlModule } from 'primeng/primeng';
     NgaModule,
     routing,
     GrowlModule,
+    MultiSelectModule,
+    DataTableModule,
+    SharedModule,
+    SliderModule,
+    DropdownModule,
   ],
   declarations: [
     ChartistJsComponent,

@@ -1,0 +1,49 @@
+@import "../../../../theme/sass/conf/conf";
+
+// :host /deep/.show-grid div[class^=col-]{
+//   padding: 10px;
+//   box-sizing: border-box;
+//   div {
+//     color: $default-text;
+//     text-align: center;
+//     font-size: 18px;
+//     background-color: rgba($content-text, 0.3);
+//     padding: 12px 5px;
+//   }
+// }
+
+// :host /deep/.grid-h{
+//   margin-top: 40px;
+//   margin-bottom: 0;
+//   &:first-child{
+//     margin-top: 0;
+//   }
+// }
+
+:host /deep/ {
+
+.show-cls {
+  display: block;
+}
+.hide-cls {
+  display: none;
+}
+
+.ui-datatable .ui-datatable-data > tr > td, .ui-datatable .ui-datatable-tfoot > tr > td, .ui-datatable .ui-datatable-thead > tr > th {
+    
+    box-sizing: border-box !important;
+    padding: 0.25em 0.5em !important;
+    overflow:  inherit !important;
+}
+  .ui-widget-header .ui-state-default, .ui-widget-content .ui-state-default, .ui-state-default {
+    background: #ffffff !important;
+    border: 1px solid #d6d6d6 !important;
+    color: #555555 !important;
+  }
+  
+ }
+
+ 
+    
+
+ 

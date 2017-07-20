@@ -461,7 +461,7 @@
                 <div class="horizontal-scroll">
                   <div class="row">
 
-                    <div class="col-md-2">
+                    <div class="col-md-2" >
                       Select Field :
                     </div>
                     <div class="col-md-3">
@@ -473,14 +473,59 @@
                             <option value="Age">Age</option> -->
                           </select>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" *ngIf="fieldDyCountReport.fieldtype !== undefined">
                       Select FieldValues :
                     </div>
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-3">
                       <select id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCountReport($event.target.value)">
                             <option value="">--- Select ---</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
+                          </select>
+                    </div> -->
+                    <div class="col-md-3" *ngIf="fieldDyCountReport.fieldtype == 'list' && hasLookupData">
+                      <select id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCountReport($event.target.value)">
+                            <option value="">--- Select ---</option>
+                             <option [value]="p.value" *ngFor="let p of fieldDyCountReport.lookupdata">{{p.key}}</option>
+                           
+                          </select>
+                    </div>
+                    <div class="col-md-3" *ngIf="fieldDyCountReport.fieldtype == 'text'">
+                      <!-- <div class="row"> -->
+                      <!-- <div class="col-md-6"> -->
+                      <input type="text" id="fieldValue" [value]="fieldValueModel" class="form-control" placeholder="" [(ngModel)]="fieldValueModel">
+                      <!-- </div> -->
+                      <!-- <div class="col-md-1">
+                          <button [disabled]="fieldValueModel === ''" (click)="addFieldValue()" type="button" class="btn btn-danger btn-icon"><i class="ion-plus"></i></button>
+
+                        </div> -->
+                      <!-- </div> -->
+                      <!-- <div class="row"> -->
+                      <!-- <div class="col-md-6"> -->
+                      <!-- <span *ngFor="let p of fieldValueDyCountReport"> {{p}} <i class="ion-close-circled" style="color:red; margin:2px;"></i></span> -->
+                      <!-- </div> -->
+                      <!-- <div class="col-md-1">
+                          <button [disabled]="" (click)="removeFieldValue(p)" type="button" class="btn btn-danger btn-icon"><i class="ion-minus"></i></button>
+
+                        </div> -->
+                      <!-- </div> -->
+                    </div>
+                    <div class="col-md-3" *ngIf="fieldDyCountReport.fieldtype == 'list' && !hasLookupData && fieldDyCountReport.labelname =='province'">
+                      <select id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCountReport($event.target.value)">
+                            <option value="">--- Select ---</option>
+                             <option [value]="p" *ngFor="let p of _allProvinceLists">{{p}}</option>
+                          </select>
+                    </div>
+                    <div class="col-md-3" *ngIf="fieldDyCountReport.fieldtype == 'list' && !hasLookupData && fieldDyCountReport.labelname =='district'">
+                      <select id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCountReport($event.target.value)">
+                            <option value="">--- Select ---</option>
+                             <option [value]="p" *ngFor="let p of _allDistrictLists">{{p}}</option>
+                          </select>
+                    </div>
+                    <div class="col-md-3" *ngIf="fieldDyCountReport.fieldtype == 'list' && !hasLookupData && fieldDyCountReport.labelname =='area'">
+                      <select id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCountReport($event.target.value)">
+                            <option value="">--- Select ---</option>
+                             <option [value]="p" *ngFor="let p of _allAreaLists">{{p}}</option>
                           </select>
                     </div>
                     <div class="form-group col-sm-2">
@@ -521,8 +566,52 @@
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
                     <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyCountUserHistory"
-                       [baChartistChartOptions]="data['simpleBarOptions']">
+                      [baChartistChartOptions]="data['simpleBarOptions']">
                     </ba-chartist-chart>
+                  </ba-card>
+                  <ba-card title="Person History Grid" baCardClass="with-scroll">
+                    <p-dataTable [value]="adminlist" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt class="samarth">
+                      <p-header>
+
+                        <div class="ui-helper-clearfix">
+                          <!-- <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none;float: left">
+                            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                            <input #gb type="text" pInputText size="50" placeholder="Global Filter">
+                          </div> -->
+                          <button type="button" class="btn btn-info" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float:right">
+                            CSV
+                        </button>
+                        </div>
+                      </p-header>
+                      <p-column field="fullname" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="fullnameLists" defaultLabel="All Names" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      <p-column field="province" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="provinceLists" defaultLabel="All Provinces" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      <p-column field="district" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="districtLists" defaultLabel="All Districts" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      <p-column field="area" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="areaLists" defaultLabel="All Areas" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                    </p-dataTable>
                   </ba-card>
                 </div>
               </div>
@@ -541,14 +630,15 @@
                     </div>
                     <div class="col-md-3">
                       <!--<select id="compare" class="form-control" value="State" [(ngModel)]="compareTwo">-->
-                      <select id="dynamic" class="form-control" value="Province" (change)="onChangeFieldforDynamicReport($event.target.value)">
+                      <select id="dynamic" class="form-control" value="Province" (change)="onChangeFieldforDyBestReport($event.target.value)">
                             <option value="">--- Select ---</option>
-                            <option value="Province">Province</option>
+                            <option [value]="p.labelname" *ngFor="let p of fieldList">{{p.displayname}}</option>
+                            <!-- <option value="Province">Province</option>
                             <option value="Gender">Gender</option>
-                            <option value="Age">Age</option>
+                            <option value="Age">Age</option> -->
                           </select>
                     </div>
-                   
+
                     <div class="form-group col-sm-2">
                       <button class="btn btn-block btn-warning btn-rounded" (click)="genrateReportForDyBest()">Generate Report</button>
                     </div>
@@ -567,15 +657,11 @@
                     <div class="row">
                       <h5 translate class="col-md-4">Person History Chart</h5>
                       <div class="col-md-8 row">
-                        <!--<div class="col-sm-1">
-                    <button class="btn btn-block btn-danger btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
-                  </div>
-                  <span class="col-sm-4 custom-margin" *ngIf="compareTwo === 'Province'">{{firstProvince}}</span>
-                  <span class="col-sm-4 custom-margin" *ngIf="compareTwo === 'District'">{{firstDistrict}}</span>-->
-                        <div class="col-sm-3">
+
+                        <!-- <div class="col-sm-3">
                           Selected Field :
                         </div>
-                        <span class="col-sm-2 custom-margin">{{xAxisField}}</span>
+                        <span class="col-sm-2 custom-margin">{{xAxisField}}</span> -->
                         <!-- <div class="col-sm-3">
                           Field Value :
                         </div>
@@ -588,12 +674,56 @@
                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="data['simpleLineData']"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
-                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
+                    <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
                     <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyBestUserHistory"
-                       [baChartistChartOptions]="data['simpleBarOptions']">
+                      [baChartistChartOptions]="data['simpleBarOptions']">
                     </ba-chartist-chart>
+                  </ba-card>
+                  <ba-card title="Person History Grid" baCardClass="with-scroll">
+                    <p-dataTable [value]="adminlist" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt class="samarth">
+                      <p-header>
+
+                        <div class="ui-helper-clearfix">
+                          <!-- <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none;float: left">
+                            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                            <input #gb type="text" pInputText size="50" placeholder="Global Filter">
+                          </div> -->
+                          <button type="button" class="btn btn-info" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float:right">
+                            CSV
+                        </button>
+                        </div>
+                      </p-header>
+                      <p-column field="fullname" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="fullnameLists" defaultLabel="All Names" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      <p-column field="province" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="provinceLists" defaultLabel="All Provinces" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      <p-column field="district" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="districtLists" defaultLabel="All Districts" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      <p-column field="area" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="areaLists" defaultLabel="All Areas" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                    </p-dataTable>
                   </ba-card>
                 </div>
               </div>
@@ -602,7 +732,7 @@
         </div>
         <div class="row" *ngIf="compareDyView">
           <ba-card title="Compare Report" baCardClass="with-scroll" class="col-md-12">
-             <div class="col-md-12">
+            <div class="col-md-12">
               <ba-card class="pie-chart-item-container col-md-12">
                 <div class="horizontal-scroll">
                   <div class="row">
@@ -612,23 +742,84 @@
                     </div>
                     <div class="col-md-3">
                       <!--<select id="compare" class="form-control" value="State" [(ngModel)]="compareTwo">-->
-                      <select id="dynamic" class="form-control" value="Province" (change)="onChangeFieldforDynamicReport($event.target.value)">
+                      <select id="dynamic" class="form-control" value="Province" (change)="onChangeFieldforDyCompareReport($event.target.value)">
                             <option value="">--- Select ---</option>
-                            <option value="Province">Province</option>
+                            <option [value]="p | json" *ngFor="let p of fieldList">{{p.displayname}}</option>
+                            <!-- <option value="Province">Province</option>
                             <option value="Gender">Gender</option>
-                            <option value="Age">Age</option>
+                            <option value="Age">Age</option> -->
                           </select>
                     </div>
-                    <div class="col-md-2">
+                        <div class="col-md-2" *ngIf="fieldDyCompareReport.fieldtype !== undefined">
                       Select FieldValues :
                     </div>
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-3">
+                      <select id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCompareReport($event.target.value)">
+                            <option value="">--- Select ---</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                    </div> -->
+                    <div class="col-md-3" *ngIf="fieldDyCompareReport.fieldtype == 'list' && hasLookupData">
+                         <select multiple id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCompareReport($event.target.value)" [(ngModel)]="fieldValueModelList">
+                            <!-- <option value="">--- Select ---</option> -->
+                             <option [value]="p.value" *ngFor="let p of fieldDyCompareReport.lookupdata">{{p.key}}</option>
+                           
+                          </select>
+                          <span style="color:red;">CTRL + Select multiple</span>
+                    </div>
+                    <div class="col-md-3" *ngIf="fieldDyCompareReport.fieldtype == 'text'">
+                       <div class="row"> 
+                       <div class="col-md-8"> 
+                      <input type="text" id="fieldValue" [value]="fieldValueModel" class="form-control" placeholder="" [(ngModel)]="fieldValueModel" [disabled]="disablemultiSelect">
+                       </div> 
+                       <div class="col-md-1">
+                          <button [disabled]="fieldValueModel === ''" (click)="addFieldValue()" type="button" class="btn btn-danger btn-icon"><i class="ion-plus"></i></button>
+
+                        </div> 
+                       </div> 
+                       <div class="row" *ngFor="let p of fieldValueDyCountReport" style="margin:2px;"> 
+                       <div class="col-md-8"> 
+                       <!-- <span *ngFor="let p of fieldValueDyCountReport"> {{p}} <i class="ion-close-circled" style="color:red; margin:2px;" (click)="removeFieldValue(p)"></i></span>  -->
+                       <span ><i class="ion-checkmark" ></i> {{p}} </span> 
+                       </div> 
+                        <div class="col-md-1">
+                          <button [disabled]="" (click)="removeFieldValue(p)" type="button" class="btn btn-danger btn-icon"><i class="ion-minus"></i></button>
+
+                        </div>  
+                       </div> 
+                    </div>
+                    <div class="col-md-3" *ngIf="fieldDyCompareReport.fieldtype == 'list' && !hasLookupData && fieldDyCompareReport.labelname =='province'">
+                      <select multiple="2" id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCompareReport($event.target.value)" [(ngModel)]="fieldValueModelList" [disabled]="disablemultiSelect">
+                            <!-- <option value="">--- Select ---</option> -->
+                             <option [value]="p" *ngFor="let p of _allProvinceLists">{{p}}</option>
+                          </select>
+                            <span style="color:red;">CTRL + Select multiple</span>
+                    </div>
+                    <div class="col-md-3" *ngIf="fieldDyCompareReport.fieldtype == 'list' && !hasLookupData && fieldDyCompareReport.labelname =='district'">
+                      <select multiple id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCompareReport($event.target.value)" [(ngModel)]="fieldValueModelList" [disabled]="disablemultiSelect">
+                            <!-- <option value="">--- Select ---</option> -->
+                             <option [value]="p" *ngFor="let p of _allDistrictLists">{{p}}</option>
+                          </select>
+                            <span style="color:red;">CTRL + Select multiple</span>
+                    </div>
+                    <div class="col-md-3" *ngIf="fieldDyCompareReport.fieldtype == 'list' && !hasLookupData && fieldDyCompareReport.labelname =='area'">
+                      <select multiple id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCompareReport($event.target.value)" [(ngModel)]="fieldValueModelList" [disabled]="disablemultiSelect">
+                            <!-- <option value="">--- Select ---</option> -->
+                             <option [value]="p" *ngFor="let p of _allAreaLists">{{p}}</option>
+                          </select>
+                            <span style="color:red;">CTRL + Select multiple</span>
+                    </div>
+                    <!-- <div class="col-md-2">
+                      Select FieldValues :
+                    </div> -->
+                    <!-- <div class="col-md-3">
                       <select id="compare" class="form-control" value="Province" (change)="onChangeFieldValueforDyCompareReport($event.target.value)">
                             <option value="">--- Select ---</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                           </select>
-                    </div>
+                    </div> -->
                     <div class="form-group col-sm-2">
                       <button class="btn btn-block btn-warning btn-rounded" (click)="genrateReportForDyCompare()">Generate Report</button>
                     </div>
@@ -645,8 +836,8 @@
                 <div class="col-md-12">
                   <ba-card title="Person History" baCardClass="with-scroll">
                     <div class="row">
-                      <h5 translate class="col-md-4">Person History Chart</h5>
-                      <div class="col-md-8 row">
+                      <h5 translate class="col-md-3">Person History Chart</h5>
+                      <div class="col-md-9 row">
                         <!--<div class="col-sm-1">
                     <button class="btn btn-block btn-danger btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
                   </div>
@@ -655,25 +846,75 @@
                         <div class="col-sm-3">
                           Selected Field :
                         </div>
-                        <span class="col-sm-2 custom-margin">{{xAxisField}}</span>
-                        <!-- <div class="col-sm-3">
-                          Field Value :
+                        <span class="col-sm-1 custom-margin">{{xAxisField}}</span>
+                          <div class="col-sm-2">
+                          Field Values :
                         </div>
-                        <div class="col-sm-1">
+                         <div class="row col-sm-6">
+                        <div class="col-sm-1" *ngIf="fieldValueModelList[0] != undefined">
                           <button class="btn btn-block btn-danger btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
                         </div>
-                        <span class="col-sm-2 custom-margin">{{xAxisFieldValue}}</span> -->
+                        <span class="col-sm-3 custom-margin">{{fieldValueModelList[0]}}</span> 
+                        <div class="col-sm-1"  *ngIf="fieldValueModelList[1] != undefined">
+                          <button class="btn btn-block btn-success btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                        </div>
+                        <span class="col-sm-3 custom-margin">{{fieldValueModelList[1]}}</span> 
+                         </div> 
                       </div>
                     </div>
                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="data['simpleLineData']"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
-                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyCompareUserHistory"
+                    <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyCompareUserHistory"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
-                     <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyCompareUserHistory"
-                       [baChartistChartOptions]="data['simpleBarOptions']">
+                    <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyCompareUserHistory"
+                      [baChartistChartOptions]="data['simpleBarOptions']">
                     </ba-chartist-chart>
+                  </ba-card>
+                  <ba-card title="Person History Grid" baCardClass="with-scroll">
+                    <p-dataTable [value]="adminlist" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt class="samarth">
+                      <p-header>
+
+                        <div class="ui-helper-clearfix">
+                          <!-- <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none;float: left">
+                            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                            <input #gb type="text" pInputText size="50" placeholder="Global Filter">
+                          </div> -->
+                          <button type="button" class="btn btn-info" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float:right">
+                            CSV
+                        </button>
+                        </div>
+                      </p-header>
+                      <p-column field="fullname" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="fullnameLists" defaultLabel="All Names" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      <p-column field="province" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="provinceLists" defaultLabel="All Provinces" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      <p-column field="district" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="districtLists" defaultLabel="All Districts" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      <p-column field="area" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="areaLists" defaultLabel="All Areas" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                    </p-dataTable>
                   </ba-card>
                 </div>
               </div>

@@ -9,11 +9,12 @@ import { ReportService } from './../../../../core/services/report/report.service
 import { Message } from 'primeng/primeng';
 import { SettingsService } from './../../../../core/services/settings/settings.service';
 import { FieldsService } from './../../../../core/services/dynamic-fields/fields.service';
+import { SelectItem } from 'primeng/primeng';
 
 @Component({
   selector: 'nga-chartist-js',
   templateUrl: './chartistJs.html',
-  styleUrls: ['./chartistJs.scss'],
+  styleUrls: ['./chartistJs.scss', './test.scss'],
 })
 
 export class ChartistJsComponent {
@@ -34,13 +35,17 @@ export class ChartistJsComponent {
   selectDistrict: string = '';
   xAxisField: string = '';
   xAxisFieldValue: string = '';
-  fieldDyCountReport: any;
-  fieldDyBestReport: any = {};
+  fieldDyCountReport: any = {};
+  fieldDyBestReport: any = '';
   fieldDyCompareReport: any = {};
-  fieldValueDyCountReport: any = {};
+  fieldValueDyCountReport: any = [];
   fieldValueDyBestReport: any = {};
-  fieldValueDyCompareReport: any = {};
-  
+  fieldValueDyCompareReport: any = [];
+  fieldValueModel: string = '';
+  fieldValueModelList: string[] = [];
+  hasLookupData = false;
+  disablemultiSelect = false;
+
   showGenCompareReport = false;
   showGenSelectReport = false;
   showGenDynamicReport = false;
@@ -75,14 +80,32 @@ export class ChartistJsComponent {
   districtList: any[] = [];
   areaList: any[] = [];
 
+  tempfulnameList: any[] = [];
+  tempprovinceList: any[] = [];
+  tempdistrictList: any[] = [];
+  tempareaList: any[] = [];
+
+  adminlist: any[] = [];
+  fullnameLists: any[] = [];
+  provinceLists: any[] = [];
+  districtLists: any[] = [];
+  areaLists: any[] = [];
+
+  _allProvinceLists: any[] = [];
+  _allDistrictLists: any[] = [];
+  _allAreaLists: any[] = [];
+
   districtListforDD: any[] = [];
   areaListforDD: any[] = [];
-  
+
   fieldList: any[] = [];
 
   defaultLabelArr: string[] = [];
   defaultseriesArr: number[] = [];
   selectMonthYearArray: any[] = [];
+
+  userHistoryDySearch: any = {};
+
   chartColors = {
     red: 'rgb(255, 99, 132)',
     orange: 'rgb(255, 159, 64)',
@@ -102,19 +125,19 @@ export class ChartistJsComponent {
     this.defaultseriesArr = _ReportService.defaultseriesArr;
     this.selectMonthYearArray = _ReportService.selectMonthYearArray;
     this.dataComparePointHistory = {
-       labels: this.defaultLabelArr,
-      series: [this.defaultseriesArr],
-    };
-     this.dataCompareUserHistory = {
       labels: this.defaultLabelArr,
       series: [this.defaultseriesArr],
     };
-     this.dataCompareResultHistory = {
+    this.dataCompareUserHistory = {
+      labels: this.defaultLabelArr,
+      series: [this.defaultseriesArr],
+    };
+    this.dataCompareResultHistory = {
       labels: this.defaultLabelArr,
       series: [this.defaultseriesArr],
     };
     this.dataSelectPointHistory = {
-       labels: this.defaultLabelArr,
+      labels: this.defaultLabelArr,
       series: [this.defaultseriesArr],
     };
     this.dataSelectUserHistory = {
@@ -137,7 +160,12 @@ export class ChartistJsComponent {
       labels: this.defaultLabelArr,
       series: [this.defaultseriesArr],
     };
-    
+
+    this.userHistoryDySearch.province = [];
+    this.userHistoryDySearch.district = [];
+    this.userHistoryDySearch.area = [];
+    this.userHistoryDySearch.groupby = [];
+    this.userHistoryDySearch.searchvalue = [];
   }
 
   ngOnInit() {
@@ -152,6 +180,10 @@ export class ChartistJsComponent {
     this._ReportService.GetAllProvince().subscribe(data => {
       if (data) {
         this.provinceList = data;
+        data.forEach(element => {
+          this._allProvinceLists.push(element.name);
+        });
+        this.userHistoryDySearch.province = this._allProvinceLists;
       }
     });
   }
@@ -159,6 +191,10 @@ export class ChartistJsComponent {
     this._ReportService.GetAllDistrict().subscribe(data => {
       if (data) {
         this.districtList = data;
+        data.forEach(element => {
+          this._allDistrictLists.push(element.district);
+        });
+        this.userHistoryDySearch.district = this._allDistrictLists;
       }
     });
   }
@@ -166,24 +202,28 @@ export class ChartistJsComponent {
     this._ReportService.GetAllArea().subscribe(data => {
       if (data) {
         this.areaList = data;
+        data.forEach(element => {
+          this._allAreaLists.push(element.area);
+        });
+        this.userHistoryDySearch.area = this._allAreaLists;
       }
     });
   }
   getAllFields() {
     this._fieldsService
-          .GetAll('people')
-          .subscribe(
-          data => {
-            if (data) {
-               this.fieldList = data;
-              //  this.fieldList = this.fieldList.filter(ele => (ele.labelname !== 'province' &&
-              //   ele.labelname !== 'district' &&
-              //   ele.labelname !== 'area'));
-            }
-          });
-   }
+      .GetAll('people')
+      .subscribe(
+      data => {
+        if (data) {
+          this.fieldList = data;
+          //  this.fieldList = this.fieldList.filter(ele => (ele.labelname !== 'province' &&
+          //   ele.labelname !== 'district' &&
+          //   ele.labelname !== 'area'));
+        }
+      });
+  }
   switchView(view: string) {
-   
+
     this.selectType = '';
     this.compareTwo = '';
     this.firstProvince = '';
@@ -215,7 +255,7 @@ export class ChartistJsComponent {
   }
 
   switchDyView(view: string) {
-   
+
     // this.selectType = '';
     // this.compareTwo = '';
     // this.firstProvince = '';
@@ -225,6 +265,14 @@ export class ChartistJsComponent {
     // this.selectProvince = '';
     // this.selectDistrict = '';
 
+    this.fieldDyCountReport = {};
+    this.fieldDyBestReport = '';
+    this.fieldDyCompareReport = {};
+    this.fieldValueDyCountReport = [];
+    this.fieldValueDyBestReport = {};
+    this.fieldValueDyCompareReport = [];
+    this.fieldValueModel = '';
+    this.fieldValueModelList = [];
     // this.showGenCompareReport = false;
     // this.showGenSelectReport = false;
     // this.showGenDynamicReport = false;
@@ -236,8 +284,13 @@ export class ChartistJsComponent {
     this.xAxisField = '';
     this.xAxisFieldValue = '';
 
+    this.userHistoryDySearch.groupby = [];
+    this.userHistoryDySearch.searchvalue = [];
+
+    this.disablemultiSelect = false;
+
     if (view === 'CountDyView') {
-      
+
       this.countDyView = true;
       this.bestDyView = false;
       this.compareDyView = false;
@@ -277,34 +330,82 @@ export class ChartistJsComponent {
   }
 
   onChangeFieldforDynamicReport(selectedField) {
-     this.showGenDynamicReport = false;
-     this.xAxisField = selectedField;
+    this.showGenDynamicReport = false;
+    this.xAxisField = selectedField;
   }
   onChangeFieldValueforDynamicReport(selectedField) {
-     this.showGenDynamicReport = false;
-     this.xAxisFieldValue = selectedField;
+    this.showGenDynamicReport = false;
+    this.xAxisFieldValue = selectedField;
   }
   onChangeFieldforDyCountReport(selectedField) {
-      this.showGenDyCountReport = false;
+    this.userHistoryDySearch.groupby = [];
+    this.userHistoryDySearch.searchvalue = [];
+
+    this.showGenDyCountReport = false;
+    if (selectedField !== '') {
       this.fieldDyCountReport = JSON.parse(selectedField);
       // console.log(JSON.parse(selectedField));
       this.xAxisField = this.fieldDyCountReport.displayname;
+      if (this.fieldDyCountReport.lookupdata !== null) {
+        if (this.fieldDyCountReport.lookupdata.length > 0) {
+          this.hasLookupData = true;
+        } else {
+          this.hasLookupData = false;
+        }
+      } else {
+        this.hasLookupData = false;
+      }
+      this.userHistoryDySearch.groupby = this.fieldDyCountReport.labelname;
+    }
+    this.fieldValueModel = '';
+    console.log(this.fieldDyCountReport);
   }
+
   onChangeFieldforDyBestReport(selectedField) {
-      this.showGenDyBestReport = false;
-      this.fieldDyBestReport = selectedField;
-       // console.log(JSON.parse(selectedField));
-      this.xAxisField = this.fieldDyCountReport.displayname;
+    this.userHistoryDySearch.groupby = [];
+    this.userHistoryDySearch.searchvalue = [];
+
+    this.showGenDyBestReport = false;
+    this.fieldDyBestReport = selectedField;
+    console.log(this.fieldDyBestReport);
+    // console.log(JSON.parse(selectedField));
+    this.xAxisField = this.fieldDyBestReport;
+    this.userHistoryDySearch.groupby = this.fieldDyBestReport;
+    console.log(this.userHistoryDySearch);
   }
   onChangeFieldforDyCompareReport(selectedField) {
-      this.showGenDyCompareReport = false;
-      this.fieldDyCompareReport = selectedField;
-  }
-  onChangeFieldValueforDyCountReport(selectedField) {
-      this.showGenDyCountReport = false;
-      this.fieldValueDyCountReport = selectedField;
+    this.userHistoryDySearch.groupby = [];
+    this.userHistoryDySearch.searchvalue = [];
+
+    this.showGenDyCompareReport = false;
+    // this.fieldDyCompareReport = selectedField;
+    if (selectedField !== '') {
+      this.fieldDyCompareReport = JSON.parse(selectedField);
       // console.log(JSON.parse(selectedField));
-      this.xAxisFieldValue = selectedField;
+      this.xAxisField = this.fieldDyCompareReport.displayname;
+      if (this.fieldDyCompareReport.lookupdata !== null) {
+        if (this.fieldDyCompareReport.lookupdata.length > 0) {
+          this.hasLookupData = true;
+        } else {
+          this.hasLookupData = false;
+        }
+      } else {
+        this.hasLookupData = false;
+      }
+      this.userHistoryDySearch.groupby = this.fieldDyCompareReport.labelname;
+    }
+    this.fieldValueModel = '';
+    this.fieldValueModelList = [];
+    this.disablemultiSelect = false;
+    console.log(this.fieldDyCompareReport);
+  }
+
+  onChangeFieldValueforDyCountReport(selectedField) {
+    this.showGenDyCountReport = false;
+    this.fieldValueDyCountReport = selectedField;
+    // console.log(JSON.parse(selectedField));
+    this.xAxisFieldValue = selectedField;
+    this.fieldValueModel = selectedField;
   }
   // onChangeFieldValueforDyBestReport(selectedField) {
   //     this.showGenDyBestReport = false;
@@ -313,10 +414,57 @@ export class ChartistJsComponent {
   //     this.xAxisFieldValue = selectedField;
   // }
   onChangeFieldValueforDyCompareReport(selectedField) {
-      this.showGenDyCompareReport = false;
-      this.fieldValueDyCompareReport = selectedField;
-      // console.log(JSON.parse(selectedField));
-      this.xAxisFieldValue = selectedField;
+    // console.log(selectedField);
+    console.log(this.fieldValueModelList.length);
+    if (this.fieldValueModelList.length === 2) {
+      this.disablemultiSelect = true;
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select only 2 Field Value' });
+    }
+    this.showGenDyCompareReport = false;
+    this.fieldValueDyCompareReport = selectedField;
+    // console.log(JSON.parse(selectedField));
+    this.xAxisFieldValue = selectedField;
+    this.fieldValueModel = selectedField;
+    console.log(selectedField);
+    console.log(this.fieldValueModelList);
+  }
+  addFieldValue() {
+    if (this.fieldValueModelList.length === 2) {
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please add only 2 FieldValues to Compare' });
+      return;
+    }
+    if (this.fieldValueModel === '') {
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please Add Unique Field Value' });
+    }
+    let isp = false;
+    this.fieldValueDyCountReport.forEach(ele => {
+      if (ele === this.fieldValueModel) {
+        isp = true;
+      }
+    });
+    if (isp === false) {
+      this.fieldValueDyCountReport.push(this.fieldValueModel);
+      this.fieldValueModelList.push(this.fieldValueModel);
+      this.fieldValueModel = '';
+    } else {
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please Add Unique Field Value' });
+      this.fieldValueModel = '';
+    }
+    console.log(this.fieldValueModel);
+    console.log(this.fieldValueDyCountReport);
+  }
+  removeFieldValue(fieldToRemove) {
+    this.fieldValueDyCountReport.forEach(element => {
+      if (this.fieldValueDyCountReport.indexOf(fieldToRemove) === this.fieldValueDyCountReport.indexOf(element)) {
+        const idx = this.fieldValueDyCountReport.indexOf(fieldToRemove);
+        this.fieldValueDyCountReport.splice(idx);
+        this.fieldValueModelList.splice(idx);
+      }
+    });
   }
 
   onChangeFirstProvince(firstProvince) {
@@ -327,7 +475,7 @@ export class ChartistJsComponent {
   onChangeSecondProvince(secondProvince) {
     this.showGenCompareReport = false;
     this.secondProvince = secondProvince;
-   // this.resetAllCharts();
+    // this.resetAllCharts();
   }
   onChangeFirstDistrict(firstDistrict) {
     this.showGenCompareReport = false;
@@ -347,45 +495,487 @@ export class ChartistJsComponent {
     this.selectDistrict = selectDistrict;
   }
 
-   onChangeDyProvince(province) {
+  onChangeDyProvince(province) {
     if (province !== '') {
       this.districtListforDD = this.districtList.filter(element => element.province === province);
       this.areaListforDD = this.areaList.filter(element => element.province === province);
+      this.userHistoryDySearch.province = [];
+      this.userHistoryDySearch.province.push(province);
     } else {
       this.districtListforDD = [];
       this.areaListforDD = [];
+      this.userHistoryDySearch.province = this._allProvinceLists;
     }
+    this.showGenDyCountReport = false;
+    this.showGenDyBestReport = false;
+    this.showGenDyCompareReport = false;
+  }
+
+  onChangeDyDistrict(district) {
+    if (district !== '') {
+      this.userHistoryDySearch.district = [];
+      this.userHistoryDySearch.district.push(district);
+    } else {
+      this.userHistoryDySearch.district = this._allDistrictLists;
+    }
+    this.showGenDyCountReport = false;
+    this.showGenDyBestReport = false;
+    this.showGenDyCompareReport = false;
+  }
+
+  onChangeDyArea(area) {
+    if (area !== '') {
+      this.userHistoryDySearch.area = [];
+      this.userHistoryDySearch.area.push(area);
+    } else {
+      this.userHistoryDySearch.area = this._allAreaLists;
+    }
+    this.showGenDyCountReport = false;
+    this.showGenDyBestReport = false;
+    this.showGenDyCompareReport = false;
   }
 
   genrateReportForDyCount() {
-    this.dataDyCountUserHistory.series = [
-             [15, 24, 43, 57, 65, 70, 77, 82, 98, 100, 125, 200],
-        //     [13, 22, 49, 22, 4, 6, 24, 46, 57, 148, 22, 4],
-           ];
-   this.showGenDyCountReport = true;
+    if (this.fieldDyCountReport.labelname !== '' && this.fieldValueModel !== '') {
+      this.userHistoryDySearch.searchvalue = [];
+      this.userHistoryDySearch.searchvalue.push(this.fieldValueModel);
+      let labelsArr: string[] = [];
+      let seriesArrA: number[] = [];
+      console.log(this.userHistoryDySearch);
+      this._ReportService.GetUserCountsHistoryDyCount(this.userHistoryDySearch).subscribe(data => {
+        console.log(data);
+        if (data) {
+          // data.forEach(ele => {
+          //   if (ele._id !== null && ele._id !== '') {
+          //     labelsArr.push(ele._id);
+          //     seriesArrA.push(ele.count);
+          //   }
+          // });
+
+          this.selectMonthYearArray.forEach(ele => {
+            //labelsArr.push(ele.month);
+            let countUser = 0;
+            data[0].forEach(ele1 => {
+              if (ele.year === ele1._id.year) {
+                if (ele.monthNo === ele1._id.month) {
+                  countUser = ele1.count;
+                }
+              }
+            });
+            seriesArrA.push(countUser);
+          });
+          // this.dataDyCountUserHistory.labels = labelsArr;
+          this.dataDyCountUserHistory.series = [seriesArrA];
+          console.log(this.dataDyCountUserHistory);
+        }
+      });
+
+      this._ReportService.GetUserCountsHistoryDyCountGrid(this.userHistoryDySearch).subscribe(data1 => {
+        this.adminlist = [];
+        this.provinceLists = [];
+        this.districtLists = [];
+        this.areaLists = [];
+        console.log(data1);
+        data1.forEach(element1 => {
+          element1.forEach(element => {
+            this.adminlist.push({
+              fullname: element.person.fullname,
+              province: element.person.province,
+              district: element.person.district,
+              area: element.person.area,
+            });
+
+            let ispfn = false;
+            this.tempfulnameList.forEach(ele6 => {
+              if (ele6 === element.person.fullname) {
+                ispfn = true;
+              }
+            });
+
+            if (ispfn) {
+            } else {
+              this.tempfulnameList.push(element.person.fullname);
+            }
+
+
+            let isppr = false;
+            this.tempprovinceList.forEach(ele6 => {
+
+              if (ele6 === element.person.province) {
+                isppr = true;
+              }
+            });
+
+            if (isppr) {
+            } else {
+              this.tempprovinceList.push(element.person.province);
+            }
+
+            let isd = false;
+            this.tempdistrictList.forEach(ele6 => {
+              if (ele6 === element.person.district) {
+                isd = true;
+              }
+            });
+
+            if (isd) {
+            } else {
+              this.tempdistrictList.push(element.person.district);
+            }
+
+            let isa = false;
+            this.tempareaList.forEach(ele6 => {
+              if (ele6 === element.person.area) {
+                isa = true;
+              }
+            });
+
+            if (isa) {
+            } else {
+              this.tempareaList.push(element.person.area);
+            }
+
+
+          });
+          //console.log(this.fullnameLists);
+
+        });
+
+        this.tempfulnameList.forEach(ele6 => {
+          this.fullnameLists.push({ label: ele6, value: ele6 });
+        });
+        this.tempprovinceList.forEach(ele6 => {
+          this.provinceLists.push({ label: ele6, value: ele6 });
+        });
+        this.tempdistrictList.forEach(ele6 => {
+          this.districtLists.push({ label: ele6, value: ele6 });
+        });
+        this.tempareaList.forEach(ele6 => {
+          this.areaLists.push({ label: ele6, value: ele6 });
+        });
+
+        //   this.districtLists = this.districtLists.filter(function (x, i, a) {
+        //     return a.indexOf(x) === i;
+        //   });
+        //   this.areaLists = this.areaLists.filter(function (x, i, a) {
+        //     return a.indexOf(x) === i;
+        //   });
+
+      });
+
+
+      setTimeout(() => {
+        this.showGenDyCountReport = true;
+      }, 500);
+    } else {
+      this.showGenDyCountReport = false;
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select Field & FieldValue' });
+    }
+    // this.dataDyCountUserHistory.series = [
+    //   [15, 24, 43, 57, 65, 70, 77, 82, 98, 100, 125, 200],
+    // ];
+    // this.showGenDyCountReport = true;
   }
   genrateReportForDyBest() {
-     this.dataDyBestUserHistory.labels = ['Basra', 'Muthanna', 'Najaf', 'Babylon', 'Baghdad'];
-     this.dataDyBestUserHistory.series = [
-               [82, 98, 100, 125, 200],
-          //   [15, 24, 43, 37, 65, 80, 77, 82, 98, 100, 125, 200],
-        //     [13, 22, 49, 22, 4, 6, 24, 46, 57, 148, 22, 4],
-           ];
-   this.showGenDyBestReport = true;
+    if (this.fieldDyBestReport !== '') {
+      let labelsArr: string[] = [];
+      let seriesArrA: number[] = [];
+      this._ReportService.GetUserCountsHistoryDyBest(this.userHistoryDySearch).subscribe(data => {
+        // console.log(data);
+        if (data) {
+          data.forEach(ele => {
+            if (ele._id !== null && ele._id !== '') {
+              labelsArr.push(ele._id);
+              seriesArrA.push(ele.count);
+            }
+          });
+          this.dataDyBestUserHistory.labels = labelsArr;
+          this.dataDyBestUserHistory.series = [seriesArrA];
+
+          //console.log(this.dataDyBestUserHistory);
+          this.userHistoryDySearch.searchvalue = labelsArr;
+          this._ReportService.GetUserCountsHistoryDyBestGrid(this.userHistoryDySearch).subscribe(data1 => {
+            this.adminlist = [];
+            this.provinceLists = [];
+            this.districtLists = [];
+            this.areaLists = [];
+            //console.log(data1);
+            data1.forEach(element1 => {
+              element1.forEach(element => {
+                this.adminlist.push({
+                  fullname: element.person.fullname,
+                  province: element.person.province,
+                  district: element.person.district,
+                  area: element.person.area,
+                });
+
+                let ispfn = false;
+                this.tempfulnameList.forEach(ele6 => {
+                  if (ele6 === element.person.fullname) {
+                    ispfn = true;
+                  }
+                });
+
+                if (ispfn) {
+                } else {
+                  this.tempfulnameList.push(element.person.fullname);
+                }
+
+
+                let isppr = false;
+                this.tempprovinceList.forEach(ele6 => {
+
+                  if (ele6 === element.person.province) {
+                    isppr = true;
+                  }
+                });
+
+                if (isppr) {
+                } else {
+                  this.tempprovinceList.push(element.person.province);
+                }
+
+                let isd = false;
+                this.tempdistrictList.forEach(ele6 => {
+                  if (ele6 === element.person.district) {
+                    isd = true;
+                  }
+                });
+
+                if (isd) {
+                } else {
+                  this.tempdistrictList.push(element.person.district);
+                }
+
+                let isa = false;
+                this.tempareaList.forEach(ele6 => {
+                  if (ele6 === element.person.area) {
+                    isa = true;
+                  }
+                });
+
+                if (isa) {
+                } else {
+                  this.tempareaList.push(element.person.area);
+                }
+
+
+              });
+              //console.log(this.fullnameLists);
+
+            });
+
+            this.tempfulnameList.forEach(ele6 => {
+              this.fullnameLists.push({ label: ele6, value: ele6 });
+            });
+            this.tempprovinceList.forEach(ele6 => {
+              this.provinceLists.push({ label: ele6, value: ele6 });
+            });
+            this.tempdistrictList.forEach(ele6 => {
+              this.districtLists.push({ label: ele6, value: ele6 });
+            });
+            this.tempareaList.forEach(ele6 => {
+              this.areaLists.push({ label: ele6, value: ele6 });
+            });
+
+            //   this.districtLists = this.districtLists.filter(function (x, i, a) {
+            //     return a.indexOf(x) === i;
+            //   });
+            //   this.areaLists = this.areaLists.filter(function (x, i, a) {
+            //     return a.indexOf(x) === i;
+            //   });
+
+          });
+        }
+      });
+      // this.dataDyBestUserHistory.labels = ['Basra', 'Muthanna', 'Najaf', 'Babylon', 'Baghdad'];
+      // this.dataDyBestUserHistory.series = [
+      // [82, 98, 100, 125, 200],
+      //   [15, 24, 43, 37, 65, 80, 77, 82, 98, 100, 125, 200],
+      //     [13, 22, 49, 22, 4, 6, 24, 46, 57, 148, 22, 4],
+      // ];
+      // this.showGenDyBestReport = true;
+      setTimeout(() => {
+        this.showGenDyBestReport = true;
+      }, 500);
+    } else {
+      this.showGenDyBestReport = false;
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select Field' });
+    }
+
   }
+
   genrateReportForDyCompare() {
-     this.dataDyCompareUserHistory.series = [
-             [15, 54, 43, 107, 65, 127, 87, 62, 98, 100, 125, 200],
-             [13, 22, 52, 62, 104, 76, 54, 96, 107, 148, 180, 190],
-           ];
-   this.showGenDyCompareReport = true;
+    // if (this.fieldValueModelList.length < 2) {
+    //   this.msgs = [];
+    //   this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select 2 FieldValues to Compare' });
+    // }
+    if (this.fieldDyCompareReport.labelname !== '' && this.fieldValueModelList.length > 0) {
+      // this.userHistoryDySearch.searchvalue.push(this.fieldValueModel);
+      this.userHistoryDySearch.searchvalue = this.fieldValueModelList;
+      let labelsArr: string[] = [];
+      let seriesArrA: number[] = [];
+      let seriesArrB: number[] = [];
+      console.log(this.userHistoryDySearch);
+      this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+        console.log(data);
+        if (data) {
+          // data.forEach(ele => {
+          //   if (ele._id !== null && ele._id !== '') {
+          //     labelsArr.push(ele._id);
+          //     seriesArrA.push(ele.count);
+          //   }
+          // });
+
+          this.selectMonthYearArray.forEach(ele => {
+            //labelsArr.push(ele.month);
+            let countUser = 0;
+            let countUser2 = 0;
+            if (data[0] !== undefined) {
+              data[0].forEach(ele1 => {
+                if (ele.year === ele1._id.year) {
+                  if (ele.monthNo === ele1._id.month) {
+                    countUser = ele1.count;
+                  }
+                }
+              });
+            }
+            if (data[1] !== undefined) {
+              data[1].forEach(ele1 => {
+                if (ele.year === ele1._id.year) {
+                  if (ele.monthNo === ele1._id.month) {
+                    countUser2 = ele1.count;
+                  }
+                }
+              });
+            }
+            seriesArrA.push(countUser);
+            seriesArrB.push(countUser2);
+          });
+          // this.dataDyCompareUserHistory.labels = labelsArr;
+          this.dataDyCompareUserHistory.series = [seriesArrA, seriesArrB];
+
+          console.log(this.dataDyCompareUserHistory);
+        }
+      });
+
+      this._ReportService.GetUserCountsHistoryDyCompareGrid(this.userHistoryDySearch).subscribe(data1 => {
+        this.adminlist = [];
+        this.provinceLists = [];
+        this.districtLists = [];
+        this.areaLists = [];
+        console.log(data1);
+        data1.forEach(element1 => {
+          element1.forEach(element => {
+            this.adminlist.push({
+              fullname: element.person.fullname,
+              province: element.person.province,
+              district: element.person.district,
+              area: element.person.area,
+            });
+
+            let ispfn = false;
+            this.tempfulnameList.forEach(ele6 => {
+              if (ele6 === element.person.fullname) {
+                ispfn = true;
+              }
+            });
+
+            if (ispfn) {
+            } else {
+              this.tempfulnameList.push(element.person.fullname);
+            }
+
+
+            let isppr = false;
+            this.tempprovinceList.forEach(ele6 => {
+
+              if (ele6 === element.person.province) {
+                isppr = true;
+              }
+            });
+
+            if (isppr) {
+            } else {
+              this.tempprovinceList.push(element.person.province);
+            }
+
+            let isd = false;
+            this.tempdistrictList.forEach(ele6 => {
+              if (ele6 === element.person.district) {
+                isd = true;
+              }
+            });
+
+            if (isd) {
+            } else {
+              this.tempdistrictList.push(element.person.district);
+            }
+
+            let isa = false;
+            this.tempareaList.forEach(ele6 => {
+              if (ele6 === element.person.area) {
+                isa = true;
+              }
+            });
+
+            if (isa) {
+            } else {
+              this.tempareaList.push(element.person.area);
+            }
+
+
+          });
+          //console.log(this.fullnameLists);
+
+        });
+
+        this.tempfulnameList.forEach(ele6 => {
+          this.fullnameLists.push({ label: ele6, value: ele6 });
+        });
+        this.tempprovinceList.forEach(ele6 => {
+          this.provinceLists.push({ label: ele6, value: ele6 });
+        });
+        this.tempdistrictList.forEach(ele6 => {
+          this.districtLists.push({ label: ele6, value: ele6 });
+        });
+        this.tempareaList.forEach(ele6 => {
+          this.areaLists.push({ label: ele6, value: ele6 });
+        });
+
+        //   this.districtLists = this.districtLists.filter(function (x, i, a) {
+        //     return a.indexOf(x) === i;
+        //   });
+        //   this.areaLists = this.areaLists.filter(function (x, i, a) {
+        //     return a.indexOf(x) === i;
+        //   });
+
+      });
+
+
+      setTimeout(() => {
+        this.showGenDyCompareReport = true;
+      }, 500);
+    } else {
+      this.showGenDyCompareReport = false;
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select Field & FieldValue' });
+    }
+
+    // this.dataDyCompareUserHistory.series = [
+    //   [15, 54, 43, 107, 65, 127, 87, 62, 98, 100, 125, 200],
+    //   [13, 22, 52, 62, 104, 76, 54, 96, 107, 148, 180, 190],
+    // ];
+    // this.showGenDyCompareReport = true;
   }
 
   genrateReportForCompare() {
     if (this.compareTwo === 'Province') {
       if (this.firstProvince !== '' && this.secondProvince !== '') {
 
-         let labelsArr: string[] = [];
+        let labelsArr: string[] = [];
         let seriesArrA: number[] = [];
         let seriesArrB: number[] = [];
         let seriesArrC: number[] = [];
@@ -395,22 +985,22 @@ export class ChartistJsComponent {
         let settingCountA: number = 0;
         let settingCountB: number = 0;
 
-         this._Settings.GetAllSetting().subscribe(data1 => {
-              if (data1 !== null) {
-                if (data1.noOfUserInProvince !== null) {
-                  this.provinceCountSettingsList = data1.noOfUserInProvince;
+        this._Settings.GetAllSetting().subscribe(data1 => {
+          if (data1 !== null) {
+            if (data1.noOfUserInProvince !== null) {
+              this.provinceCountSettingsList = data1.noOfUserInProvince;
 
-                  this.provinceCountSettingsList.forEach(ele3 => {
-                            if (ele3.province === this.firstProvince) {
-                                  settingCountA = ele3.count;
-                            }
-                            if (ele3.province === this.secondProvince) {
-                                  settingCountB = ele3.count;
-                            }
-                  });
+              this.provinceCountSettingsList.forEach(ele3 => {
+                if (ele3.province === this.firstProvince) {
+                  settingCountA = ele3.count;
                 }
-              }
-            });
+                if (ele3.province === this.secondProvince) {
+                  settingCountB = ele3.count;
+                }
+              });
+            }
+          }
+        });
 
         this._ReportService.GetUserCountsHistoryProvince(this.firstProvince).subscribe(data => {
           if (data !== null) {
@@ -430,9 +1020,9 @@ export class ChartistJsComponent {
               seriesArrA.push(countUser);
               seriesArrC.push(settingCountA);
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrA);
-           // console.log(seriesArrC);
+            // console.log(labelsArr);
+            // console.log(seriesArrA);
+            // console.log(seriesArrC);
           }
 
         });
@@ -455,14 +1045,14 @@ export class ChartistJsComponent {
               seriesArrB.push(countUser);
               seriesArrD.push(settingCountB);
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrB);
-           // console.log(seriesArrD);
+            // console.log(labelsArr);
+            // console.log(seriesArrB);
+            // console.log(seriesArrD);
           }
 
         });
 
-         this._ReportService.GetUserPointsHistoryProvince(this.firstProvince).subscribe(data => {
+        this._ReportService.GetUserPointsHistoryProvince(this.firstProvince).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataA = data;
             // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
@@ -479,12 +1069,12 @@ export class ChartistJsComponent {
               });
               seriesArrAP.push(countPoint);
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrAP);
+            // console.log(labelsArr);
+            // console.log(seriesArrAP);
           }
 
         });
-         this._ReportService.GetUserPointsHistoryProvince(this.secondProvince).subscribe(data => {
+        this._ReportService.GetUserPointsHistoryProvince(this.secondProvince).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataB = data;
             // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
@@ -500,10 +1090,10 @@ export class ChartistJsComponent {
                 }
               });
               seriesArrBP.push(countPoint);
-             
+
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrBP);
+            // console.log(labelsArr);
+            // console.log(seriesArrBP);
           }
 
         });
@@ -519,11 +1109,11 @@ export class ChartistJsComponent {
         // this.dataComparePointHistory.labels = [];
         //this.dataComparePointHistory.series = [];
         // this.dataComparePointHistory.labels = labelsArr;
-         this.dataComparePointHistory.series = [seriesArrAP];
+        this.dataComparePointHistory.series = [seriesArrAP];
         // this.dataComparePointHistory.series[0] = seriesArrA;
         this.dataComparePointHistory.series.push(seriesArrBP);
 
-        
+
 
         // this.dataCompareUserHistory = {
         //   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -538,7 +1128,7 @@ export class ChartistJsComponent {
         //  this.dataCompareUserHistory.labels = [];
         // this.dataCompareUserHistory.series = [];
         //  this.dataCompareUserHistory.labels = labelsArr;
-         this.dataCompareUserHistory.series = [seriesArrA];
+        this.dataCompareUserHistory.series = [seriesArrA];
         // this.dataCompareUserHistory.series[0] = seriesArrA;
         this.dataCompareUserHistory.series.push(seriesArrB);
 
@@ -555,36 +1145,27 @@ export class ChartistJsComponent {
         // this.dataCompareResultHistory.labels = [];
         //this.dataCompareResultHistory.series = [];
         // this.dataCompareResultHistory.labels = labelsArr;
-         this.dataCompareResultHistory.series = [seriesArrA];
+        this.dataCompareResultHistory.series = [seriesArrA];
         // this.dataCompareResultHistory.series[0] = seriesArrA;
         this.dataCompareResultHistory.series.push(seriesArrB);
         this.dataCompareResultHistory.series.push(seriesArrC);
         this.dataCompareResultHistory.series.push(seriesArrD);
 
-        // setTimeout(() => {
-        //     // if (document.getElementById('row_' + this._topAdminlist[0]['custom_id'])) {
-        //     //   document.getElementById('row_' + this._topAdminlist[0]['custom_id']).click();
-        //     // }
-        //      let mychart = $('#LineChart .ct-chart');
-        //      mychart.update(); 
-        //      //mychart.get(0).__chartist__.update(this.dataCompareResultHistory);  
-        //   }, 2000);
-        
         setTimeout(() => {
           this.showGenCompareReport = true;
-          }, 500);
-        
-      } else { 
+        }, 500);
+
+      } else {
         this.showGenCompareReport = false;
         //alert('please select Province to Compare');
         this.msgs = [];
         this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select Province to Compare' });
       }
-       
+
     } else if (this.compareTwo === 'District') {
       if (this.firstDistrict !== '' && this.secondDistrict !== '') {
 
-          let labelsArr: string[] = [];
+        let labelsArr: string[] = [];
         let seriesArrA: number[] = [];
         let seriesArrB: number[] = [];
         let seriesArrC: number[] = [];
@@ -594,22 +1175,22 @@ export class ChartistJsComponent {
         let settingCountA: number = 0;
         let settingCountB: number = 0;
 
-         this._Settings.GetAllSetting().subscribe(data1 => {
-              if (data1 !== null) {
-                if (data1.noOfUserInProvince !== null) {
-                  this.districtCountSettingsList = data1.noOfUserInDistrict;
+        this._Settings.GetAllSetting().subscribe(data1 => {
+          if (data1 !== null) {
+            if (data1.noOfUserInProvince !== null) {
+              this.districtCountSettingsList = data1.noOfUserInDistrict;
 
-                  this.districtCountSettingsList.forEach(ele3 => {
-                            if (ele3.district === this.firstDistrict) {
-                                  settingCountA = ele3.count;
-                            }
-                            if (ele3.district === this.secondDistrict) {
-                                  settingCountB = ele3.count;
-                            }
-                  });
+              this.districtCountSettingsList.forEach(ele3 => {
+                if (ele3.district === this.firstDistrict) {
+                  settingCountA = ele3.count;
                 }
-              }
-            });
+                if (ele3.district === this.secondDistrict) {
+                  settingCountB = ele3.count;
+                }
+              });
+            }
+          }
+        });
 
         this._ReportService.GetUserCountsHistoryDistrict(this.firstDistrict).subscribe(data => {
           if (data !== null) {
@@ -629,8 +1210,8 @@ export class ChartistJsComponent {
               seriesArrA.push(countUser);
               seriesArrC.push(settingCountA);
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrA);
+            // console.log(labelsArr);
+            // console.log(seriesArrA);
           }
 
         });
@@ -653,13 +1234,13 @@ export class ChartistJsComponent {
               seriesArrB.push(countUser);
               seriesArrD.push(settingCountB);
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrB);
+            // console.log(labelsArr);
+            // console.log(seriesArrB);
           }
 
         });
 
-         this._ReportService.GetUserPointsHistoryDistrict(this.firstDistrict).subscribe(data => {
+        this._ReportService.GetUserPointsHistoryDistrict(this.firstDistrict).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataA = data;
             // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
@@ -676,12 +1257,12 @@ export class ChartistJsComponent {
               });
               seriesArrAP.push(countPoint);
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrAP);
+            // console.log(labelsArr);
+            // console.log(seriesArrAP);
           }
 
         });
-         this._ReportService.GetUserPointsHistoryDistrict(this.secondDistrict).subscribe(data => {
+        this._ReportService.GetUserPointsHistoryDistrict(this.secondDistrict).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataB = data;
             // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
@@ -697,15 +1278,15 @@ export class ChartistJsComponent {
                 }
               });
               seriesArrBP.push(countPoint);
-             
+
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrBP);
+            // console.log(labelsArr);
+            // console.log(seriesArrBP);
           }
 
         });
 
-        
+
         // this.dataComparePointHistory = {
         //   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         //   series: [
@@ -717,7 +1298,7 @@ export class ChartistJsComponent {
         // this.dataComparePointHistory.labels = [];
         this.dataComparePointHistory.series = [];
         // this.dataComparePointHistory.labels = labelsArr;
-         this.dataComparePointHistory.series = [seriesArrAP];
+        this.dataComparePointHistory.series = [seriesArrAP];
         // this.dataComparePointHistory.series[0] = seriesArrA;
         this.dataComparePointHistory.series.push(seriesArrBP);
 
@@ -733,7 +1314,7 @@ export class ChartistJsComponent {
         // this.dataCompareUserHistory.labels = [];
         this.dataCompareUserHistory.series = [];
         // this.dataCompareUserHistory.labels = labelsArr;
-         this.dataCompareUserHistory.series = [seriesArrA];
+        this.dataCompareUserHistory.series = [seriesArrA];
         // this.dataCompareUserHistory.series[0] = seriesArrA;
         this.dataCompareUserHistory.series.push(seriesArrB);
         // this.dataCompareResultHistory = {
@@ -745,19 +1326,19 @@ export class ChartistJsComponent {
         //     [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200],
         //   ],
         // };
-          // this.dataCompareResultHistory.labels = [];
+        // this.dataCompareResultHistory.labels = [];
         this.dataCompareResultHistory.series = [];
         // this.dataCompareResultHistory.labels = labelsArr;
-         this.dataCompareResultHistory.series = [seriesArrA];
-         // this.dataCompareResultHistory.series[0] = seriesArrA;
+        this.dataCompareResultHistory.series = [seriesArrA];
+        // this.dataCompareResultHistory.series[0] = seriesArrA;
         this.dataCompareResultHistory.series.push(seriesArrB);
         this.dataCompareResultHistory.series.push(seriesArrC);
         this.dataCompareResultHistory.series.push(seriesArrD);
 
-        
-          setTimeout(() => {
-           this.showGenCompareReport = true;
-          }, 500);
+
+        setTimeout(() => {
+          this.showGenCompareReport = true;
+        }, 500);
       } else {
         this.showGenCompareReport = false;
         //alert('please select District to Compare');
@@ -779,19 +1360,19 @@ export class ChartistJsComponent {
         let seriesArrAP: number[] = [];
         let settingCount: number = 0;
 
-         this._Settings.GetAllSetting().subscribe(data1 => {
-              if (data1 !== null) {
-                if (data1.noOfUserInProvince !== null) {
-                  this.provinceCountSettingsList = data1.noOfUserInProvince;
+        this._Settings.GetAllSetting().subscribe(data1 => {
+          if (data1 !== null) {
+            if (data1.noOfUserInProvince !== null) {
+              this.provinceCountSettingsList = data1.noOfUserInProvince;
 
-                  this.provinceCountSettingsList.forEach(ele3 => {
-                            if (ele3.province === this.selectProvince) {
-                                  settingCount = ele3.count;
-                            }
-                  });
+              this.provinceCountSettingsList.forEach(ele3 => {
+                if (ele3.province === this.selectProvince) {
+                  settingCount = ele3.count;
                 }
-              }
-            });
+              });
+            }
+          }
+        });
 
         this._ReportService.GetUserCountsHistoryProvince(this.selectProvince).subscribe(data => {
           if (data !== null) {
@@ -811,15 +1392,15 @@ export class ChartistJsComponent {
               seriesArrA.push(countUser);
               seriesArrB.push(settingCount);
             });
-            
-           // console.log(labelsArr);
-           // console.log(seriesArrA);
+
+            // console.log(labelsArr);
+            // console.log(seriesArrA);
 
           }
 
         });
 
-         this._ReportService.GetUserPointsHistoryProvince(this.selectProvince).subscribe(data => {
+        this._ReportService.GetUserPointsHistoryProvince(this.selectProvince).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataA = data;
             // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
@@ -836,13 +1417,13 @@ export class ChartistJsComponent {
               });
               seriesArrAP.push(countPoint);
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrAP);
+            // console.log(labelsArr);
+            // console.log(seriesArrAP);
           }
 
         });
 
-        
+
         // this.dataSelectPointHistory = {
         //   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         //   series: [
@@ -850,10 +1431,10 @@ export class ChartistJsComponent {
         //   ],
         // };
 
-         // this.dataSelectPointHistory.labels = [];
+        // this.dataSelectPointHistory.labels = [];
         this.dataSelectPointHistory.series = [];
         // this.dataSelectPointHistory.labels = labelsArr;
-         this.dataSelectPointHistory.series = [seriesArrAP];
+        this.dataSelectPointHistory.series = [seriesArrAP];
         // this.dataSelectPointHistory.series[0] = seriesArrA;
 
         // this.dataSelectUserHistory = {
@@ -883,10 +1464,10 @@ export class ChartistJsComponent {
         this.dataSelectResultHistory.series = [seriesArrA];
         this.dataSelectResultHistory.series.push(seriesArrB);
 
-        
+
         setTimeout(() => {
-           this.showGenSelectReport = true;
-          }, 500);
+          this.showGenSelectReport = true;
+        }, 500);
 
       } else {
         this.showGenSelectReport = false;
@@ -897,26 +1478,26 @@ export class ChartistJsComponent {
 
     } else if (this.selectType === 'District') {
       if (this.selectDistrict !== '') {
-       
+
         let labelsArr: string[] = [];
         let seriesArrA: number[] = [];
         let seriesArrB: number[] = [];
         let seriesArrAP: number[] = [];
         let settingCount: number = 0;
 
-         this._Settings.GetAllSetting().subscribe(data1 => {
-              if (data1 !== null) {
-                if (data1.noOfUserInProvince !== null) {
-                  this.districtCountSettingsList = data1.noOfUserInDistrict;
+        this._Settings.GetAllSetting().subscribe(data1 => {
+          if (data1 !== null) {
+            if (data1.noOfUserInProvince !== null) {
+              this.districtCountSettingsList = data1.noOfUserInDistrict;
 
-                  this.districtCountSettingsList.forEach(ele3 => {
-                            if (ele3.district === this.selectDistrict) {
-                                  settingCount = ele3.count;
-                            }
-                  });
+              this.districtCountSettingsList.forEach(ele3 => {
+                if (ele3.district === this.selectDistrict) {
+                  settingCount = ele3.count;
                 }
-              }
-            });
+              });
+            }
+          }
+        });
 
         this._ReportService.GetUserCountsHistoryDistrict(this.selectDistrict).subscribe(data => {
           if (data !== null) {
@@ -936,15 +1517,15 @@ export class ChartistJsComponent {
               seriesArrA.push(countUser);
               seriesArrB.push(settingCount);
             });
-            
-           // console.log(labelsArr);
-           // console.log(seriesArrA);
+
+            // console.log(labelsArr);
+            // console.log(seriesArrA);
 
           }
 
         });
 
-         this._ReportService.GetUserPointsHistoryDistrict(this.selectDistrict).subscribe(data => {
+        this._ReportService.GetUserPointsHistoryDistrict(this.selectDistrict).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataA = data;
             // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
@@ -961,8 +1542,8 @@ export class ChartistJsComponent {
               });
               seriesArrAP.push(countPoint);
             });
-           // console.log(labelsArr);
-           // console.log(seriesArrAP);
+            // console.log(labelsArr);
+            // console.log(seriesArrAP);
           }
 
         });
@@ -974,10 +1555,10 @@ export class ChartistJsComponent {
         //   ],
         // };
 
-         // this.dataSelectPointHistory.labels = [];
+        // this.dataSelectPointHistory.labels = [];
         this.dataSelectPointHistory.series = [];
         // this.dataSelectPointHistory.labels = labelsArr;
-         this.dataSelectPointHistory.series = [seriesArrAP];
+        this.dataSelectPointHistory.series = [seriesArrAP];
         // this.dataSelectPointHistory.series[0] = seriesArrA;
 
         // this.dataSelectUserHistory = {
@@ -988,7 +1569,7 @@ export class ChartistJsComponent {
         //   ],
         // };
 
-         // this.dataSelectUserHistory.labels = [];
+        // this.dataSelectUserHistory.labels = [];
         this.dataSelectUserHistory.series = [];
         // this.dataSelectUserHistory.labels = labelsArr;
         this.dataSelectUserHistory.series = [seriesArrA];
@@ -1001,16 +1582,16 @@ export class ChartistJsComponent {
         //   ],
         // };
 
-         // this.dataSelectResultHistory.labels = [];
+        // this.dataSelectResultHistory.labels = [];
         this.dataSelectResultHistory.series = [];
         // this.dataSelectResultHistory.labels = labelsArr;
         this.dataSelectResultHistory.series = [seriesArrA];
         this.dataSelectResultHistory.series.push(seriesArrB);
 
-        
-         setTimeout(() => {
-            this.showGenSelectReport = true;
-          }, 500);
+
+        setTimeout(() => {
+          this.showGenSelectReport = true;
+        }, 500);
       } else {
         this.showGenSelectReport = false;
         //alert('please select District to Compare');
@@ -1022,20 +1603,20 @@ export class ChartistJsComponent {
   }
 
   resetAllCharts() {
-     this.dataComparePointHistory = {
-       labels: this.defaultLabelArr,
-      series: [this.defaultseriesArr],
-    };
-     this.dataCompareUserHistory = {
+    this.dataComparePointHistory = {
       labels: this.defaultLabelArr,
       series: [this.defaultseriesArr],
     };
-     this.dataCompareResultHistory = {
+    this.dataCompareUserHistory = {
+      labels: this.defaultLabelArr,
+      series: [this.defaultseriesArr],
+    };
+    this.dataCompareResultHistory = {
       labels: this.defaultLabelArr,
       series: [this.defaultseriesArr],
     };
     this.dataSelectPointHistory = {
-       labels: this.defaultLabelArr,
+      labels: this.defaultLabelArr,
       series: [this.defaultseriesArr],
     };
     this.dataSelectUserHistory = {

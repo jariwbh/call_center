@@ -148,6 +148,36 @@ export class ReportService {
             .get(this.actionUrl + 'reportpoint/district/' + district)
             .map(res => <any>res.json());
     }
+     public GetUserCountsHistoryDyCount = (toAdd: any): Observable<any> => {
+        return this.http
+            .post(this.actionUrl + 'report/countquery' , toAdd)
+            .map(res => <any>res.json());
+    }
+     public GetUserCountsHistoryDyCountGrid = (toAdd: any): Observable<any> => {
+        return this.http
+            .post(this.actionUrl + 'report/countquery/list' , toAdd)
+            .map(res => <any>res.json());
+    }
+     public GetUserCountsHistoryDyBest = (toAdd: any): Observable<any> => {
+        return this.http
+            .post(this.actionUrl + 'report/top5query' , toAdd)
+            .map(res => <any>res.json());
+    }
+     public GetUserCountsHistoryDyBestGrid = (toAdd: any): Observable<any> => {
+        return this.http
+            .post(this.actionUrl + 'report/top5query/list' , toAdd)
+            .map(res => <any>res.json());
+    }
+     public GetUserCountsHistoryDyCompare = (toAdd: any): Observable<any> => {
+        return this.http
+            .post(this.actionUrl + 'report/countquery' , toAdd)
+            .map(res => <any>res.json());
+    }
+     public GetUserCountsHistoryDyCompareGrid = (toAdd: any): Observable<any> => {
+        return this.http
+            .post(this.actionUrl + 'report/countquery/list' , toAdd)
+            .map(res => <any>res.json());
+    }
     // public GetById = (id: number): Observable<any> => {
     //    return this.http
     //        .get(this.actionUrl + 'ManagePeople/GetPeopleById/' + id)
