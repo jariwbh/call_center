@@ -18,6 +18,7 @@ import { SelectItem } from 'primeng/primeng';
 })
 
 export class ChartistJsComponent {
+  chartType: string = 'Bar';
   comparePointHistoryDataB: any;
   comparePointHistoryDataA: any;
   districtCountSettingsList: any;
@@ -125,6 +126,7 @@ export class ChartistJsComponent {
     private _Settings: SettingsService,
     private _fieldsService: FieldsService,
   ) {
+    this.chartType = 'Bar';
     this.defaultLabelArr = _ReportService.defaultLabelArr;
     this.defaultseriesArr = _ReportService.defaultseriesArr;
     this.selectMonthYearArray = _ReportService.selectMonthYearArray;
@@ -173,6 +175,7 @@ export class ChartistJsComponent {
   }
 
   ngOnInit() {
+    this.chartType = 'Bar';
     this.data = this._chartistJsService.getAll();
     this.getAllProvince();
     this.getAllDistrict();
@@ -259,7 +262,7 @@ export class ChartistJsComponent {
   }
 
   switchDyView(view: string) {
-
+     this.chartType = 'Bar';
     // this.selectType = '';
     // this.compareTwo = '';
     // this.firstProvince = '';
@@ -468,7 +471,7 @@ export class ChartistJsComponent {
     if (this.fieldValueModelList.length === 5) {
       this.disablemultiSelect = true;
       this.msgs = [];
-      this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select only 2 Field Value' });
+      this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select only 5 Field Value' });
     }
     this.showGenDyCompareReport = false;
     this.fieldValueDyCompareReport = selectedField;
@@ -580,6 +583,10 @@ export class ChartistJsComponent {
     this.showGenDyCountReport = false;
     this.showGenDyBestReport = false;
     this.showGenDyCompareReport = false;
+  }
+
+  onChangeChartType(chType) {
+   this.chartType = chType;
   }
 
   genrateReportForDyCount() {
@@ -1093,7 +1100,7 @@ export class ChartistJsComponent {
         this.userHistoryDySearch.searchvalue = [];
          this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[3]];
         this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
-          console.log(data);
+          // console.log(data);
           if (data) {
             
             this.selectMonthYearArray.forEach(ele => {
@@ -1150,7 +1157,7 @@ export class ChartistJsComponent {
       }
       
       this.userHistoryDySearch.searchvalue = this.fieldValueModelList;
-      
+
       this._ReportService.GetUserCountsHistoryDyCompareGrid(this.userHistoryDySearch).subscribe(data1 => {
         this.adminlist = [];
         this.provinceLists = [];
