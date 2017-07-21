@@ -35,9 +35,11 @@ export class ChartistJsComponent {
   selectDistrict: string = '';
   xAxisField: string = '';
   xAxisFieldValue: string = '';
-  fieldDyCountReport: any = {};
+  // fieldDyCountReport: any = {};
+  fieldDyCountReport: any = '';
   fieldDyBestReport: any = '';
-  fieldDyCompareReport: any = {};
+  // fieldDyCompareReport: any = {};
+  fieldDyCompareReport: any = '';
   fieldValueDyCountReport: any = [];
   fieldValueDyBestReport: any = {};
   fieldValueDyCompareReport: any = [];
@@ -45,6 +47,8 @@ export class ChartistJsComponent {
   fieldValueModelList: string[] = [];
   hasLookupData = false;
   disablemultiSelect = false;
+  tempfieldValueDDList: string[] = [];
+  fieldValueDDList: string[] = [];
 
   showGenCompareReport = false;
   showGenSelectReport = false;
@@ -265,9 +269,11 @@ export class ChartistJsComponent {
     // this.selectProvince = '';
     // this.selectDistrict = '';
 
-    this.fieldDyCountReport = {};
+    // this.fieldDyCountReport = {};
+    this.fieldDyCountReport = '';
     this.fieldDyBestReport = '';
-    this.fieldDyCompareReport = {};
+    // this.fieldDyCompareReport = {};
+    this.fieldDyCompareReport = '';
     this.fieldValueDyCountReport = [];
     this.fieldValueDyBestReport = {};
     this.fieldValueDyCompareReport = [];
@@ -283,7 +289,13 @@ export class ChartistJsComponent {
 
     this.xAxisField = '';
     this.xAxisFieldValue = '';
-
+    
+    this.userHistoryDySearch.province = [];
+    this.userHistoryDySearch.district = [];
+    this.userHistoryDySearch.area = [];
+     this.userHistoryDySearch.province = this._allProvinceLists;
+    this.userHistoryDySearch.district = this._allDistrictLists;
+    this.userHistoryDySearch.area = this._allAreaLists;
     this.userHistoryDySearch.groupby = [];
     this.userHistoryDySearch.searchvalue = [];
 
@@ -343,22 +355,41 @@ export class ChartistJsComponent {
 
     this.showGenDyCountReport = false;
     if (selectedField !== '') {
-      this.fieldDyCountReport = JSON.parse(selectedField);
+      this.fieldDyCountReport = selectedField;
+      // this.fieldDyCountReport = JSON.parse(selectedField);
       // console.log(JSON.parse(selectedField));
-      this.xAxisField = this.fieldDyCountReport.displayname;
-      if (this.fieldDyCountReport.lookupdata !== null) {
-        if (this.fieldDyCountReport.lookupdata.length > 0) {
-          this.hasLookupData = true;
-        } else {
-          this.hasLookupData = false;
+      // this.xAxisField = this.fieldDyCountReport.displayname;
+      this.xAxisField = this.fieldDyCountReport;
+      // if (this.fieldDyCountReport.lookupdata !== null) {
+      //   if (this.fieldDyCountReport.lookupdata.length > 0) {
+      //     this.hasLookupData = true;
+      //   } else {
+      //     this.hasLookupData = false;
+      //   }
+      // } else {
+      //   this.hasLookupData = false;
+      // }
+      // this.userHistoryDySearch.groupby = this.fieldDyCountReport.labelname;
+      this.userHistoryDySearch.groupby = this.fieldDyCountReport;
+      this._ReportService.GetFieldDDValuesDy(selectedField).subscribe(data => {
+        if (data) {
+          this.tempfieldValueDDList = [];
+          this.tempfieldValueDDList = data;
+          this.fieldValueDDList = [];
+          this.tempfieldValueDDList.forEach(ele7 => {
+            if (ele7 !== '') {
+              this.fieldValueDDList.push(ele7);
+            }
+          });
         }
-      } else {
-        this.hasLookupData = false;
-      }
-      this.userHistoryDySearch.groupby = this.fieldDyCountReport.labelname;
+
+      });
+
+    } else {
+      this.fieldDyCountReport = '';
     }
     this.fieldValueModel = '';
-    console.log(this.fieldDyCountReport);
+   // console.log(this.fieldDyCountReport);
   }
 
   onChangeFieldforDyBestReport(selectedField) {
@@ -367,11 +398,11 @@ export class ChartistJsComponent {
 
     this.showGenDyBestReport = false;
     this.fieldDyBestReport = selectedField;
-    console.log(this.fieldDyBestReport);
+    // console.log(this.fieldDyBestReport);
     // console.log(JSON.parse(selectedField));
     this.xAxisField = this.fieldDyBestReport;
     this.userHistoryDySearch.groupby = this.fieldDyBestReport;
-    console.log(this.userHistoryDySearch);
+   // console.log(this.userHistoryDySearch);
   }
   onChangeFieldforDyCompareReport(selectedField) {
     this.userHistoryDySearch.groupby = [];
@@ -380,24 +411,43 @@ export class ChartistJsComponent {
     this.showGenDyCompareReport = false;
     // this.fieldDyCompareReport = selectedField;
     if (selectedField !== '') {
-      this.fieldDyCompareReport = JSON.parse(selectedField);
+      this.fieldDyCompareReport = selectedField;
+      // this.fieldDyCompareReport = JSON.parse(selectedField);
       // console.log(JSON.parse(selectedField));
-      this.xAxisField = this.fieldDyCompareReport.displayname;
-      if (this.fieldDyCompareReport.lookupdata !== null) {
-        if (this.fieldDyCompareReport.lookupdata.length > 0) {
-          this.hasLookupData = true;
-        } else {
-          this.hasLookupData = false;
+      // this.xAxisField = this.fieldDyCompareReport.displayname;
+      this.xAxisField = this.fieldDyCompareReport;
+      // if (this.fieldDyCompareReport.lookupdata !== null) {
+      //   if (this.fieldDyCompareReport.lookupdata.length > 0) {
+      //     this.hasLookupData = true;
+      //   } else {
+      //     this.hasLookupData = false;
+      //   }
+      // } else {
+      //   this.hasLookupData = false;
+      // }
+      // this.userHistoryDySearch.groupby = this.fieldDyCompareReport.labelname;
+      this.userHistoryDySearch.groupby = this.fieldDyCompareReport;
+      this._ReportService.GetFieldDDValuesDy(selectedField).subscribe(data => {
+        if (data) {
+          this.tempfieldValueDDList = [];
+          this.tempfieldValueDDList = data;
+          this.fieldValueDDList = [];
+          this.tempfieldValueDDList.forEach(ele7 => {
+            if (ele7 !== '') {
+              this.fieldValueDDList.push(ele7);
+            }
+          });
         }
-      } else {
-        this.hasLookupData = false;
-      }
-      this.userHistoryDySearch.groupby = this.fieldDyCompareReport.labelname;
+
+      });
+
+    } else {
+      this.fieldDyCompareReport = '';
     }
-    this.fieldValueModel = '';
+    // this.fieldValueModel = '';
     this.fieldValueModelList = [];
     this.disablemultiSelect = false;
-    console.log(this.fieldDyCompareReport);
+    // console.log(this.fieldDyCompareReport);
   }
 
   onChangeFieldValueforDyCountReport(selectedField) {
@@ -415,8 +465,7 @@ export class ChartistJsComponent {
   // }
   onChangeFieldValueforDyCompareReport(selectedField) {
     // console.log(selectedField);
-    console.log(this.fieldValueModelList.length);
-    if (this.fieldValueModelList.length === 2) {
+    if (this.fieldValueModelList.length === 5) {
       this.disablemultiSelect = true;
       this.msgs = [];
       this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select only 2 Field Value' });
@@ -426,11 +475,9 @@ export class ChartistJsComponent {
     // console.log(JSON.parse(selectedField));
     this.xAxisFieldValue = selectedField;
     this.fieldValueModel = selectedField;
-    console.log(selectedField);
-    console.log(this.fieldValueModelList);
   }
   addFieldValue() {
-    if (this.fieldValueModelList.length === 2) {
+    if (this.fieldValueModelList.length === 5) {
       this.msgs = [];
       this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please add only 2 FieldValues to Compare' });
       return;
@@ -454,8 +501,8 @@ export class ChartistJsComponent {
       this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please Add Unique Field Value' });
       this.fieldValueModel = '';
     }
-    console.log(this.fieldValueModel);
-    console.log(this.fieldValueDyCountReport);
+    // console.log(this.fieldValueModel);
+    // console.log(this.fieldValueDyCountReport);
   }
   removeFieldValue(fieldToRemove) {
     this.fieldValueDyCountReport.forEach(element => {
@@ -541,9 +588,9 @@ export class ChartistJsComponent {
       this.userHistoryDySearch.searchvalue.push(this.fieldValueModel);
       let labelsArr: string[] = [];
       let seriesArrA: number[] = [];
-      console.log(this.userHistoryDySearch);
+      // console.log(this.userHistoryDySearch);
       this._ReportService.GetUserCountsHistoryDyCount(this.userHistoryDySearch).subscribe(data => {
-        console.log(data);
+        // console.log(data);
         if (data) {
           // data.forEach(ele => {
           //   if (ele._id !== null && ele._id !== '') {
@@ -553,7 +600,7 @@ export class ChartistJsComponent {
           // });
 
           this.selectMonthYearArray.forEach(ele => {
-            //labelsArr.push(ele.month);
+            // labelsArr.push(ele.month);
             let countUser = 0;
             data[0].forEach(ele1 => {
               if (ele.year === ele1._id.year) {
@@ -566,7 +613,7 @@ export class ChartistJsComponent {
           });
           // this.dataDyCountUserHistory.labels = labelsArr;
           this.dataDyCountUserHistory.series = [seriesArrA];
-          console.log(this.dataDyCountUserHistory);
+          // console.log(this.dataDyCountUserHistory);
         }
       });
 
@@ -575,7 +622,7 @@ export class ChartistJsComponent {
         this.provinceLists = [];
         this.districtLists = [];
         this.areaLists = [];
-        console.log(data1);
+        // console.log(data1);
         data1.forEach(element1 => {
           element1.forEach(element => {
             this.adminlist.push({
@@ -637,7 +684,7 @@ export class ChartistJsComponent {
 
 
           });
-          //console.log(this.fullnameLists);
+          // console.log(this.fullnameLists);
 
         });
 
@@ -653,13 +700,6 @@ export class ChartistJsComponent {
         this.tempareaList.forEach(ele6 => {
           this.areaLists.push({ label: ele6, value: ele6 });
         });
-
-        //   this.districtLists = this.districtLists.filter(function (x, i, a) {
-        //     return a.indexOf(x) === i;
-        //   });
-        //   this.areaLists = this.areaLists.filter(function (x, i, a) {
-        //     return a.indexOf(x) === i;
-        //   });
 
       });
 
@@ -693,14 +733,14 @@ export class ChartistJsComponent {
           this.dataDyBestUserHistory.labels = labelsArr;
           this.dataDyBestUserHistory.series = [seriesArrA];
 
-          //console.log(this.dataDyBestUserHistory);
+          // console.log(this.dataDyBestUserHistory);
           this.userHistoryDySearch.searchvalue = labelsArr;
           this._ReportService.GetUserCountsHistoryDyBestGrid(this.userHistoryDySearch).subscribe(data1 => {
             this.adminlist = [];
             this.provinceLists = [];
             this.districtLists = [];
             this.areaLists = [];
-            //console.log(data1);
+            // console.log(data1);
             data1.forEach(element1 => {
               element1.forEach(element => {
                 this.adminlist.push({
@@ -762,7 +802,7 @@ export class ChartistJsComponent {
 
 
               });
-              //console.log(this.fullnameLists);
+              // console.log(this.fullnameLists);
 
             });
 
@@ -778,13 +818,6 @@ export class ChartistJsComponent {
             this.tempareaList.forEach(ele6 => {
               this.areaLists.push({ label: ele6, value: ele6 });
             });
-
-            //   this.districtLists = this.districtLists.filter(function (x, i, a) {
-            //     return a.indexOf(x) === i;
-            //   });
-            //   this.areaLists = this.areaLists.filter(function (x, i, a) {
-            //     return a.indexOf(x) === i;
-            //   });
 
           });
         }
@@ -810,7 +843,8 @@ export class ChartistJsComponent {
   genrateReportForDyCompare() {
     // if (this.fieldValueModelList.length < 2) {
     //   this.msgs = [];
-    //   this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select 2 FieldValues to Compare' });
+    //   this.msgs.push({ severity: 'warn', 
+    // summary: 'Warn Message', detail: 'please select 2 FieldValues to Compare' });
     // }
     if (this.fieldDyCompareReport.labelname !== '' && this.fieldValueModelList.length > 0) {
       // this.userHistoryDySearch.searchvalue.push(this.fieldValueModel);
@@ -818,55 +852,309 @@ export class ChartistJsComponent {
       let labelsArr: string[] = [];
       let seriesArrA: number[] = [];
       let seriesArrB: number[] = [];
-      console.log(this.userHistoryDySearch);
-      this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
-        console.log(data);
-        if (data) {
-          // data.forEach(ele => {
-          //   if (ele._id !== null && ele._id !== '') {
-          //     labelsArr.push(ele._id);
-          //     seriesArrA.push(ele.count);
-          //   }
-          // });
+      let seriesArrC: number[] = [];
+      let seriesArrD: number[] = [];
+      let seriesArrE: number[] = [];
+      // console.log(this.userHistoryDySearch);
 
-          this.selectMonthYearArray.forEach(ele => {
-            //labelsArr.push(ele.month);
-            let countUser = 0;
-            let countUser2 = 0;
-            if (data[0] !== undefined) {
-              data[0].forEach(ele1 => {
-                if (ele.year === ele1._id.year) {
-                  if (ele.monthNo === ele1._id.month) {
-                    countUser = ele1.count;
-                  }
-                }
-              });
-            }
-            if (data[1] !== undefined) {
-              data[1].forEach(ele1 => {
-                if (ele.year === ele1._id.year) {
-                  if (ele.monthNo === ele1._id.month) {
-                    countUser2 = ele1.count;
-                  }
-                }
-              });
-            }
-            seriesArrA.push(countUser);
-            seriesArrB.push(countUser2);
-          });
-          // this.dataDyCompareUserHistory.labels = labelsArr;
-          this.dataDyCompareUserHistory.series = [seriesArrA, seriesArrB];
+      // this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+      //   console.log(data);
+      //   if (data) {
+      //     // data.forEach(ele => {
+      //     //   if (ele._id !== null && ele._id !== '') {
+      //     //     labelsArr.push(ele._id);
+      //     //     seriesArrA.push(ele.count);
+      //     //   }
+      //     // });
 
-          console.log(this.dataDyCompareUserHistory);
-        }
-      });
+      //     this.selectMonthYearArray.forEach(ele => {
+      //       //labelsArr.push(ele.month);
+      //       let countUser1 = 0;
+      //       let countUser2 = 0;
+      //       let countUser3 = 0;
+      //       let countUser4 = 0;
+      //       let countUser5 = 0;
+      //       if (data[0] !== undefined) {
+      //         data[0].forEach(ele1 => {
+      //           if (ele.year === ele1._id.year) {
+      //             if (ele.monthNo === ele1._id.month) {
+      //               countUser1 = ele1.count;
+      //             }
+      //           }
+      //         });
+      //       }
+      //       if (data[1] !== undefined) {
+      //         data[1].forEach(ele1 => {
+      //           if (ele.year === ele1._id.year) {
+      //             if (ele.monthNo === ele1._id.month) {
+      //               countUser2 = ele1.count;
+      //             }
+      //           }
+      //         });
+      //       }
+      //       if (data[2] !== undefined) {
+      //         data[2].forEach(ele1 => {
+      //           if (ele.year === ele1._id.year) {
+      //             if (ele.monthNo === ele1._id.month) {
+      //               countUser3 = ele1.count;
+      //             }
+      //           }
+      //         });
+      //       }
+      //       if (data[3] !== undefined) {
+      //         data[3].forEach(ele1 => {
+      //           if (ele.year === ele1._id.year) {
+      //             if (ele.monthNo === ele1._id.month) {
+      //               countUser4 = ele1.count;
+      //             }
+      //           }
+      //         });
+      //       }
+      //       if (data[4] !== undefined) {
+      //         data[4].forEach(ele1 => {
+      //           if (ele.year === ele1._id.year) {
+      //             if (ele.monthNo === ele1._id.month) {
+      //               countUser5 = ele1.count;
+      //             }
+      //           }
+      //         });
+      //       }
+      //       seriesArrA.push(countUser1);
+      //       seriesArrB.push(countUser2);
+      //       seriesArrC.push(countUser3);
+      //       seriesArrD.push(countUser4);
+      //       seriesArrE.push(countUser5);
+      //     });
+      //     // this.dataDyCompareUserHistory.labels = labelsArr;
+      //     this.dataDyCompareUserHistory.series = [seriesArrA, seriesArrB];
+      //     if (seriesArrC.length > 0) {
+      //        this.dataDyCompareUserHistory.series.push(seriesArrC);
+      //     }
+      //       if (seriesArrD.length > 0) {
+      //        this.dataDyCompareUserHistory.series.push(seriesArrD);
+      //     }
+      //       if (seriesArrE.length > 0) {
+      //        this.dataDyCompareUserHistory.series.push(seriesArrE);
+      //     }
+
+      //     console.log(this.dataDyCompareUserHistory);
+      //   }
+      // });
+
+      if (this.fieldValueModelList[0] !== undefined) {
+        this.userHistoryDySearch.searchvalue = [];
+         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[0]];
+        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+          // console.log(data);
+          if (data) {
+            // data.forEach(ele => {
+            //   if (ele._id !== null && ele._id !== '') {
+            //     labelsArr.push(ele._id);
+            //     seriesArrA.push(ele.count);
+            //   }
+            // });
+
+            this.selectMonthYearArray.forEach(ele => {
+              //labelsArr.push(ele.month);
+              let countUser1 = 0;
+              // let countUser2 = 0;
+              // let countUser3 = 0;
+              // let countUser4 = 0;
+              // let countUser5 = 0;
+              if (data[0] !== undefined) {
+                data[0].forEach(ele1 => {
+                  if (ele.year === ele1._id.year) {
+                    if (ele.monthNo === ele1._id.month) {
+                      countUser1 = ele1.count;
+                    }
+                  }
+                });
+              }
+              // if (data[1] !== undefined) {
+              //   data[1].forEach(ele1 => {
+              //     if (ele.year === ele1._id.year) {
+              //       if (ele.monthNo === ele1._id.month) {
+              //         countUser2 = ele1.count;
+              //       }
+              //     }
+              //   });
+              // }
+              // if (data[2] !== undefined) {
+              //   data[2].forEach(ele1 => {
+              //     if (ele.year === ele1._id.year) {
+              //       if (ele.monthNo === ele1._id.month) {
+              //         countUser3 = ele1.count;
+              //       }
+              //     }
+              //   });
+              // }
+              // if (data[3] !== undefined) {
+              //   data[3].forEach(ele1 => {
+              //     if (ele.year === ele1._id.year) {
+              //       if (ele.monthNo === ele1._id.month) {
+              //         countUser4 = ele1.count;
+              //       }
+              //     }
+              //   });
+              // }
+              // if (data[4] !== undefined) {
+              //   data[4].forEach(ele1 => {
+              //     if (ele.year === ele1._id.year) {
+              //       if (ele.monthNo === ele1._id.month) {
+              //         countUser5 = ele1.count;
+              //       }
+              //     }
+              //   });
+              // }
+              seriesArrA.push(countUser1);
+              // seriesArrB.push(countUser2);
+              // seriesArrC.push(countUser3);
+              // seriesArrD.push(countUser4);
+              // seriesArrE.push(countUser5);
+            });
+            // this.dataDyCompareUserHistory.labels = labelsArr;
+            this.dataDyCompareUserHistory.series = [seriesArrA];
+           
+            // console.log(this.dataDyCompareUserHistory);
+          }
+        });
+
+      }
+
+      if (this.fieldValueModelList[1] !== undefined) {
+        this.userHistoryDySearch.searchvalue = [];
+         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[1]];
+        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+          // console.log(data);
+          if (data) {
+            // data.forEach(ele => {
+            //   if (ele._id !== null && ele._id !== '') {
+            //     labelsArr.push(ele._id);
+            //     seriesArrA.push(ele.count);
+            //   }
+            // });
+
+            this.selectMonthYearArray.forEach(ele => {
+              //labelsArr.push(ele.month);
+              let countUser1 = 0;
+              if (data[0] !== undefined) {
+                data[0].forEach(ele1 => {
+                  if (ele.year === ele1._id.year) {
+                    if (ele.monthNo === ele1._id.month) {
+                      countUser1 = ele1.count;
+                    }
+                  }
+                });
+              }
+             
+               seriesArrB.push(countUser1);
+             
+            });
+            // this.dataDyCompareUserHistory.labels = labelsArr;
+            this.dataDyCompareUserHistory.series.push(seriesArrB);
+            //console.log(this.dataDyCompareUserHistory);
+          }
+        });
+
+      }
+
+      if (this.fieldValueModelList[2] !== undefined) {
+        this.userHistoryDySearch.searchvalue = [];
+         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[2]];
+        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+          // console.log(data);
+          if (data) {
+           
+            this.selectMonthYearArray.forEach(ele => {
+              //labelsArr.push(ele.month);
+              let countUser1 = 0;
+            
+              if (data[0] !== undefined) {
+                data[0].forEach(ele1 => {
+                  if (ele.year === ele1._id.year) {
+                    if (ele.monthNo === ele1._id.month) {
+                      countUser1 = ele1.count;
+                    }
+                  }
+                });
+              }
+              seriesArrC.push(countUser1);
+             
+            });
+            // this.dataDyCompareUserHistory.labels = labelsArr;
+              this.dataDyCompareUserHistory.series.push(seriesArrC);
+            // console.log(this.dataDyCompareUserHistory);
+          }
+        });
+
+      }
+
+      if (this.fieldValueModelList[3] !== undefined) {
+        this.userHistoryDySearch.searchvalue = [];
+         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[3]];
+        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+          console.log(data);
+          if (data) {
+            
+            this.selectMonthYearArray.forEach(ele => {
+              //labelsArr.push(ele.month);
+              let countUser1 = 0;
+             
+              if (data[0] !== undefined) {
+                data[0].forEach(ele1 => {
+                  if (ele.year === ele1._id.year) {
+                    if (ele.monthNo === ele1._id.month) {
+                      countUser1 = ele1.count;
+                    }
+                  }
+                });
+              }
+            
+               seriesArrD.push(countUser1);
+            });
+              this.dataDyCompareUserHistory.series.push(seriesArrD);
+            // console.log(this.dataDyCompareUserHistory);
+          }
+        });
+
+      }
+
+      if (this.fieldValueModelList[4] !== undefined) {
+        this.userHistoryDySearch.searchvalue = [];
+         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[4]];
+        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+          // console.log(data);
+          if (data) {
+           
+            this.selectMonthYearArray.forEach(ele => {
+              //labelsArr.push(ele.month);
+              let countUser1 = 0;
+              
+              if (data[0] !== undefined) {
+                data[0].forEach(ele1 => {
+                  if (ele.year === ele1._id.year) {
+                    if (ele.monthNo === ele1._id.month) {
+                      countUser1 = ele1.count;
+                    }
+                  }
+                });
+              }
+             
+               seriesArrE.push(countUser1);
+            });
+              this.dataDyCompareUserHistory.series.push(seriesArrE);
+            // console.log(this.dataDyCompareUserHistory);
+          }
+        });
+
+      }
 
       this._ReportService.GetUserCountsHistoryDyCompareGrid(this.userHistoryDySearch).subscribe(data1 => {
         this.adminlist = [];
         this.provinceLists = [];
         this.districtLists = [];
         this.areaLists = [];
-        console.log(data1);
+        // console.log(data1);
         data1.forEach(element1 => {
           element1.forEach(element => {
             this.adminlist.push({
@@ -928,7 +1216,7 @@ export class ChartistJsComponent {
 
 
           });
-          //console.log(this.fullnameLists);
+          // console.log(this.fullnameLists);
 
         });
 
@@ -1020,9 +1308,7 @@ export class ChartistJsComponent {
               seriesArrA.push(countUser);
               seriesArrC.push(settingCountA);
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrA);
-            // console.log(seriesArrC);
+            
           }
 
         });
@@ -1030,10 +1316,9 @@ export class ChartistJsComponent {
         this._ReportService.GetUserCountsHistoryProvince(this.secondProvince).subscribe(data => {
           if (data !== null) {
             this.compareUserHistoryDataB = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+           
             this.selectMonthYearArray.forEach(ele => {
-              //labelsArr.push(ele.month);
+              // labelsArr.push(ele.month);
               let countUser = 0;
               this.compareUserHistoryDataB.forEach(ele1 => {
                 if (ele.year === ele1._id.year) {
@@ -1045,9 +1330,7 @@ export class ChartistJsComponent {
               seriesArrB.push(countUser);
               seriesArrD.push(settingCountB);
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrB);
-            // console.log(seriesArrD);
+           
           }
 
         });
@@ -1055,8 +1338,7 @@ export class ChartistJsComponent {
         this._ReportService.GetUserPointsHistoryProvince(this.firstProvince).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataA = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+           
             this.selectMonthYearArray.forEach(ele => {
               // labelsArr.push(ele.month);
               let countPoint = 0;
@@ -1069,16 +1351,14 @@ export class ChartistJsComponent {
               });
               seriesArrAP.push(countPoint);
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrAP);
+           
           }
 
         });
         this._ReportService.GetUserPointsHistoryProvince(this.secondProvince).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataB = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+           
             this.selectMonthYearArray.forEach(ele => {
               // labelsArr.push(ele.month);
               let countPoint = 0;
@@ -1092,58 +1372,24 @@ export class ChartistJsComponent {
               seriesArrBP.push(countPoint);
 
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrBP);
+           
           }
 
         });
 
-        // this.dataComparePointHistory = {
-        //   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        //   series: [
-        //     [15, 24, 43, 27, 5, 10, 23, 44, 68, 100, 26, 8],
-        //     [13, 22, 49, 22, 4, 6, 24, 46, 57, 148, 22, 4],
-        //   ],
-        // };
-
         // this.dataComparePointHistory.labels = [];
         //this.dataComparePointHistory.series = [];
-        // this.dataComparePointHistory.labels = labelsArr;
+       
         this.dataComparePointHistory.series = [seriesArrAP];
         // this.dataComparePointHistory.series[0] = seriesArrA;
         this.dataComparePointHistory.series.push(seriesArrBP);
 
-
-
-        // this.dataCompareUserHistory = {
-        //   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        //   series: [
-        //     // [20, 30, 60, 70, 80, 90, 100, 120, 125, 130, 133, 140],
-        //     // [13, 25, 30, 50, 64, 70, 80, 90, 95, 105, 120, 135],
-        //     [5, 20, 30, 40, 60, 75, 85, 95, 98, 100, 115, 125],
-        //     [4, 25, 35, 45, 55, 88, 105, 120, 130, 135, 140, 155],
-        //   ],
-        // };
-
-        //  this.dataCompareUserHistory.labels = [];
-        // this.dataCompareUserHistory.series = [];
-        //  this.dataCompareUserHistory.labels = labelsArr;
         this.dataCompareUserHistory.series = [seriesArrA];
         // this.dataCompareUserHistory.series[0] = seriesArrA;
         this.dataCompareUserHistory.series.push(seriesArrB);
 
-        // this.dataCompareResultHistory = {
-        //   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        //   series: [
-        //     [5, 20, 30, 40, 60, 75, 85, 95, 98, 100, 115, 125],
-        //     [4, 25, 35, 45, 55, 88, 105, 120, 130, 135, 140, 155],
-        //     [150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150],
-        //     [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200],
-        //   ],
-        // };
-
         // this.dataCompareResultHistory.labels = [];
-        //this.dataCompareResultHistory.series = [];
+        // this.dataCompareResultHistory.series = [];
         // this.dataCompareResultHistory.labels = labelsArr;
         this.dataCompareResultHistory.series = [seriesArrA];
         // this.dataCompareResultHistory.series[0] = seriesArrA;
@@ -1157,7 +1403,7 @@ export class ChartistJsComponent {
 
       } else {
         this.showGenCompareReport = false;
-        //alert('please select Province to Compare');
+        // alert('please select Province to Compare');
         this.msgs = [];
         this.msgs.push({ severity: 'warn', summary: 'Warn Message', detail: 'please select Province to Compare' });
       }
@@ -1210,8 +1456,7 @@ export class ChartistJsComponent {
               seriesArrA.push(countUser);
               seriesArrC.push(settingCountA);
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrA);
+           
           }
 
         });
@@ -1219,10 +1464,9 @@ export class ChartistJsComponent {
         this._ReportService.GetUserCountsHistoryDistrict(this.secondDistrict).subscribe(data => {
           if (data !== null) {
             this.compareUserHistoryDataB = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+          
             this.selectMonthYearArray.forEach(ele => {
-              //labelsArr.push(ele.month);
+              // labelsArr.push(ele.month);
               let countUser = 0;
               this.compareUserHistoryDataB.forEach(ele1 => {
                 if (ele.year === ele1._id.year) {
@@ -1234,8 +1478,7 @@ export class ChartistJsComponent {
               seriesArrB.push(countUser);
               seriesArrD.push(settingCountB);
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrB);
+           
           }
 
         });
@@ -1243,8 +1486,7 @@ export class ChartistJsComponent {
         this._ReportService.GetUserPointsHistoryDistrict(this.firstDistrict).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataA = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+           
             this.selectMonthYearArray.forEach(ele => {
               // labelsArr.push(ele.month);
               let countPoint = 0;
@@ -1257,16 +1499,14 @@ export class ChartistJsComponent {
               });
               seriesArrAP.push(countPoint);
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrAP);
+          
           }
 
         });
         this._ReportService.GetUserPointsHistoryDistrict(this.secondDistrict).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataB = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+           
             this.selectMonthYearArray.forEach(ele => {
               // labelsArr.push(ele.month);
               let countPoint = 0;
@@ -1280,8 +1520,7 @@ export class ChartistJsComponent {
               seriesArrBP.push(countPoint);
 
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrBP);
+          
           }
 
         });
@@ -1377,8 +1616,7 @@ export class ChartistJsComponent {
         this._ReportService.GetUserCountsHistoryProvince(this.selectProvince).subscribe(data => {
           if (data !== null) {
             this.selectUserHistoryData = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+          
             this.selectMonthYearArray.forEach(ele => {
               labelsArr.push(ele.month);
               let countUser = 0;
@@ -1393,9 +1631,6 @@ export class ChartistJsComponent {
               seriesArrB.push(settingCount);
             });
 
-            // console.log(labelsArr);
-            // console.log(seriesArrA);
-
           }
 
         });
@@ -1403,8 +1638,7 @@ export class ChartistJsComponent {
         this._ReportService.GetUserPointsHistoryProvince(this.selectProvince).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataA = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+          
             this.selectMonthYearArray.forEach(ele => {
               // labelsArr.push(ele.month);
               let countPoint = 0;
@@ -1417,8 +1651,7 @@ export class ChartistJsComponent {
               });
               seriesArrAP.push(countPoint);
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrAP);
+          
           }
 
         });
@@ -1435,8 +1668,7 @@ export class ChartistJsComponent {
         this.dataSelectPointHistory.series = [];
         // this.dataSelectPointHistory.labels = labelsArr;
         this.dataSelectPointHistory.series = [seriesArrAP];
-        // this.dataSelectPointHistory.series[0] = seriesArrA;
-
+       
         // this.dataSelectUserHistory = {
         //   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         //   series: [
@@ -1502,8 +1734,7 @@ export class ChartistJsComponent {
         this._ReportService.GetUserCountsHistoryDistrict(this.selectDistrict).subscribe(data => {
           if (data !== null) {
             this.selectUserHistoryData = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+          
             this.selectMonthYearArray.forEach(ele => {
               labelsArr.push(ele.month);
               let countUser = 0;
@@ -1518,9 +1749,6 @@ export class ChartistJsComponent {
               seriesArrB.push(settingCount);
             });
 
-            // console.log(labelsArr);
-            // console.log(seriesArrA);
-
           }
 
         });
@@ -1528,8 +1756,7 @@ export class ChartistJsComponent {
         this._ReportService.GetUserPointsHistoryDistrict(this.selectDistrict).subscribe(data => {
           if (data !== null) {
             this.comparePointHistoryDataA = data;
-            // let abc: any[] = this._ReportService.loadLastMonthsArray(2017, 4);
-            // console.log(abc);
+        
             this.selectMonthYearArray.forEach(ele => {
               // labelsArr.push(ele.month);
               let countPoint = 0;
@@ -1542,8 +1769,7 @@ export class ChartistJsComponent {
               });
               seriesArrAP.push(countPoint);
             });
-            // console.log(labelsArr);
-            // console.log(seriesArrAP);
+         
           }
 
         });

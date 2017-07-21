@@ -178,6 +178,11 @@ export class ReportService {
             .post(this.actionUrl + 'report/countquery/list' , toAdd)
             .map(res => <any>res.json());
     }
+     public GetFieldDDValuesDy = (toAdd: any): Observable<any> => {
+        return this.http
+            .get(this.actionUrl + 'person/district/'+toAdd)
+            .map(res => <any>res.json());
+    }
     // public GetById = (id: number): Observable<any> => {
     //    return this.http
     //        .get(this.actionUrl + 'ManagePeople/GetPeopleById/' + id)
