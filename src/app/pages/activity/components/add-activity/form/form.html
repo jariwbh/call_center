@@ -235,10 +235,13 @@
                 url="/api/upload/" 
                 accept="image/*"
                 multiple="multiple"
-                (onUpload)="onUploadPhoto($event)" 
+                (onUpload)="onUploadPhoto($event)"
+                (onBeforeUpload)="onBeforeUploadPhotos($event)"
+                (onRemove)="onRemovePhoto($event)"
                 auto="true" 
                 showButtons="false">
               </p-fileUpload>
+                <img *ngIf="uploadProgress" src="assets/img/small_loader.gif" class="img-responsive">
               <input 
                   class="form-control" 
                   type="hidden" 
@@ -248,7 +251,7 @@
               <div *ngFor="let img of _imageLists">    
                 <img
                   class="img-responsive" 
-                  src="{{serverPath}}/{{img.imagevalue}}" 
+                  src="{{img.imagevalue}}" 
                   style="height: 150px; width: 150px">
                 <input type="button" class="btn btn-danger" (click)="removeImage(img.id)" value="Remove">
               </div>

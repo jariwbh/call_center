@@ -79,6 +79,8 @@ _allUsers: any[] = [];
   _selectedUsersLists: any[] = [];
   _selectedUsers: any[] = [];
 
+  uploadProgress: boolean = false;
+
 constructor(
     private fb: FormBuilder,
     private _router: Router,
@@ -373,6 +375,15 @@ constructor(
       }
     }
   }
+
+onBeforeUploadPhotos(event) {
+    this.uploadProgress = true;
+  }
+
+  onRemovePhoto(event) {
+    this.uploadProgress = false;
+  }
+
   onUploadPhoto(event) {
       const url = event.xhr.response;
       let uuid = this.uuid();
@@ -382,6 +393,7 @@ constructor(
       };
       this._imageLists.push(grp);
       this._activityModel.images = this._imageLists;
+      this.uploadProgress = false;
   }
 
   uuid() {

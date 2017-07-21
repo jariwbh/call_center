@@ -37,11 +37,14 @@
                       url="/api/upload/" 
                       accept="image/*"
                       multiple="multiple"
+                      (onBeforeUpload)="onBeforeUploadPhotos($event)"
+                      (onRemove)="onRemovePhoto($event)"
                       (onUpload)="onUploadPhoto($event, fields.labelname)" 
                       auto="true" 
                       showButtons="false"
                       *ngIf="fields.visiblity">
                     </p-fileUpload>
+                    <img *ngIf="uploadProgress" src="assets/img/small_loader.gif" class="img-responsive">
                     <input 
                         class="form-control" 
                         type="hidden" 

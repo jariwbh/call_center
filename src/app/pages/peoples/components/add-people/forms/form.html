@@ -38,16 +38,19 @@
                   </div>
 
                   <div *ngIf="fields.labelname == 'points'">
-                    <span *ngIf="authRole == 'A'">
-                      <label for="exampleInputname1">{{fields.displayname}}</label>
-                      <a style="margin-left: 20px;"> <i class="ion-locked"></i> </a>
-                    </span>  
+                    <div *ngIf="authRole == 'A'">
+                      <span [ngClass]="bindId ? 'hide-cls' : 'show-cls'">
+                        <label for="exampleInputname1">{{fields.displayname}}</label>
+                        <a style="margin-left: 20px;"> <i class="ion-locked"></i> </a>
+                      </span>
+                    </div>  
                   </div>
 
                   <div *ngSwitchCase="'text'">
                       
                       <div *ngIf="fields.labelname == 'points'">
                           <div [ngClass]="authRole == 'A' ? 'show-cls' : 'hide-cls'">
+                            <div [ngClass]="bindId ? 'hide-cls' : 'show-cls'">
                               <div *ngIf="bindId">
                                 <input 
                                   class="form-control" 
@@ -60,9 +63,9 @@
                                   class="form-control" 
                                   type="text" 
                                   [formControlName]="fields.labelname" 
-                                  [(ngModel)]="fields.value" 
-                                  [value]="0">
+                                  [(ngModel)]="fields.value">
                               </div>
+                            </div>
                           </div>
                       </div>
                       <div *ngIf="fields.labelname !== 'points'">
@@ -94,10 +97,13 @@
                       url="/api/upload/" 
                       accept="image/*"
                       multiple="multiple"
+                      (onBeforeUpload)="onBeforeUploadPhotos($event)"
+                      (onRemove)="onRemovePhoto($event)"
                       (onUpload)="onUploadPhoto($event, fields.labelname)" 
                       auto="true" 
                       showButtons="false">
                     </p-fileUpload>
+                    <img *ngIf="uploadProgress" src="assets/img/small_loader.gif" class="img-responsive">
                     <input 
                         class="form-control" 
                         type="hidden" 

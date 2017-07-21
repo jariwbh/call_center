@@ -112,6 +112,8 @@ export class FormComponent {
 
    _serverPath: any;
 
+   uploadProgress: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private _router: Router,
@@ -484,16 +486,16 @@ export class FormComponent {
           } else if (element.fieldtype == 'image') {
             const ispath = <HTMLInputElement> document.getElementById('imagePath_' + element.labelname);
             if (data.admin[element.labelname] != '') {
-              ispath.src = this._configuration.Server + data.admin[element.labelname];
+              ispath.src = data.admin[element.labelname];
             }
             
           }
 
         });
         if (data.admin.role == 'A') {
-          this._usersModel['role'] = true;
+          this._usersModel.role = true;
         } else {
-          this._usersModel['role'] = false;
+          this._usersModel.role = false;
         }
         this._usersModel['email'] = data.admin.email;
         this._usersModel['username'] = data.admin.username;
@@ -693,6 +695,38 @@ export class FormComponent {
                   this.informationVisibilty = false;
                   this.usernamepasswordVisibilty = false;
                   this.accesscontrolVisibilty = true;
+                  setTimeout(() => {
+                      this.selectedcityRights.forEach(element => {
+                          if (element == 'Create a new admin') {
+                            const isChecked = <HTMLInputElement> document.getElementById('acl_0');
+                            isChecked.checked = true;
+                          }
+                          if (element == 'Create a new person') {
+                            const isChecked = <HTMLInputElement> document.getElementById('acl_1');
+                            isChecked.checked = true;
+                          }
+                          if (element == 'Create a new activity') {
+                            const isChecked = <HTMLInputElement> document.getElementById('acl_2');
+                            isChecked.checked = true;
+                          }
+                          if (element == 'View User History') {
+                            const isChecked = <HTMLInputElement> document.getElementById('acl_3');
+                            isChecked.checked = true;
+                          }
+                          if (element == 'View report page') {
+                            const isChecked = <HTMLInputElement> document.getElementById('acl_4');
+                            isChecked.checked = true;
+                          }
+                          if (element == 'View Manage person page') {
+                            const isChecked = <HTMLInputElement> document.getElementById('acl_5');
+                            isChecked.checked = true;
+                          }
+                          if (element == 'View Dashboard page') {
+                            const isChecked = <HTMLInputElement> document.getElementById('acl_6');
+                            isChecked.checked = true;
+                          }
+                        }); 
+                  }, 1000);
               });
             } else {
               this.msgs = [];
@@ -733,7 +767,7 @@ export class FormComponent {
               this.msgs = [];
               this.msgs.push ({ 
                 severity: 'info', summary: 'Insert Message', detail: 'Admin has been Updated Successfully!!!' });
-              this._router.navigate(['/pages/users/manage-user']);
+              this._router.navigate(['/pages/users/manage-user/lists/admin']);
           });
         }
       }
@@ -754,7 +788,7 @@ export class FormComponent {
       this.usernamepasswordVisibilty = true;
       this.accesscontrolVisibilty = false;
     } else if (value === 'controlaccess') {
-      
+      console.log('here');
       if (this._completedStep < 3) {
         this._completedStep = 3;
       }
@@ -762,7 +796,7 @@ export class FormComponent {
       this.usernamepasswordVisibilty = false;
       this.accesscontrolVisibilty = true;
       
-      setTimeout(() => { 
+      setTimeout(() => {
            this.selectedcityRights.forEach(element => {
               if (element == 'Create a new admin') {
                 const isChecked = <HTMLInputElement> document.getElementById('acl_0');
@@ -917,6 +951,14 @@ export class FormComponent {
   //         }
   //       });
   // }
+  
+  onBeforeUploadPhotos(event) {
+    this.uploadProgress = true;
+  }
+
+  onRemovePhoto(event) {
+    this.uploadProgress = false;
+  }
 
   onUploadPhoto(event, val) {
       this.errorImage[val] = false;
@@ -924,7 +966,8 @@ export class FormComponent {
       const isImageValue = <HTMLInputElement> document.getElementById('image_' + val);
       isImageValue.value = url;
       const ispath = <HTMLInputElement> document.getElementById('imagePath_' + val);
-      ispath.src = this._configuration.Server + url;
+      ispath.src = url;
+      this.uploadProgress = false;
   }
 
   removeImage(val) {

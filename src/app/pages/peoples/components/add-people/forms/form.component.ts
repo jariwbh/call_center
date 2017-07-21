@@ -25,6 +25,7 @@ import { Configuration } from '../../../../../app.constants';
 @Component({
   selector: 'nga-add-people-form',
   templateUrl: './form.html',
+  styleUrls: ['./people.scss'],
 })
 
 export class FormComponent {
@@ -80,6 +81,8 @@ export class FormComponent {
 
    location = {};
    emailVisibility = false;
+
+   uploadProgress: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -332,7 +335,7 @@ export class FormComponent {
             if ( document.getElementById('imagePath_' + element.labelname) ) {
               const ispath = <HTMLInputElement> document.getElementById('imagePath_' + element.labelname);
               if (data.person[element.labelname] != '') {
-                ispath.src = this._configuration.Server + data.person[element.labelname];
+                ispath.src = data.person[element.labelname];
               }
             }
           }
@@ -474,7 +477,7 @@ export class FormComponent {
                                 severity: 'info', 
                                 summary: 'Update Message', 
                                 detail: 'People has been Updated Successfully!!!' });
-                              this._router.navigate(['/pages/peoples/manage-people']);
+                              this._router.navigate(['/pages/peoples/manage-people/lists/updated']);
                           });
                         } else {
                           this.msgs = [];
@@ -505,9 +508,8 @@ export class FormComponent {
                         });    
                       }
                     }
-                    
                     if (emailCnt == 0) {
-                        value.points = 0;
+                        //value.points = 0;
                         this._managepeopleService
                           .Add(this.authId, value)
                           .subscribe(
@@ -517,7 +519,7 @@ export class FormComponent {
                               severity: 'info', 
                               summary: 'Insert Message', 
                               detail: 'People has been added Successfully!!!' });
-                            this._router.navigate(['/pages/peoples/manage-people']);
+                            this._router.navigate(['/pages/peoples/manage-people/lists/added']);
                         });
                     } else {
                       this.msgs = [];
@@ -659,13 +661,23 @@ export class FormComponent {
   //         }
   //       });
   // }
+
+  onBeforeUploadPhotos(event) {
+    this.uploadProgress = true;
+  }
+
+  onRemovePhoto(event) {
+    this.uploadProgress = false;
+  }
+
   onUploadPhoto(event, val) {
       this.errorImage[val] = false;
       const url = event.xhr.response;
       const isImageValue = <HTMLInputElement> document.getElementById('image_' + val);
       isImageValue.value = url;
       const ispath = <HTMLInputElement> document.getElementById('imagePath_' + val);
-      ispath.src = this._configuration.Server + url;
+      ispath.src = url;
+      this.uploadProgress = false;
   }
 
   removeImage(val) {

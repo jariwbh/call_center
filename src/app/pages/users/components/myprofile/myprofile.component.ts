@@ -42,6 +42,7 @@ export class MyprofileComponent {
   authId: string;
 
   displayFieldLists: boolean = false;
+  uploadProgress: boolean = false;
 
   constructor(
     private _router: Router,
@@ -74,39 +75,46 @@ export class MyprofileComponent {
           .subscribe(
           data => {
             this.userData = data.admin;
-            
-
             setTimeout(() => {    
               this.fieldLists.forEach(element => {
-                if (element.fieldtype == 'image') {
-                  let isImage = <HTMLInputElement> document.getElementById('image_' + element.labelname);
-                  let isImageDisplay = <HTMLInputElement> document.getElementById('imagePath_' + element.labelname);
-                  if (document.getElementById('image_' + element.labelname)) {
-                    isImage.value = this.userData[element.labelname];
-                  }
-                  if (this.userData[element.labelname] != '') {
-                    if (document.getElementById('imagePath_' + element.labelname)) {
-                      isImageDisplay.src = this._configuration.Server + this.userData[element.labelname];
-                    }
-                    
-                  }
-                }
                 element.value = this.userData[element.labelname];
                 element.visiblity = false;
+                if (element.fieldtype == 'image') {
+                  this.setImage(this.userData[element.labelname], element.labelname);
+                }
               });
+              
               this.onChangeProvince(this.userData['province']);
+
               if (this.fieldLists.length !== 0 ) {
                 this._spinner.hide();
                 this.displayFieldLists = true;
               } else {
                 this.displayFieldLists = false;
-              }      
+              }
+              this._spinner.hide();
             }, 2000);
             
             
         });
   }
   
+  setImage(value, labelname) {
+     setTimeout(() => {
+         let isImage = <HTMLInputElement> document.getElementById('image_' + labelname);
+         let isImageDisplay = <HTMLInputElement> document.getElementById('imagePath_' + labelname);
+
+          if (value !== '') {
+            if (document.getElementById('image_' + labelname)) {
+              isImage.value = value;
+            }
+            if (document.getElementById('imagePath_' + labelname)) {
+              isImageDisplay.src = value;
+            }
+          }
+        
+     }, 1000);
+  }
   getAllProvince() {
     this._fieldsService
           .GetAllProvince()
@@ -162,12 +170,21 @@ export class MyprofileComponent {
         });
   }
 
+  onBeforeUploadPhotos(event) {
+    this.uploadProgress = true;
+  }
+
+  onRemovePhoto(event) {
+    this.uploadProgress = false;
+  }
+
   onUploadPhoto(event, val) {
       const url = event.xhr.response;
       const isImageValue = <HTMLInputElement> document.getElementById('image_' + val);
       isImageValue.value = url;
       const ispath = <HTMLInputElement> document.getElementById('imagePath_' + val);
-      ispath.src = this._configuration.Server + url;
+      ispath.src = url;
+      this.uploadProgress = false;
       this.editSave(val, 'image');
   }
 

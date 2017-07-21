@@ -21,7 +21,7 @@
             </div>
             <div class="form-group" *ngIf="!imageCount">
               <img *ngIf="!_activityDetail.images" src="assets/img/developers/img1.jpg" alt="lorem pixel" class="img-responsive">
-              <img *ngIf="_activityDetail.images" src="{{serverPath}}/{{_activityDetail.images[0]['imagevalue']}}" alt="lorem pixel" class="img-responsive">
+              <img *ngIf="_activityDetail.images" src="{{_activityDetail.images[0]['imagevalue']}}" alt="lorem pixel" class="img-responsive">
             </div>
             <div class="form-group">
               <label for="exampleInputcity">Activity Time</label>
@@ -35,14 +35,14 @@
                 {{_activityDetail.activitytype}}
               </div>
             </div>
-            <!-- <div class="form-group">
+             <div class="form-group">
               <label for="exampleInputcity">Person List</label>
               <div class="font18">
-                <div *ngFor="let person of _activityDetail.personsLists" class="mrb15">
-                   <i class="fa fa-user-circle-o mrr5"></i> {{person.name}}
+                <div *ngFor="let person of _personLists" class="mrb15">
+                   <i class="fa fa-user-circle-o mrr5"></i> {{person}}
                     </div> <br>
               </div>
-            </div> -->
+            </div> 
             <div class="form-group">
               <label for="exampleInputcity">Url</label>
               <div class="font18"> {{_activityDetail.url}} </div>
