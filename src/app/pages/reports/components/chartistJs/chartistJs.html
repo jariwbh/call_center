@@ -688,6 +688,7 @@
                             <option value="Bar">-Select ChartType-</option>
                             <option value="Bar">Bar Chart</option>
                             <option value="Line">Line Chart</option>
+                            <!-- <option value="Pie">Pie Chart</option> -->
                           </select>
                         </div>
                       </div>
@@ -708,6 +709,11 @@
                       [baChartistChartOptions]="data['simpleBarOptions']">
                     </ba-chartist-chart>
                     </div>
+                  <!-- <div *ngIf="chartType == 'Pie'">
+                  <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyBestUserHistory"
+                [baChartistChartOptions]="data['labelsPieOptions']" [baChartistChartResponsive]="getResponsive(5, 40)">
+              </ba-chartist-chart>
+              </div> -->
                   </ba-card>
                   <ba-card title="Person History Grid" baCardClass="with-scroll">
                     <p-dataTable [value]="adminlist" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt class="samarth">
@@ -797,6 +803,7 @@
                             <!-- <option value="Male">Male</option>
                             <option value="Female">Female</option> -->
                           </select>
+                          <span style="color:red;">CTRL + Select multiple</span>
                     </div>
                     <!-- <div class="col-md-3" *ngIf="fieldDyCompareReport.fieldtype == 'list' && hasLookupData">
                          <select multiple id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCompareReport($event.target.value)" [(ngModel)]="fieldValueModelList" [disabled]="disablemultiSelect">
