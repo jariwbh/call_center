@@ -18,6 +18,7 @@ import { SelectItem } from 'primeng/primeng';
 })
 
 export class ChartistJsComponent {
+  showSpinner = false;
   chartType: string = 'Bar';
   comparePointHistoryDataB: any;
   comparePointHistoryDataA: any;
@@ -175,6 +176,7 @@ export class ChartistJsComponent {
   }
 
   ngOnInit() {
+    this.showSpinner = false;
     this.chartType = 'Bar';
     this.data = this._chartistJsService.getAll();
     this.getAllProvince();
@@ -230,7 +232,7 @@ export class ChartistJsComponent {
       });
   }
   switchView(view: string) {
-
+    
     this.selectType = '';
     this.compareTwo = '';
     this.firstProvince = '';
@@ -262,6 +264,7 @@ export class ChartistJsComponent {
   }
 
   switchDyView(view: string) {
+     this.showSpinner = false;
      this.chartType = 'Bar';
     // this.selectType = '';
     // this.compareTwo = '';
@@ -353,6 +356,7 @@ export class ChartistJsComponent {
     this.xAxisFieldValue = selectedField;
   }
   onChangeFieldforDyCountReport(selectedField) {
+     this.showSpinner = false;
     this.userHistoryDySearch.groupby = [];
     this.userHistoryDySearch.searchvalue = [];
 
@@ -396,6 +400,7 @@ export class ChartistJsComponent {
   }
 
   onChangeFieldforDyBestReport(selectedField) {
+     this.showSpinner = false;
     this.userHistoryDySearch.groupby = [];
     this.userHistoryDySearch.searchvalue = [];
 
@@ -408,6 +413,7 @@ export class ChartistJsComponent {
    // console.log(this.userHistoryDySearch);
   }
   onChangeFieldforDyCompareReport(selectedField) {
+     this.showSpinner = false;
     this.userHistoryDySearch.groupby = [];
     this.userHistoryDySearch.searchvalue = [];
 
@@ -454,6 +460,7 @@ export class ChartistJsComponent {
   }
 
   onChangeFieldValueforDyCountReport(selectedField) {
+     this.showSpinner = false;
     this.showGenDyCountReport = false;
     this.fieldValueDyCountReport = selectedField;
     // console.log(JSON.parse(selectedField));
@@ -467,6 +474,7 @@ export class ChartistJsComponent {
   //     this.xAxisFieldValue = selectedField;
   // }
   onChangeFieldValueforDyCompareReport(selectedField) {
+     this.showSpinner = false;
     // console.log(selectedField);
     if (this.fieldValueModelList.length === 5) {
       this.disablemultiSelect = true;
@@ -546,6 +554,7 @@ export class ChartistJsComponent {
   }
 
   onChangeDyProvince(province) {
+     this.showSpinner = false;
     if (province !== '') {
       this.districtListforDD = this.districtList.filter(element => element.province === province);
       this.areaListforDD = this.areaList.filter(element => element.province === province);
@@ -562,6 +571,7 @@ export class ChartistJsComponent {
   }
 
   onChangeDyDistrict(district) {
+     this.showSpinner = false;
     if (district !== '') {
       this.userHistoryDySearch.district = [];
       this.userHistoryDySearch.district.push(district);
@@ -574,6 +584,7 @@ export class ChartistJsComponent {
   }
 
   onChangeDyArea(area) {
+     this.showSpinner = false;
     if (area !== '') {
       this.userHistoryDySearch.area = [];
       this.userHistoryDySearch.area.push(area);
@@ -596,6 +607,7 @@ export class ChartistJsComponent {
       let labelsArr: string[] = [];
       let seriesArrA: number[] = [];
       // console.log(this.userHistoryDySearch);
+      this.showSpinner = true;
       this._ReportService.GetUserCountsHistoryDyCount(this.userHistoryDySearch).subscribe(data => {
         // console.log(data);
         if (data) {
@@ -712,6 +724,7 @@ export class ChartistJsComponent {
 
 
       setTimeout(() => {
+         this.showSpinner = false;
         this.showGenDyCountReport = true;
       }, 500);
     } else {
@@ -728,6 +741,7 @@ export class ChartistJsComponent {
     if (this.fieldDyBestReport !== '') {
       let labelsArr: string[] = [];
       let seriesArrA: number[] = [];
+       this.showSpinner = true;
       this._ReportService.GetUserCountsHistoryDyBest(this.userHistoryDySearch).subscribe(data => {
         // console.log(data);
         if (data) {
@@ -837,6 +851,7 @@ export class ChartistJsComponent {
       // ];
       // this.showGenDyBestReport = true;
       setTimeout(() => {
+         this.showSpinner = false;
         this.showGenDyBestReport = true;
       }, 500);
     } else {
@@ -862,6 +877,7 @@ export class ChartistJsComponent {
       let seriesArrC: number[] = [];
       let seriesArrD: number[] = [];
       let seriesArrE: number[] = [];
+       this.showSpinner = true;
       // console.log(this.userHistoryDySearch);
 
       // this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
@@ -1253,8 +1269,9 @@ export class ChartistJsComponent {
 
 
       setTimeout(() => {
+        this.showSpinner = false;
         this.showGenDyCompareReport = true;
-      }, 500);
+      }, 900);
     } else {
       this.showGenDyCompareReport = false;
       this.msgs = [];
