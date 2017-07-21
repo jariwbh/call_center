@@ -69,9 +69,13 @@ export class UserHistoryComponent {
             this._allAuditLists = data;
             data.forEach(element => {
               element.date = this.updateClock(element.date);
-              let checkValue = this.checkUniquness(element.adminid._id, this._selectedAdmin);
-              if (checkValue == 0) {
-                this._selectedAdmin.push(element.adminid);
+              if (element.adminid) {
+                if (element.adminid._id) {
+                  let checkValue = this.checkUniquness(element.adminid._id, this._selectedAdmin);
+                  if (checkValue == 0) {
+                    this._selectedAdmin.push(element.adminid);
+                  }
+                }
               }
             });
             this._auditLists  = data;

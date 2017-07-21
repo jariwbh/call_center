@@ -38,6 +38,8 @@ export class ManageUserComponent {
 
   _countAdmin: boolean = false;
 
+  successMsg: any;
+
   authId: string;
    constructor(
     private _router: Router,
@@ -60,6 +62,13 @@ export class ManageUserComponent {
   }
 
   ngOnInit() {
+    
+    //get URLid
+    this._route.params.subscribe(
+        (param: any) => {
+            this.successMsg = param['msg'];
+    });
+    
     this.getAllFields('admin');
     this.getAllAdmin();
 
@@ -210,6 +219,21 @@ export class ManageUserComponent {
             this._countAdmin = true;
         } else {
             this._countAdmin = false;
+        }
+        if (this.successMsg == 'points') {
+            this.msgs = [];
+            this.msgs.push({
+                severity: 'success', 
+                summary: 'Success Message', 
+                detail: 'Point has been added Successfully!!',
+            });
+        } else if (this.successMsg == 'admin') {
+            this.msgs = [];
+            this.msgs.push({
+                severity: 'success', 
+                summary: 'Success Message', 
+                detail: 'Admin has been Updated Successfully!!',
+            });
         }
       });
   }

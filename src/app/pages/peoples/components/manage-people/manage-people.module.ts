@@ -14,6 +14,7 @@ import { ManagepeopleService } from '../../../../core/services/people/manage-peo
 import { GrowlModule } from 'primeng/primeng';
 
 import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
+import { PagerService } from '../../../../core/services/common/pager.service';
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
     ManagepeopleService,
     FieldsService,
     ConfirmationService,
+    PagerService,
   ],
 })
 export class ManagePeopleModule {}

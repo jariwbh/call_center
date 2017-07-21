@@ -183,20 +183,19 @@ constructor(
                 });
                 this._pointsModel.points = value.points;
                 this._pointsModel.users = this._selectedUsers;
-                console.log(this._pointsModel);
-                // if (this.authId) {
-                //     this._pointsService
-                //         .AddAdminPoint(this.authId, this._pointsModel)
-                //         .subscribe(data => {
-                //             this.msgs = [];
-                //             this.msgs.push({
-                //                 severity: 'success', 
-                //                 summary: 'Success Message', 
-                //                 detail: 'Point has been added Successfully!!',
-                //             });
-                //             this._router.navigate(['./pages/points/admin']);
-                //         });
-                // }
+                if (this.authId) {
+                    this._pointsService
+                        .AddAdminPoint(this.authId, this._pointsModel)
+                        .subscribe(data => {
+                            this.msgs = [];
+                            this.msgs.push({
+                                severity: 'success', 
+                                summary: 'Success Message', 
+                                detail: 'Point has been added Successfully!!',
+                            });
+                            this._router.navigate(['./pages/users/manage-user/lists/points']);
+                        });
+                }
                 
             }
         }

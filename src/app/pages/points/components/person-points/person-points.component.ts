@@ -197,7 +197,7 @@ constructor(
                                 summary: 'Success Message', 
                                 detail: 'Point has been added Successfully!!',
                             });
-                            this._router.navigate(['./pages/points/person']);
+                            this._router.navigate(['./pages/peoples/manage-people/lists/points']);
                         });
                 }
                 

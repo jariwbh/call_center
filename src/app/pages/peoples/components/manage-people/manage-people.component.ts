@@ -14,6 +14,7 @@ import { Configuration } from '../../../../app.constants';
 import { ConfirmationService } from 'primeng/primeng';
 
 import { AuthService } from '../../../../core/services/common/auth.service';
+import { PagerService } from '../../../../core/services/common/pager.service';
 
 @Component({
   selector: 'nga-manage-people',
@@ -47,6 +48,12 @@ export class ManagePeopleComponent {
   _countPerson: boolean = false;
 
   authId: string;
+  successMsg: any;
+
+  // pager object
+    pager: any = {};
+  // paged items
+    pagedItems: any[];
 
   constructor(
     private _router: Router,
@@ -58,6 +65,7 @@ export class ManagePeopleComponent {
     private _confirmationService: ConfirmationService,
     private _authService: AuthService,
     private _spinner: BaThemeSpinner,
+    private pagerService: PagerService,
   ) {
      _spinner.show();
     this.serverPath = this._configuration.Server;
@@ -83,6 +91,13 @@ export class ManagePeopleComponent {
   }
 
   ngOnInit() {
+
+    //get URLid
+    this._route.params.subscribe(
+        (param: any) => {
+            this.successMsg = param['msg'];
+    });
+
     //this.getAllPeople();
     this.getAllFields('people');
 
@@ -187,6 +202,7 @@ export class ManagePeopleComponent {
         .GetAll()
         .subscribe( data => {
           this.peoplelist = [];
+          this.pagedItems = [];
             data.forEach(element => {
                 if (type == 'province') {
                     if (element.person.province == value) {
@@ -221,6 +237,8 @@ export class ManagePeopleComponent {
             } else {
               this.showPeopleList = true;
             }
+            //initialize to page 1
+              this.setPage(1);
         });
     }
 
@@ -273,6 +291,7 @@ export class ManagePeopleComponent {
       data => {
         if (data) {
           this.peoplelist = [];
+          this.pagedItems = [];
           data.forEach(element => {
             if (element.person) {
               element.person.id = element._id;
@@ -287,6 +306,10 @@ export class ManagePeopleComponent {
             this.showPeopleList = true;
             this._countPerson = false;
           }
+          
+          //initialize to page 1
+          this.setPage(1);
+
           //this.cardViewVisibilty = false;
           if (this._CommonDataService.filterDataBy === 'province' || this._CommonDataService.filterDataBy === 'social') {
             this.cardViewVisibilty = false;
@@ -308,6 +331,7 @@ export class ManagePeopleComponent {
       data => {
         if (data) {
           this.peoplelist = [];
+          this.pagedItems = [];
           data.forEach(element => {
             if (element.person) {
               element.person.id = element._id;
@@ -329,10 +353,47 @@ export class ManagePeopleComponent {
             this.showPeopleList = true;
           }
 
+          //initialize to page 1
+          this.setPage(1);
+
+          if (this.successMsg == 'points') {
+            this.msgs = [];
+            this.msgs.push({
+                severity: 'success', 
+                summary: 'Success Message', 
+                detail: 'Point has been added Successfully!!',
+            });
+          } else if (this.successMsg == 'added') {
+              this.msgs = [];
+              this.msgs.push({
+                  severity: 'success', 
+                  summary: 'Success Message', 
+                  detail: 'Person has been Added Successfully!!',
+              });
+          } else if (this.successMsg == 'updated') {
+              this.msgs = [];
+              this.msgs.push({
+                  severity: 'success', 
+                  summary: 'Success Message', 
+                  detail: 'Person has been Updated Successfully!!',
+              });
+          }
+
         }
         this._spinner.hide();
       });
   }
+
+  setPage(page: number) {
+      if (page < 1 || page > this.pager.totalPages) {
+          return;
+      }
+      // get pager object from service
+      this.pager = this.pagerService.getPager(this.peoplelist.length, page);
+      // get current page of items
+      this.pagedItems = this.peoplelist.slice(this.pager.startIndex, this.pager.endIndex + 1);
+  }
+
   switchView() {
     if (this.cardViewVisibilty) {
       this.cardViewVisibilty = false;
