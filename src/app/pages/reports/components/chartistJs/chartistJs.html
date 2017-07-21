@@ -533,6 +533,9 @@
                 </div>
               </ba-card>
             </div>
+            <div class="col-md-12 text-center" *ngIf="!showGenDyCountReport && showSpinner">
+              <img alt="img" src="assets/img/loadingf.gif" class="thumb-lg img-circle img-width-130">
+            </div>
             <div class="col-md-12" *ngIf="showGenDyCountReport">
               <div class="row">
                 <div class="col-md-12">
@@ -657,6 +660,9 @@
 
                 </div>
               </ba-card>
+            </div>
+            <div class="col-md-12 text-center" *ngIf="!showGenDyBestReport && showSpinner">
+              <img alt="img" src="assets/img/loadingf.gif" class="thumb-lg img-circle img-width-130">
             </div>
             <div class="col-md-12" *ngIf="showGenDyBestReport">
               <div class="row">
@@ -847,6 +853,9 @@
 
                 </div>
               </ba-card>
+            </div>
+            <div class="col-md-12 text-center" *ngIf="!showGenDyCompareReport && showSpinner">
+              <img alt="img" src="assets/img/loadingf.gif" class="thumb-lg img-circle img-width-130">
             </div>
             <div class="col-md-12" *ngIf="showGenDyCompareReport">
               <div class="row">
