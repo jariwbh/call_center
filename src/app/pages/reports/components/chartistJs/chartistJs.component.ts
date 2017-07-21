@@ -1148,7 +1148,9 @@ export class ChartistJsComponent {
         });
 
       }
-
+      
+      this.userHistoryDySearch.searchvalue = this.fieldValueModelList;
+      
       this._ReportService.GetUserCountsHistoryDyCompareGrid(this.userHistoryDySearch).subscribe(data1 => {
         this.adminlist = [];
         this.provinceLists = [];
