@@ -307,6 +307,17 @@ router.route('/dashboard/topadminchart/:adminid')
         });
 });
 
+router.route('/reportperson/count')
+    .get(function(req, res) {   
+        Person.count().exec()
+                .then(function(data){
+                    res.json(data);
+                })
+                .catch(function(err){
+                    res.json(err);
+                });
+});
+
 router.route('/reportperson/province/:province')
     .get(function(req, res) {   
         var province = req.params.province;
