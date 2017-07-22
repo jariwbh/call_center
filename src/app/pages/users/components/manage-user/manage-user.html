@@ -41,6 +41,7 @@
     <div *ngIf="_countAdmin" style="word-break: break-word">
       <p-dataTable
           #dt 
+          [globalFilter]="gb" 
           tableStyleClass="table table-hover"
           [value]="adminlist" 
           exportFilename="peopleinfo" 
@@ -50,6 +51,10 @@
 
         <p-header>
           <div class="ui-helper-clearfix">
+            <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none;float: left">
+                <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                <input #gb type="text" pInputText size="50" placeholder="Global Filter">
+            </div>
             <button 
               class="btn btn-info" 
               type="button" 
@@ -58,7 +63,7 @@
               iconPos="left" 
               label="CSV" 
               (click)="dt.exportCSV()" 
-              style="float:left">
+              style="float:right">
             </button>
           </div>
         </p-header>
