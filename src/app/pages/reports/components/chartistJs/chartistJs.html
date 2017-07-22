@@ -570,7 +570,7 @@
                         <span class="col-sm-4 custom-margin" style="word-wrap: break-word;">{{xAxisFieldValue}}</span>
                         <div class="col-md-3">
                           <select id="chartType" class="form-control" value="Bar" (change)="onChangeChartType($event.target.value)">
-                            <option value="Bar">-Select ChartType-</option>
+                            <option value="All">All</option>
                             <option value="Bar">Bar Chart</option>
                             <option value="Line">Line Chart</option>
                             <option value="Pie">Pie Chart</option>
@@ -584,17 +584,20 @@
                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyCountUserHistory"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
-                    <div *ngIf="chartType == 'Line'">
-                      <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyCountUserHistory"
-                        [baChartistChartOptions]="data['simpleLineOptions']">
-                      </ba-chartist-chart>
-                    </div>
-                    <div *ngIf="chartType == 'Bar'">
+                     <div *ngIf="chartType == 'Bar' || chartTypeAll">
+                      <h5 class="col-md-12 chartHeading">Bar Chart</h5>
                       <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyCountUserHistory"
                         [baChartistChartOptions]="data['simpleBarOptions']">
                       </ba-chartist-chart>
                     </div>
-                    <div *ngIf="chartType == 'Pie'">
+                    <div *ngIf="chartType == 'Line' || chartTypeAll">
+                      <h5 class="col-md-12 chartHeading">Line Chart</h5>
+                      <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyCountUserHistory"
+                        [baChartistChartOptions]="data['simpleLineOptions']">
+                      </ba-chartist-chart>
+                    </div>
+                    <div *ngIf="chartType == 'Pie' || chartTypeAll">
+                      <h5 class="col-md-12 chartHeading">Pie Chart</h5>
                       <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyCountUserHistoryPie"
                         [baChartistChartOptions]="dataDyCountUserHistoryPieOptions">
                       </ba-chartist-chart>
@@ -711,7 +714,7 @@
                         <span class="col-sm-2 custom-margin">{{xAxisFieldValue}}</span> -->
                         <div class="col-md-3">
                           <select id="chartType" class="form-control" value="Bar" (change)="onChangeChartType($event.target.value)">
-                            <option value="Bar">-Select ChartType-</option>
+                            <option value="All">All</option>
                             <option value="Bar">Bar Chart</option>
                             <option value="Line">Line Chart</option>
                              <option value="Pie">Pie Chart</option> 
@@ -719,23 +722,26 @@
                         </div>
                       </div>
                     </div>
-                    <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="data['simpleLineData']"
+                    <!-- *ngIf="chartType == 'Bar'" <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="data['simpleLineData']"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
-                    <div *ngIf="chartType == 'Line'">
-                      <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
-                        [baChartistChartOptions]="data['simpleLineOptions']">
-                      </ba-chartist-chart>
-                    </div>
-                    <div *ngIf="chartType == 'Bar'">
+                     <div *ngIf="chartType == 'Bar' || chartTypeAll">
+                      <h5 class="col-md-12 chartHeading">Bar Chart</h5>
                       <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyBestUserHistory"
                         [baChartistChartOptions]="data['simpleBarOptions']">
                       </ba-chartist-chart>
                     </div>
-                    <div *ngIf="chartType == 'Pie'">
+                    <div *ngIf="chartType == 'Line' || chartTypeAll">
+                      <h5 class="col-md-12 chartHeading">Line Chart</h5>
+                      <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
+                        [baChartistChartOptions]="data['simpleLineOptions']">
+                      </ba-chartist-chart>
+                    </div>
+                    <div *ngIf="chartType == 'Pie' || chartTypeAll">
+                      <h5 class="col-md-12 chartHeading">Pie Chart</h5>
                       <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyBestUserHistoryPie"
                         [baChartistChartOptions]="dataDyBestUserHistoryPieOptions">
                       </ba-chartist-chart>
@@ -789,6 +795,15 @@
                           </p-multiSelect>
                         </ng-template>
                       </p-column>
+                      <div *ngIf="fieldStatus == 1">
+                      <p-column [field]="dynamicLabelNameFields" [filter]="true" filterMatchMode="in">
+                        <ng-template pTemplate="filter" let-col>
+                          <p-multiSelect [options]="dynamicFieldLists" defaultLabel="All {{dynamicLabelNameFields}}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter">
+                          </p-multiSelect>
+                        </ng-template>
+                      </p-column>
+                      </div>
                     </p-dataTable>
                   </ba-card>
                 </div>
@@ -965,7 +980,7 @@
 
                         <div class="col-md-3">
                           <select id="chartType" class="form-control" value="Bar" (change)="onChangeChartType($event.target.value)">
-                            <option value="Bar">-Select ChartType-</option>
+                            <option value="All">All</option>
                             <option value="Bar">Bar Chart</option>
                             <option value="Line">Line Chart</option>
                           </select>
@@ -979,12 +994,14 @@
                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyCompareUserHistory"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
-                    <div *ngIf="chartType == 'Bar'">
+                    <div *ngIf="chartType == 'Bar' || chartTypeAll">
+                      <h5 class="col-md-12 chartHeading">Bar Chart</h5>
                       <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyCompareUserHistory"
                         [baChartistChartOptions]="data['simpleBarOptions']">
                       </ba-chartist-chart>
                     </div>
-                    <div *ngIf="chartType == 'Line'">
+                    <div *ngIf="chartType == 'Line' || chartTypeAll">
+                      <h5 class="col-md-12 chartHeading">Line Chart</h5>
                       <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyCompareUserHistory"
                         [baChartistChartOptions]="data['simpleLineOptions']">
                       </ba-chartist-chart>

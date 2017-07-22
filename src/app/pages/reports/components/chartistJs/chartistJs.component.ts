@@ -20,6 +20,7 @@ import { SelectItem } from 'primeng/primeng';
 export class ChartistJsComponent {
   showSpinner = false;
   chartType: string = 'Bar';
+  chartTypeAll = true;
   comparePointHistoryDataB: any;
   comparePointHistoryDataA: any;
   districtCountSettingsList: any;
@@ -99,12 +100,14 @@ export class ChartistJsComponent {
   tempprovinceList: any[] = [];
   tempdistrictList: any[] = [];
   tempareaList: any[] = [];
+  tempDynamicList: any [] = [];
 
   adminlist: any[] = [];
   fullnameLists: any[] = [];
   provinceLists: any[] = [];
   districtLists: any[] = [];
   areaLists: any[] = [];
+  dynamicFieldLists: any [] = [];
 
   _allProvinceLists: any[] = [];
   _allDistrictLists: any[] = [];
@@ -131,6 +134,9 @@ export class ChartistJsComponent {
     purple: 'rgb(153, 102, 255)',
     grey: 'rgb(231,233,237)',
   };
+
+  dynamicLabelNameFields: any;
+  fieldStatus : number = 0;
 
   constructor(private _chartistJsService: ChartistJsService,
     private _ReportService: ReportService,
@@ -664,7 +670,12 @@ export class ChartistJsComponent {
   }
 
   onChangeChartType(chType) {
-    this.chartType = chType;
+    if (chType === 'All') {
+      this.chartTypeAll = true;
+    } else {
+      this.chartType = chType;
+      this.chartTypeAll = false;
+    }
   }
 
   genrateReportForDyCount() {
@@ -716,22 +727,22 @@ export class ChartistJsComponent {
           // console.log(this.dataDyBestUserHistory);
           data[0].forEach(ele1 => {
               totalResultPersonCount += ele1.count;
-              console.log(ele1.count);
-              console.log(totalResultPersonCount);
+              // console.log(ele1.count);
+              // console.log(totalResultPersonCount);
             });
           this._ReportService.GetTotalPersonCountDy().subscribe(dataY => {
             if (dataY) {
               totalUser = dataY;
-              console.log(totalUser);
+              // console.log(totalUser);
               totalOtherPersonCount = totalUser - totalResultPersonCount;
               seriesArrAPie.push(totalResultPersonCount);
               seriesArrAPie.push(totalOtherPersonCount);
               labelsArrPie.push(this.fieldValueDyCountReport);
               labelsArrPie.push('Other');
 
-              console.log(totalUser);
-              console.log(totalResultPersonCount);
-              console.log(totalOtherPersonCount);
+              // console.log(totalUser);
+              // console.log(totalResultPersonCount);
+              // console.log(totalOtherPersonCount);
               this.dataDyCountUserHistoryPie.labels = [];
               this.dataDyCountUserHistoryPie.series = [];
               this.dataDyCountUserHistoryPie.labels = labelsArrPie;
@@ -744,7 +755,7 @@ export class ChartistJsComponent {
                 labelInterpolationFnc: function (value) {
                   // return value[0];
                   // return value;
-                  return value + ' ' + '[' + Math.round(seriesArrAPie[labelsArrPie.indexOf(value)] / totalUser * 100) + '%' + ']';
+                  return '[' + Math.round(seriesArrAPie[labelsArrPie.indexOf(value)] / totalUser * 100) + '%' + ']' + ' ' +  value ;
                 }
               };
 
@@ -861,6 +872,7 @@ export class ChartistJsComponent {
       let labelsArr: string[] = [];
       let seriesArrA: number[] = [];
       this.showSpinner = true;
+      
       this._ReportService.GetUserCountsHistoryDyBest(this.userHistoryDySearch).subscribe(data => {
         // console.log(data);
         if (data) {
@@ -889,7 +901,7 @@ export class ChartistJsComponent {
             labelInterpolationFnc: function (value) {
               // return value[0];
               // return value;
-              return value + ' ' + '[' + Math.round(seriesArrA[labelsArr.indexOf(value)] / totalUser * 100) + '%' + ']';
+              return '[' + Math.round(seriesArrA[labelsArr.indexOf(value)] / totalUser * 100) + '%' + ']'  + ' ' + value ;
             }
           };
 
@@ -899,15 +911,43 @@ export class ChartistJsComponent {
             this.provinceLists = [];
             this.districtLists = [];
             this.areaLists = [];
+            this.dynamicFieldLists = [];
+            this.fieldStatus = 0;
             // console.log(data1);
             data1.forEach(element1 => {
               element1.forEach(element => {
-                this.adminlist.push({
-                  fullname: element.person.fullname,
-                  province: element.person.province,
-                  district: element.person.district,
-                  area: element.person.area,
-                });
+                
+                
+
+                if ( (this.fieldDyBestReport !== "fullname") || 
+                  (this.fieldDyBestReport !== "province") || 
+                  (this.fieldDyBestReport !== "district") || 
+                  (this.fieldDyBestReport !== "area")) {
+                  this.fieldStatus = 1;
+                }
+
+                this.dynamicLabelNameFields = this.fieldDyBestReport;
+
+                if (this.fieldStatus == 1) {
+                  console.log('if');
+                  this.adminlist.push({
+                    fullname: element.person.fullname,
+                    province: element.person.province,
+                    district: element.person.district,
+                    area: element.person.area,
+                    [this.dynamicLabelNameFields] : element.person[this.dynamicLabelNameFields],
+                  });
+                } else {
+                  console.log('else');
+                  this.adminlist.push({
+                    fullname: element.person.fullname,
+                    province: element.person.province,
+                    district: element.person.district,
+                    area: element.person.area,
+                  });
+                }
+                
+                console.log(this.adminlist);
 
                 let ispfn = false;
                 this.tempfulnameList.forEach(ele6 => {
@@ -959,6 +999,21 @@ export class ChartistJsComponent {
                   this.tempareaList.push(element.person.area);
                 }
 
+                 if (this.fieldStatus == 1) {
+                    let isdynamic = false;
+                    this.tempDynamicList.forEach(ele6 => {
+                      if (ele6 === element.person[this.dynamicLabelNameFields]) {
+                        isdynamic = true;
+                      }
+                    });
+
+                    if (isdynamic) {
+                    } else {
+                      this.tempDynamicList.push(element.person[this.dynamicLabelNameFields]);
+                    }
+                 }
+                
+
 
               });
               // console.log(this.fullnameLists);
@@ -977,6 +1032,13 @@ export class ChartistJsComponent {
             this.tempareaList.forEach(ele6 => {
               this.areaLists.push({ label: ele6, value: ele6 });
             });
+
+            if (this.fieldStatus == 1) {
+              this.tempDynamicList.forEach(ele6 => {
+                this.dynamicFieldLists.push({ label: ele6, value: ele6 });
+              });
+            }
+            
 
           });
         }
