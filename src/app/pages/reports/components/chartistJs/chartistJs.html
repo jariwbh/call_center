@@ -683,6 +683,14 @@
                           <button class="btn btn-block btn-danger btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
                         </div>
                         <span class="col-sm-2 custom-margin">{{xAxisFieldValue}}</span> -->
+                        <div class="col-md-3">
+                          <select id="chartType" class="form-control" value="Bar" (change)="onChangeChartType($event.target.value)">
+                            <option value="Bar">-Select ChartType-</option>
+                            <option value="Bar">Bar Chart</option>
+                            <option value="Line">Line Chart</option>
+                            <!-- <option value="Pie">Pie Chart</option> -->
+                          </select>
+                        </div>
                       </div>
                     </div>
                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="data['simpleLineData']"
@@ -691,9 +699,21 @@
                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
+                    <div *ngIf="chartType == 'Line'">
+                    <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
+                      [baChartistChartOptions]="data['simpleLineOptions']">
+                    </ba-chartist-chart>
+                    </div>
+                    <div *ngIf="chartType == 'Bar'">
                     <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyBestUserHistory"
                       [baChartistChartOptions]="data['simpleBarOptions']">
                     </ba-chartist-chart>
+                    </div>
+                  <!-- <div *ngIf="chartType == 'Pie'">
+                  <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyBestUserHistory"
+                [baChartistChartOptions]="data['labelsPieOptions']" [baChartistChartResponsive]="getResponsive(5, 40)">
+              </ba-chartist-chart>
+              </div> -->
                   </ba-card>
                   <ba-card title="Person History Grid" baCardClass="with-scroll">
                     <p-dataTable [value]="adminlist" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt class="samarth">
@@ -783,6 +803,7 @@
                             <!-- <option value="Male">Male</option>
                             <option value="Female">Female</option> -->
                           </select>
+                          <span style="color:red;">CTRL + Select multiple</span>
                     </div>
                     <!-- <div class="col-md-3" *ngIf="fieldDyCompareReport.fieldtype == 'list' && hasLookupData">
                          <select multiple id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCompareReport($event.target.value)" [(ngModel)]="fieldValueModelList" [disabled]="disablemultiSelect">
