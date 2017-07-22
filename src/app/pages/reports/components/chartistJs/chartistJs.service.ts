@@ -158,7 +158,8 @@ export class ChartistJsService {
       weight: '300px',
       labelDirection: 'explode',
       labelInterpolationFnc: function (value) {
-        return value[0];
+        // return value[0];
+         return value;
       }
     },
     simpleDonutData: {

@@ -424,14 +424,14 @@
       <div class="col-md-12">
         <ba-card title="Scope" baCardClass="with-scroll">
           <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
               <select class="form-control" id="dyprovince" (change)="onChangeDyProvince($event.target.value)">
                     <option value="">--Select Province--</option>
                     <option [value]="p.name" *ngFor="let p of provinceList">{{p.name}}</option>
                     <!--<option value="Baghdad">Baghdad</option>-->
                   </select>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
               <select class="form-control" id="dydistrict" (change)="onChangeDyDistrict($event.target.value)">
                     <option value="">--Select District--</option>
                     <option [value]="p.district" *ngFor="let p of districtListforDD">{{p.district}}</option>
@@ -439,13 +439,30 @@
                     <option value="Sadr">Sadr</option>-->
                   </select>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-2">
               <select class="form-control" id="dyarea" (change)="onChangeDyArea($event.target.value)">
                     <option value="">--Select Area--</option>
                     <option [value]="p.area" *ngFor="let p of areaListforDD">{{p.area}}</option>
                     <!--<option value="Baghdad">Baghdad</option>
                     <option value="Sadr">Sadr</option>-->
                   </select>
+            </div>
+            <div class="col-sm-2">
+              <select id="dynamic" class="form-control" value="" (change)="onChangeDyField($event.target.value)">
+                            <option value="">--- Select Field ---</option>
+                            <option [value]="p.labelname" *ngFor="let p of fieldDyList">{{p.displayname}}</option>
+                            <!-- <option value="Province">Province</option>
+                            <option value="Gender">Gender</option>
+                            <option value="Age">Age</option> -->
+              </select>
+            </div>
+            <div class="col-sm-2">
+              <select id="compare" class="form-control" value="" (change)="onChangeDyFieldValue($event.target.value)">
+                             <option value="">--- Select FieldValue ---</option> 
+                            <option [value]="p" *ngFor="let p of fieldValueDyDDList">{{p}}</option>
+                            <!-- <option value="Male">Male</option>
+                            <option value="Female">Female</option> -->
+              </select>
             </div>
           </div>
         </ba-card>
@@ -559,6 +576,7 @@
                             <option value="Bar">-Select ChartType-</option>
                             <option value="Bar">Bar Chart</option>
                             <option value="Line">Line Chart</option>
+                            <option value="Pie">Pie Chart</option>
                           </select>
                         </div>
                       </div>
@@ -578,6 +596,17 @@
                       <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyCountUserHistory"
                         [baChartistChartOptions]="data['simpleBarOptions']">
                       </ba-chartist-chart>
+                    </div>
+                    <div *ngIf="chartType == 'Pie'">
+                      <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyCountUserHistoryPie"
+                        [baChartistChartOptions]="dataDyCountUserHistoryPieOptions">
+                      </ba-chartist-chart>
+                      <!--<h5 translate>{{'chart.pie_with_labels'}}</h5>
+                             <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar"
+                               baChartistChartType="Pie"
+                               [baChartistChartData]="data['labelsPieData']"
+                               [baChartistChartOptions]="data['labelsPieOptions']">
+                               </ba-chartist-chart>-->
                     </div>
                   </ba-card>
                   <ba-card title="Person History Grid" baCardClass="with-scroll">
@@ -688,7 +717,7 @@
                             <option value="Bar">-Select ChartType-</option>
                             <option value="Bar">Bar Chart</option>
                             <option value="Line">Line Chart</option>
-                            <!-- <option value="Pie">Pie Chart</option> -->
+                             <option value="Pie">Pie Chart</option> 
                           </select>
                         </div>
                       </div>
@@ -700,20 +729,26 @@
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
                     <div *ngIf="chartType == 'Line'">
-                    <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
-                      [baChartistChartOptions]="data['simpleLineOptions']">
-                    </ba-chartist-chart>
+                      <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
+                        [baChartistChartOptions]="data['simpleLineOptions']">
+                      </ba-chartist-chart>
                     </div>
                     <div *ngIf="chartType == 'Bar'">
-                    <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyBestUserHistory"
-                      [baChartistChartOptions]="data['simpleBarOptions']">
-                    </ba-chartist-chart>
+                      <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyBestUserHistory"
+                        [baChartistChartOptions]="data['simpleBarOptions']">
+                      </ba-chartist-chart>
                     </div>
-                  <!-- <div *ngIf="chartType == 'Pie'">
-                  <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyBestUserHistory"
-                [baChartistChartOptions]="data['labelsPieOptions']" [baChartistChartResponsive]="getResponsive(5, 40)">
-              </ba-chartist-chart>
-              </div> -->
+                    <div *ngIf="chartType == 'Pie'">
+                      <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyBestUserHistoryPie"
+                        [baChartistChartOptions]="dataDyBestUserHistoryPieOptions">
+                      </ba-chartist-chart>
+                      <!--<h5 translate>{{'chart.pie_with_labels'}}</h5>
+                             <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar"
+                               baChartistChartType="Pie"
+                               [baChartistChartData]="data['labelsPieData']"
+                               [baChartistChartOptions]="data['labelsPieOptions']">
+                               </ba-chartist-chart>-->
+                    </div>
                   </ba-card>
                   <ba-card title="Person History Grid" baCardClass="with-scroll">
                     <p-dataTable [value]="adminlist" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt class="samarth">
@@ -803,7 +838,7 @@
                             <!-- <option value="Male">Male</option>
                             <option value="Female">Female</option> -->
                           </select>
-                          <span style="color:red;">CTRL + Select multiple</span>
+                      <span style="color:red;">CTRL + Select multiple</span>
                     </div>
                     <!-- <div class="col-md-3" *ngIf="fieldDyCompareReport.fieldtype == 'list' && hasLookupData">
                          <select multiple id="compare" class="form-control" value="" (change)="onChangeFieldValueforDyCompareReport($event.target.value)" [(ngModel)]="fieldValueModelList" [disabled]="disablemultiSelect">

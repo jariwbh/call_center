@@ -183,6 +183,11 @@ export class ReportService {
             .get(this.actionUrl + 'person/district/'+toAdd)
             .map(res => <any>res.json());
     }
+     public GetTotalPersonCountDy = (): Observable<any> => {
+        return this.http
+            .get(this.actionUrl + 'reportperson/count')
+            .map(res => <any>res.json());
+    }
     // public GetById = (id: number): Observable<any> => {
     //    return this.http
     //        .get(this.actionUrl + 'ManagePeople/GetPeopleById/' + id)
