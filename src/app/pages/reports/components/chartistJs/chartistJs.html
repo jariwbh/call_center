@@ -424,29 +424,42 @@
       <div class="col-md-12">
         <ba-card title="Scope" baCardClass="with-scroll">
           <div class="row">
-            <div class="col-sm-3">
+             <div class="col-sm-4">
               <select class="form-control" id="dyprovince" (change)="onChangeDyProvince($event.target.value)">
                     <option value="">--Select Province--</option>
                     <option [value]="p.name" *ngFor="let p of provinceList">{{p.name}}</option>
-                    <!--<option value="Baghdad">Baghdad</option>-->
+                  </select>
+            </div>
+            <div class="col-sm-4">
+              <select class="form-control" id="dydistrict" (change)="onChangeDyDistrict($event.target.value)">
+                    <option value="">--Select District--</option>
+                    <option [value]="p.district" *ngFor="let p of districtListforDD">{{p.district}}</option>
+                  </select>
+            </div>
+            <div class="col-sm-4">
+              <select class="form-control" id="dyarea" (change)="onChangeDyArea($event.target.value)">
+                    <option value="">--Select Area--</option>
+                    <option [value]="p.area" *ngFor="let p of areaListforDD">{{p.area}}</option>
+                  </select>
+            </div>
+            <!-- <div class="col-sm-3">
+              <select class="form-control" id="dyprovince" (change)="onChangeDyProvince($event.target.value)">
+                    <option value="">--Select Province--</option>
+                    <option [value]="p.name" *ngFor="let p of provinceList">{{p.name}}</option>
                   </select>
             </div>
             <div class="col-sm-3">
               <select class="form-control" id="dydistrict" (change)="onChangeDyDistrict($event.target.value)">
                     <option value="">--Select District--</option>
                     <option [value]="p.district" *ngFor="let p of districtListforDD">{{p.district}}</option>
-                    <!--<option value="Baghdad">Baghdad</option>
-                    <option value="Sadr">Sadr</option>-->
                   </select>
             </div>
             <div class="col-sm-2">
               <select class="form-control" id="dyarea" (change)="onChangeDyArea($event.target.value)">
                     <option value="">--Select Area--</option>
                     <option [value]="p.area" *ngFor="let p of areaListforDD">{{p.area}}</option>
-                    <!--<option value="Baghdad">Baghdad</option>
-                    <option value="Sadr">Sadr</option>-->
                   </select>
-            </div>
+            </div> -->
             <!-- <div class="col-sm-2">
               <select id="dynamic" class="form-control" value="" (change)="onChangeDyField($event.target.value)">
                             <option value="">--- Select Field ---</option>
@@ -983,6 +996,7 @@
                             <option value="All">All</option>
                             <option value="Bar">Bar Chart</option>
                             <option value="Line">Line Chart</option>
+                            <option value="Pie">Pie Chart</option>
                           </select>
                         </div>
 
@@ -1005,6 +1019,18 @@
                       <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyCompareUserHistory"
                         [baChartistChartOptions]="data['simpleLineOptions']">
                       </ba-chartist-chart>
+                    </div>
+                    <div *ngIf="chartType == 'Pie' || chartTypeAll">
+                      <h5 class="col-md-12 chartHeading">Pie Chart</h5>
+                      <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyCompareUserHistoryPie"
+                        [baChartistChartOptions]="dataDyCompareUserHistoryPieOptions">
+                      </ba-chartist-chart>
+                      <!--<h5 translate>{{'chart.pie_with_labels'}}</h5>
+                             <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar"
+                               baChartistChartType="Pie"
+                               [baChartistChartData]="data['labelsPieData']"
+                               [baChartistChartOptions]="data['labelsPieOptions']">
+                               </ba-chartist-chart>-->
                     </div>
                   </ba-card>
 

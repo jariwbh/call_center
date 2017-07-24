@@ -124,26 +124,26 @@
       // stroke: $primary;
       stroke: $danger;
     }
-    .ct-slice-pie, .ct-area {
-      fill: $danger;
-    }
+    // .ct-slice-pie, .ct-area {
+    //   fill: $danger;
+    // }
   }
      .ct-series-b {
      .ct-line, .ct-point  {
       stroke: $success;
     }
-    .ct-slice-pie, .ct-area {
-      fill: $success;
-    }
+    // .ct-slice-pie, .ct-area {
+    //   fill: $success;
+    // }
   }
   .ct-series-c {
     .ct-line, .ct-point {
        stroke: $danger;
       //stroke: $primary;
     }
-    .ct-slice-pie, .ct-area {
-      fill: $danger;
-    }
+    // .ct-slice-pie, .ct-area {
+    //   fill: $danger;
+    // }
   }
 
   .ct-series-d {
@@ -151,9 +151,9 @@
       // stroke: $warning;
       stroke: $success;
     }
-    .ct-slice-pie, .ct-area {
-      fill: $success;
-    }
+    // .ct-slice-pie, .ct-area {
+    //   fill: $success;
+    // }
 
   }
   }

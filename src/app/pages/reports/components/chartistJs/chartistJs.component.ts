@@ -100,14 +100,14 @@ export class ChartistJsComponent {
   tempprovinceList: any[] = [];
   tempdistrictList: any[] = [];
   tempareaList: any[] = [];
-  tempDynamicList: any [] = [];
+  tempDynamicList: any[] = [];
 
   adminlist: any[] = [];
   fullnameLists: any[] = [];
   provinceLists: any[] = [];
   districtLists: any[] = [];
   areaLists: any[] = [];
-  dynamicFieldLists: any [] = [];
+  dynamicFieldLists: any[] = [];
 
   _allProvinceLists: any[] = [];
   _allDistrictLists: any[] = [];
@@ -136,7 +136,7 @@ export class ChartistJsComponent {
   };
 
   dynamicLabelNameFields: any;
-  fieldStatus : number = 0;
+  fieldStatus: number = 0;
 
   constructor(private _chartistJsService: ChartistJsService,
     private _ReportService: ReportService,
@@ -726,10 +726,10 @@ export class ChartistJsComponent {
           // console.log(totalUser);
           // console.log(this.dataDyBestUserHistory);
           data[0].forEach(ele1 => {
-              totalResultPersonCount += ele1.count;
-              // console.log(ele1.count);
-              // console.log(totalResultPersonCount);
-            });
+            totalResultPersonCount += ele1.count;
+            // console.log(ele1.count);
+            // console.log(totalResultPersonCount);
+          });
           this._ReportService.GetTotalPersonCountDy().subscribe(dataY => {
             if (dataY) {
               totalUser = dataY;
@@ -755,7 +755,7 @@ export class ChartistJsComponent {
                 labelInterpolationFnc: function (value) {
                   // return value[0];
                   // return value;
-                  return '[' + Math.round(seriesArrAPie[labelsArrPie.indexOf(value)] / totalUser * 100) + '%' + ']' + ' ' +  value ;
+                  return '[' + Math.round(seriesArrAPie[labelsArrPie.indexOf(value)] / totalUser * 100) + '%' + ']' + ' ' + value;
                 }
               };
 
@@ -872,7 +872,7 @@ export class ChartistJsComponent {
       let labelsArr: string[] = [];
       let seriesArrA: number[] = [];
       this.showSpinner = true;
-      
+
       this._ReportService.GetUserCountsHistoryDyBest(this.userHistoryDySearch).subscribe(data => {
         // console.log(data);
         if (data) {
@@ -901,7 +901,7 @@ export class ChartistJsComponent {
             labelInterpolationFnc: function (value) {
               // return value[0];
               // return value;
-              return '[' + Math.round(seriesArrA[labelsArr.indexOf(value)] / totalUser * 100) + '%' + ']'  + ' ' + value ;
+              return '[' + Math.round(seriesArrA[labelsArr.indexOf(value)] / totalUser * 100) + '%' + ']' + ' ' + value;
             }
           };
 
@@ -916,12 +916,12 @@ export class ChartistJsComponent {
             // console.log(data1);
             data1.forEach(element1 => {
               element1.forEach(element => {
-                
-                
 
-                if ( (this.fieldDyBestReport !== "fullname") || 
-                  (this.fieldDyBestReport !== "province") || 
-                  (this.fieldDyBestReport !== "district") || 
+
+
+                if ((this.fieldDyBestReport !== "fullname") ||
+                  (this.fieldDyBestReport !== "province") ||
+                  (this.fieldDyBestReport !== "district") ||
                   (this.fieldDyBestReport !== "area")) {
                   this.fieldStatus = 1;
                 }
@@ -929,16 +929,16 @@ export class ChartistJsComponent {
                 this.dynamicLabelNameFields = this.fieldDyBestReport;
 
                 if (this.fieldStatus == 1) {
-                  console.log('if');
+                 // console.log('if');
                   this.adminlist.push({
                     fullname: element.person.fullname,
                     province: element.person.province,
                     district: element.person.district,
                     area: element.person.area,
-                    [this.dynamicLabelNameFields] : element.person[this.dynamicLabelNameFields],
+                    [this.dynamicLabelNameFields]: element.person[this.dynamicLabelNameFields],
                   });
                 } else {
-                  console.log('else');
+                  // console.log('else');
                   this.adminlist.push({
                     fullname: element.person.fullname,
                     province: element.person.province,
@@ -946,8 +946,8 @@ export class ChartistJsComponent {
                     area: element.person.area,
                   });
                 }
-                
-                console.log(this.adminlist);
+
+                // console.log(this.adminlist);
 
                 let ispfn = false;
                 this.tempfulnameList.forEach(ele6 => {
@@ -999,20 +999,20 @@ export class ChartistJsComponent {
                   this.tempareaList.push(element.person.area);
                 }
 
-                 if (this.fieldStatus == 1) {
-                    let isdynamic = false;
-                    this.tempDynamicList.forEach(ele6 => {
-                      if (ele6 === element.person[this.dynamicLabelNameFields]) {
-                        isdynamic = true;
-                      }
-                    });
-
-                    if (isdynamic) {
-                    } else {
-                      this.tempDynamicList.push(element.person[this.dynamicLabelNameFields]);
+                if (this.fieldStatus == 1) {
+                  let isdynamic = false;
+                  this.tempDynamicList.forEach(ele6 => {
+                    if (ele6 === element.person[this.dynamicLabelNameFields]) {
+                      isdynamic = true;
                     }
-                 }
-                
+                  });
+
+                  if (isdynamic) {
+                  } else {
+                    this.tempDynamicList.push(element.person[this.dynamicLabelNameFields]);
+                  }
+                }
+
 
 
               });
@@ -1038,7 +1038,7 @@ export class ChartistJsComponent {
                 this.dynamicFieldLists.push({ label: ele6, value: ele6 });
               });
             }
-            
+
 
           });
         }
@@ -1053,7 +1053,7 @@ export class ChartistJsComponent {
       setTimeout(() => {
         this.showSpinner = false;
         this.showGenDyBestReport = true;
-      }, 500);
+      }, 900);
     } else {
       this.showGenDyBestReport = false;
       this.msgs = [];
@@ -1070,7 +1070,7 @@ export class ChartistJsComponent {
     // }
     if (this.fieldDyCompareReport.labelname !== '' && this.fieldValueModelList.length > 0) {
       // this.userHistoryDySearch.searchvalue.push(this.fieldValueModel);
-      this.userHistoryDySearch.searchvalue = this.fieldValueModelList;
+     //  this.userHistoryDySearch.searchvalue = this.fieldValueModelList;
       let labelsArr: string[] = [];
       let seriesArrA: number[] = [];
       let seriesArrB: number[] = [];
@@ -1167,6 +1167,11 @@ export class ChartistJsComponent {
       if (this.fieldValueModelList[0] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[0]];
+        // let firstfilterValue: string = '';
+        // firstfilterValue = this.fieldValueModelList[0];
+        // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
+        // firstfilterValue = '';
+        // console.log(this.userHistoryDySearch);
         this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
           // console.log(data);
           if (data) {
@@ -1246,7 +1251,13 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[1] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[1]];
+         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[1]];
+        //  let firstfilterValue: string = '';
+        // firstfilterValue = this.fieldValueModelList[1];
+        // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
+        // firstfilterValue = '';
+
+        // console.log(this.userHistoryDySearch);
         this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
           // console.log(data);
           if (data) {
@@ -1283,7 +1294,12 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[2] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[2]];
+         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[2]];
+        //  let firstfilterValue: string = '';
+        // firstfilterValue = this.fieldValueModelList[2];
+        // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
+        // firstfilterValue = '';
+        // console.log(this.userHistoryDySearch);
         this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
           // console.log(data);
           if (data) {
@@ -1314,7 +1330,12 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[3] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[3]];
+         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[3]];
+        //  let firstfilterValue: string = '';
+        // firstfilterValue = this.fieldValueModelList[3];
+        // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
+        // firstfilterValue = '';
+        // console.log(this.userHistoryDySearch);
         this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
           // console.log(data);
           if (data) {
@@ -1344,7 +1365,12 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[4] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[4]];
+         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[4]];
+        //  let firstfilterValue: string = '';
+        // firstfilterValue = this.fieldValueModelList[4];
+        // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
+        // firstfilterValue = '';
+        // console.log(this.userHistoryDySearch);
         this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
           // console.log(data);
           if (data) {
@@ -1379,6 +1405,19 @@ export class ChartistJsComponent {
         this.provinceLists = [];
         this.districtLists = [];
         this.areaLists = [];
+        let labelsArrPie: string[] = [];
+        let SeriesArrPie: number[] = [];
+        let personCountPie: number = 0;
+        let totalUser: number = 0;
+
+        if (this.fieldValueModelList.length > 0) {
+          this.fieldValueModelList.forEach(ele8 => {
+            labelsArrPie.push(ele8);
+            SeriesArrPie.push(0);
+          });
+        }
+
+        // console.log('gridData');
         // console.log(data1);
         data1.forEach(element1 => {
           element1.forEach(element => {
@@ -1442,7 +1481,21 @@ export class ChartistJsComponent {
 
           });
           // console.log(this.fullnameLists);
+          personCountPie = 0;
+          if (labelsArrPie.length > 0) {
+            labelsArrPie.forEach(elelabel => {
+              if (element1.length > 0) {
 
+                if (element1[0].person[this.fieldDyCompareReport] == elelabel) {
+                  SeriesArrPie[labelsArrPie.indexOf(elelabel)] = element1.length;
+                }
+
+              }
+            });
+          }
+
+          // console.log(labelsArrPie);
+          // console.log(SeriesArrPie);
         });
 
         this.tempfulnameList.forEach(ele6 => {
@@ -1464,6 +1517,22 @@ export class ChartistJsComponent {
         //   this.areaLists = this.areaLists.filter(function (x, i, a) {
         //     return a.indexOf(x) === i;
         //   });
+        // console.log(labelsArrPie);
+         // console.log(SeriesArrPie);
+          totalUser = this.adminlist.length;
+        this.dataDyCompareUserHistoryPie.labels = labelsArrPie;
+        this.dataDyCompareUserHistoryPie.series = SeriesArrPie;
+        this.dataDyCompareUserHistoryPieOptions = {
+          fullWidth: true,
+          height: '300px',
+          weight: '300px',
+          labelDirection: 'explode',
+          labelInterpolationFnc: function (value) {
+            // return value[0];
+            // return value;
+            return '[' + Math.round(SeriesArrPie[labelsArrPie.indexOf(value)] / totalUser * 100) + '%' + ']' + ' ' + value;
+          }
+        };
 
       });
 
