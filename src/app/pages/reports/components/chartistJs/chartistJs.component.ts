@@ -929,7 +929,7 @@ export class ChartistJsComponent {
                 this.dynamicLabelNameFields = this.fieldDyBestReport;
 
                 if (this.fieldStatus == 1) {
-                 // console.log('if');
+                  // console.log('if');
                   this.adminlist.push({
                     fullname: element.person.fullname,
                     province: element.person.province,
@@ -1070,7 +1070,7 @@ export class ChartistJsComponent {
     // }
     if (this.fieldDyCompareReport.labelname !== '' && this.fieldValueModelList.length > 0) {
       // this.userHistoryDySearch.searchvalue.push(this.fieldValueModel);
-     //  this.userHistoryDySearch.searchvalue = this.fieldValueModelList;
+      //  this.userHistoryDySearch.searchvalue = this.fieldValueModelList;
       let labelsArr: string[] = [];
       let seriesArrA: number[] = [];
       let seriesArrB: number[] = [];
@@ -1251,7 +1251,7 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[1] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[1]];
+        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[1]];
         //  let firstfilterValue: string = '';
         // firstfilterValue = this.fieldValueModelList[1];
         // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
@@ -1294,7 +1294,7 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[2] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[2]];
+        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[2]];
         //  let firstfilterValue: string = '';
         // firstfilterValue = this.fieldValueModelList[2];
         // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
@@ -1330,7 +1330,7 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[3] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[3]];
+        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[3]];
         //  let firstfilterValue: string = '';
         // firstfilterValue = this.fieldValueModelList[3];
         // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
@@ -1365,7 +1365,7 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[4] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-         this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[4]];
+        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[4]];
         //  let firstfilterValue: string = '';
         // firstfilterValue = this.fieldValueModelList[4];
         // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
@@ -1397,10 +1397,10 @@ export class ChartistJsComponent {
         });
 
       }
-
-      this.userHistoryDySearch.searchvalue = this.fieldValueModelList;
-
-      this._ReportService.GetUserCountsHistoryDyCompareGrid(this.userHistoryDySearch).subscribe(data1 => {
+      let userHistoryDySearchGrid: any = {};
+      userHistoryDySearchGrid = Object.assign({}, this.userHistoryDySearch);
+      userHistoryDySearchGrid.searchvalue = this.fieldValueModelList;
+      this._ReportService.GetUserCountsHistoryDyCompareGrid(userHistoryDySearchGrid).subscribe(data1 => {
         this.adminlist = [];
         this.provinceLists = [];
         this.districtLists = [];
@@ -1518,8 +1518,8 @@ export class ChartistJsComponent {
         //     return a.indexOf(x) === i;
         //   });
         // console.log(labelsArrPie);
-         // console.log(SeriesArrPie);
-          totalUser = this.adminlist.length;
+        // console.log(SeriesArrPie);
+        totalUser = this.adminlist.length;
         this.dataDyCompareUserHistoryPie.labels = labelsArrPie;
         this.dataDyCompareUserHistoryPie.series = SeriesArrPie;
         this.dataDyCompareUserHistoryPieOptions = {
