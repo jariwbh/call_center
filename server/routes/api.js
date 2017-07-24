@@ -404,6 +404,11 @@ router.route('/report/countquery')
         var fulldata = [];
         var interval=0;
 
+        var extrafield = "person." + req.body.extrafield;
+        var extrafieldvalue = req.body.extrafieldvalue;
+        var matchextraCriteria = {};    
+        matchextraCriteria[extrafield] = extrafieldvalue;
+
         for (var i = 0, len = matchvalue.length; i < len; i++) {
             var matchCriteria = {};    
             matchCriteria[matchfield] = matchvalue[i];
@@ -416,6 +421,7 @@ router.route('/report/countquery')
                             "person.area" : { $in : areas }
                     }},                 
                     { $match : matchCriteria },                 
+                    { $match : matchextraCriteria },                 
                     {                      
                         $group : {
                         _id : { year: { $year : "$createdAt" }, month: { $month : "$createdAt" }},
@@ -448,6 +454,11 @@ router.route('/report/countquery/list')
         var fulldata = [];
         var interval=0;
 
+        var extrafield = "person." + req.body.extrafield;
+        var extrafieldvalue = req.body.extrafieldvalue;
+        var matchextraCriteria = {};    
+        matchextraCriteria[extrafield] = extrafieldvalue;
+
         for (var i = 0, len = matchvalue.length; i < len; i++) {
             var matchCriteria = {};    
             matchCriteria[matchfield] = matchvalue[i];
@@ -459,7 +470,8 @@ router.route('/report/countquery/list')
                             "person.district" : { $in : districts },
                             "person.area" : { $in : areas }
                     }},                 
-                    { $match : matchCriteria }
+                    { $match : matchCriteria },
+                    { $match : matchextraCriteria }
                 ]).exec()
                 .then(function(data){                              
                     fulldata.push(data);
@@ -484,13 +496,19 @@ router.route('/report/top5query')
         var id = "$person." + req.body.groupby;
         var matchfield = "person." + req.body.groupby;
     
+        var extrafield = "person." + req.body.extrafield;
+        var extrafieldvalue = req.body.extrafieldvalue;
+        var matchextraCriteria = {};    
+        matchextraCriteria[extrafield] = extrafieldvalue;
+
         Person.aggregate(
         [     
             { $match : { 
                     "person.province" : { $in : provinces },
                     "person.district" : { $in : districts },
                     "person.area" : { $in : areas }
-            }},                           
+            }},       
+            { $match : matchextraCriteria },                    
             {                      
                 $group : {
                 _id : id,
@@ -520,6 +538,11 @@ router.route('/report/top5query/list')
         var fulldata = [];
         var interval=0;
 
+        var extrafield = "person." + req.body.extrafield;
+        var extrafieldvalue = req.body.extrafieldvalue;
+        var matchextraCriteria = {};    
+        matchextraCriteria[extrafield] = extrafieldvalue;
+
         for (var i = 0, len = matchvalue.length; i < len; i++) {
             var matchCriteria = {};    
             matchCriteria[matchfield] = matchvalue[i];
@@ -531,7 +554,8 @@ router.route('/report/top5query/list')
                             "person.district" : { $in : districts },
                             "person.area" : { $in : areas }
                     }},                 
-                    { $match : matchCriteria }
+                    { $match : matchCriteria },
+                    { $match : matchextraCriteria }
                 ]).exec()
                 .then(function(data){                              
                     fulldata.push(data);
