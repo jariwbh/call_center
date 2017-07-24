@@ -65,8 +65,8 @@ export type StoreType = {
   providers: [ // expose our Services and Providers into Angular's dependency injection
     APP_PROVIDERS,
     AuthService,
-    AuthGuard,
     UserloginService,
+    AuthGuard,
     CommonDataService,
     Title,
     SettingsService,

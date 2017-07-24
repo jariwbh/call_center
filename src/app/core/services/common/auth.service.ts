@@ -34,6 +34,7 @@ export class AuthService {
 
   isLoggedIn() {
       this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
       if (this.currentUser) {
         //this.setBodyClass();
         return true; 
