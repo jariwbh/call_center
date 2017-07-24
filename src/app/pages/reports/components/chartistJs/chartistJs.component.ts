@@ -629,8 +629,15 @@ export class ChartistJsComponent {
       this.areaListforDD = this.areaList.filter(element => element.province === province);
       this.userHistoryDySearch.province = [];
       this.userHistoryDySearch.province.push(province);
-      this.userHistoryDySearch.district = this.districtListforDD;
-      this.userHistoryDySearch.area = this.areaListforDD;
+      this.userHistoryDySearch.district = [];
+      this.districtListforDD.forEach(ele => {
+        this.userHistoryDySearch.district.push(ele.district);
+      });
+      this.userHistoryDySearch.area = [];
+      this.areaListforDD.forEach(ele => {
+        this.userHistoryDySearch.area.push(ele.area);
+      });
+
     } else {
       this.districtListforDD = [];
       this.areaListforDD = [];
@@ -1166,13 +1173,16 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[0] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[0]];
+        // this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[0]];
         // let firstfilterValue: string = '';
         // firstfilterValue = this.fieldValueModelList[0];
         // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
         // firstfilterValue = '';
-        // console.log(this.userHistoryDySearch);
-        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+        let userHistoryDySearch0: any = {};
+        userHistoryDySearch0 = Object.assign({}, this.userHistoryDySearch);
+        userHistoryDySearch0.searchvalue = [this.fieldValueModelList[0]];
+        // console.log(userHistoryDySearch0);
+        this._ReportService.GetUserCountsHistoryDyCompare(userHistoryDySearch0).subscribe(data => {
           // console.log(data);
           if (data) {
             // data.forEach(ele => {
@@ -1251,14 +1261,16 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[1] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[1]];
+        // this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[1]];
         //  let firstfilterValue: string = '';
         // firstfilterValue = this.fieldValueModelList[1];
         // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
         // firstfilterValue = '';
-
-        // console.log(this.userHistoryDySearch);
-        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+        let userHistoryDySearch1: any = {};
+        userHistoryDySearch1 = Object.assign({}, this.userHistoryDySearch);
+        userHistoryDySearch1.searchvalue = [this.fieldValueModelList[1]];
+        // console.log(userHistoryDySearch1);
+        this._ReportService.GetUserCountsHistoryDyCompare(userHistoryDySearch1).subscribe(data => {
           // console.log(data);
           if (data) {
             // data.forEach(ele => {
@@ -1294,13 +1306,16 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[2] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[2]];
+        // this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[2]];
         //  let firstfilterValue: string = '';
         // firstfilterValue = this.fieldValueModelList[2];
         // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
         // firstfilterValue = '';
-        // console.log(this.userHistoryDySearch);
-        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+        let userHistoryDySearch2: any = {};
+        userHistoryDySearch2 = Object.assign({}, this.userHistoryDySearch);
+        userHistoryDySearch2.searchvalue = [this.fieldValueModelList[2]];
+        // console.log(userHistoryDySearch2);
+        this._ReportService.GetUserCountsHistoryDyCompare(userHistoryDySearch2).subscribe(data => {
           // console.log(data);
           if (data) {
 
@@ -1330,13 +1345,16 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[3] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[3]];
+        // this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[3]];
         //  let firstfilterValue: string = '';
         // firstfilterValue = this.fieldValueModelList[3];
         // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
         // firstfilterValue = '';
-        // console.log(this.userHistoryDySearch);
-        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+        let userHistoryDySearch3: any = {};
+        userHistoryDySearch3 = Object.assign({}, this.userHistoryDySearch);
+        userHistoryDySearch3.searchvalue = [this.fieldValueModelList[3]];
+        // console.log(userHistoryDySearch3);
+        this._ReportService.GetUserCountsHistoryDyCompare(userHistoryDySearch3).subscribe(data => {
           // console.log(data);
           if (data) {
 
@@ -1365,13 +1383,16 @@ export class ChartistJsComponent {
 
       if (this.fieldValueModelList[4] !== undefined) {
         this.userHistoryDySearch.searchvalue = [];
-        this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[4]];
+        // this.userHistoryDySearch.searchvalue = [this.fieldValueModelList[4]];
         //  let firstfilterValue: string = '';
         // firstfilterValue = this.fieldValueModelList[4];
         // this.userHistoryDySearch.searchvalue.push(firstfilterValue);
         // firstfilterValue = '';
-        // console.log(this.userHistoryDySearch);
-        this._ReportService.GetUserCountsHistoryDyCompare(this.userHistoryDySearch).subscribe(data => {
+        let userHistoryDySearch4: any = {};
+        userHistoryDySearch4 = Object.assign({}, this.userHistoryDySearch);
+        userHistoryDySearch4.searchvalue = [this.fieldValueModelList[4]];
+        // console.log(userHistoryDySearch4);
+        this._ReportService.GetUserCountsHistoryDyCompare(userHistoryDySearch4).subscribe(data => {
           // console.log(data);
           if (data) {
 
