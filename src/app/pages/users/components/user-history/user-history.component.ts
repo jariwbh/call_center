@@ -70,6 +70,7 @@ export class UserHistoryComponent {
             data.forEach(element => {
               element.date = this.updateClock(element.date);
               if (element.adminid) {
+                this._auditLists.push(element);
                 if (element.adminid._id) {
                   let checkValue = this.checkUniquness(element.adminid._id, this._selectedAdmin);
                   if (checkValue == 0) {
@@ -78,7 +79,8 @@ export class UserHistoryComponent {
                 }
               }
             });
-            this._auditLists  = data;
+            //this._auditLists  = data;
+            console.log(this._auditLists);
             if (this._auditLists.length == 0) {
                     this._tableVisibility = false;
                     this.noRecordFound = true;
