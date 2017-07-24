@@ -117,6 +117,7 @@ export class ChartistJsComponent {
   areaListforDD: any[] = [];
 
   fieldList: any[] = [];
+  fieldInitialList: any[] = [];
   fieldDyList: any[] = [];
 
   defaultLabelArr: string[] = [];
@@ -135,7 +136,8 @@ export class ChartistJsComponent {
     grey: 'rgb(231,233,237)',
   };
 
-  dynamicLabelNameFields: any;
+  dynamicLabelNameFields: string;
+  dynamicLabelNameFieldsdisplayName: string;
   fieldStatus: number = 0;
 
   constructor(private _chartistJsService: ChartistJsService,
@@ -254,6 +256,11 @@ export class ChartistJsComponent {
       data => {
         if (data) {
           this.fieldList = data;
+          // this.fieldInitialList = data;
+           data.forEach(ele => {
+             this.fieldInitialList.push(ele);
+           });
+          console.log(this.fieldInitialList);
           //  this.fieldList = this.fieldList.filter(ele => (ele.labelname !== 'province' &&
           //   ele.labelname !== 'district' &&
           //   ele.labelname !== 'area'));
@@ -556,8 +563,8 @@ export class ChartistJsComponent {
     this.fieldValueDyCountReport.forEach(element => {
       if (this.fieldValueDyCountReport.indexOf(fieldToRemove) === this.fieldValueDyCountReport.indexOf(element)) {
         const idx = this.fieldValueDyCountReport.indexOf(fieldToRemove);
-        this.fieldValueDyCountReport.splice(idx);
-        this.fieldValueModelList.splice(idx);
+        this.fieldValueDyCountReport.splice(idx, 1);
+        this.fieldValueModelList.splice(idx, 1);
       }
     });
   }
@@ -567,7 +574,13 @@ export class ChartistJsComponent {
     // this.chartType = 'Bar';
     // this.userHistoryDySearch.groupby = [];
     // this.userHistoryDySearch.searchvalue = [];
+
     if (selectedField !== '') {
+      this.userHistoryDySearch.extrafield = selectedField;
+       let tempObj = {};
+       tempObj = this.fieldList.find(ele => ele.labelname === selectedField);
+       this.fieldList.splice(this.fieldList.indexOf(tempObj), 1);
+       // console.log( this.userHistoryDySearch);
       this._ReportService.GetFieldDDValuesDy(selectedField).subscribe(data => {
         if (data) {
           this.tempDyfieldValueDDList = [];
@@ -582,15 +595,33 @@ export class ChartistJsComponent {
 
       });
     } else {
+      // console.log("else");
       this.fieldValueDyDDList = [];
+      this.fieldList = this.fieldInitialList;
+      if (this.userHistoryDySearch.extrafield !== undefined) {
+      delete this.userHistoryDySearch.extrafield;
+      }
+      if (this.userHistoryDySearch.extrafieldvalue !== undefined) {
+      delete this.userHistoryDySearch.extrafieldvalue;
+      }
     }
-
+    console.log( this.userHistoryDySearch);
   }
   onChangeDyFieldValue(selectedField) {
     // this.showSpinner = false;
     // this.chartType = 'Bar';
-
+    // console.log( this.userHistoryDySearch);
     if (selectedField !== '') {
+       this.userHistoryDySearch.extrafieldvalue = selectedField;
+       // console.log( this.userHistoryDySearch);
+    } else {
+      if (this.userHistoryDySearch.extrafieldvalue !== undefined) {
+      delete this.userHistoryDySearch.extrafieldvalue;
+      }
+     if (this.userHistoryDySearch.extrafield !== undefined) {
+      delete this.userHistoryDySearch.extrafield;
+      }
+    console.log( this.userHistoryDySearch);
     }
   }
 
@@ -686,6 +717,14 @@ export class ChartistJsComponent {
   }
 
   genrateReportForDyCount() {
+    if (this.userHistoryDySearch.extrafieldvalue === undefined) {
+       if (this.userHistoryDySearch.extrafieldvalue !== undefined) {
+      delete this.userHistoryDySearch.extrafieldvalue;
+      }
+     if (this.userHistoryDySearch.extrafield !== undefined) {
+      delete this.userHistoryDySearch.extrafield;
+      }
+    }
     if (this.fieldDyCountReport.labelname !== '' && this.fieldValueModel !== '') {
       this.userHistoryDySearch.searchvalue = [];
       this.userHistoryDySearch.searchvalue.push(this.fieldValueModel);
@@ -875,6 +914,15 @@ export class ChartistJsComponent {
     // this.showGenDyCountReport = true;
   }
   genrateReportForDyBest() {
+     if (this.userHistoryDySearch.extrafieldvalue === undefined) {
+       if (this.userHistoryDySearch.extrafieldvalue !== undefined) {
+      delete this.userHistoryDySearch.extrafieldvalue;
+      }
+     if (this.userHistoryDySearch.extrafield !== undefined) {
+      delete this.userHistoryDySearch.extrafield;
+      }
+    }
+
     if (this.fieldDyBestReport !== '') {
       let labelsArr: string[] = [];
       let seriesArrA: number[] = [];
@@ -935,6 +983,9 @@ export class ChartistJsComponent {
 
                 this.dynamicLabelNameFields = this.fieldDyBestReport;
 
+                this.dynamicLabelNameFieldsdisplayName = this.fieldList.find(ele => ele.labelname == this.fieldDyBestReport).displayname;
+                 // console.log(this.dynamicLabelNameFields);
+                 // console.log(this.dynamicLabelNameFieldsdisplayName);
                 if (this.fieldStatus == 1) {
                   // console.log('if');
                   this.adminlist.push({
@@ -1070,6 +1121,15 @@ export class ChartistJsComponent {
   }
 
   genrateReportForDyCompare() {
+     if (this.userHistoryDySearch.extrafieldvalue === undefined) {
+       if (this.userHistoryDySearch.extrafieldvalue !== undefined) {
+      delete this.userHistoryDySearch.extrafieldvalue;
+      }
+     if (this.userHistoryDySearch.extrafield !== undefined) {
+      delete this.userHistoryDySearch.extrafield;
+      }
+    }
+    
     // if (this.fieldValueModelList.length < 2) {
     //   this.msgs = [];
     //   this.msgs.push({ severity: 'warn', 

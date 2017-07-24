@@ -424,7 +424,7 @@
       <div class="col-md-12">
         <ba-card title="Scope" baCardClass="with-scroll">
           <div class="row">
-             <div class="col-sm-4">
+             <!-- <div class="col-sm-4">
               <select class="form-control" id="dyprovince" (change)="onChangeDyProvince($event.target.value)">
                     <option value="">--Select Province--</option>
                     <option [value]="p.name" *ngFor="let p of provinceList">{{p.name}}</option>
@@ -441,8 +441,8 @@
                     <option value="">--Select Area--</option>
                     <option [value]="p.area" *ngFor="let p of areaListforDD">{{p.area}}</option>
                   </select>
-            </div>
-            <!-- <div class="col-sm-3">
+            </div> -->
+             <div class="col-sm-3">
               <select class="form-control" id="dyprovince" (change)="onChangeDyProvince($event.target.value)">
                     <option value="">--Select Province--</option>
                     <option [value]="p.name" *ngFor="let p of provinceList">{{p.name}}</option>
@@ -459,8 +459,8 @@
                     <option value="">--Select Area--</option>
                     <option [value]="p.area" *ngFor="let p of areaListforDD">{{p.area}}</option>
                   </select>
-            </div> -->
-            <!-- <div class="col-sm-2">
+            </div> 
+             <div class="col-sm-2">
               <select id="dynamic" class="form-control" value="" (change)="onChangeDyField($event.target.value)">
                             <option value="">--- Select Field ---</option>
                             <option [value]="p.labelname" *ngFor="let p of fieldDyList">{{p.displayname}}</option>
@@ -473,7 +473,7 @@
                             <option [value]="p" *ngFor="let p of fieldValueDyDDList">{{p}}</option>
                             
               </select>
-            </div> -->
+            </div> 
           </div>
         </ba-card>
         <div class="row">
@@ -811,7 +811,7 @@
                       <div *ngIf="fieldStatus == 1">
                       <p-column [field]="dynamicLabelNameFields" [filter]="true" filterMatchMode="in">
                         <ng-template pTemplate="filter" let-col>
-                          <p-multiSelect [options]="dynamicFieldLists" defaultLabel="All {{dynamicLabelNameFields}}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                          <p-multiSelect [options]="dynamicFieldLists" defaultLabel="All {{dynamicLabelNameFieldsdisplayName}}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
                             styleClass="ui-column-filter">
                           </p-multiSelect>
                         </ng-template>
