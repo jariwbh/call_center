@@ -902,7 +902,7 @@ export class ChartistJsComponent {
       setTimeout(() => {
         this.showSpinner = false;
         this.showGenDyCountReport = true;
-      }, 500);
+      }, 1000);
     } else {
       this.showGenDyCountReport = false;
       this.msgs = [];
@@ -1111,7 +1111,7 @@ export class ChartistJsComponent {
       setTimeout(() => {
         this.showSpinner = false;
         this.showGenDyBestReport = true;
-      }, 900);
+      }, 1000);
     } else {
       this.showGenDyBestReport = false;
       this.msgs = [];
@@ -1621,7 +1621,7 @@ export class ChartistJsComponent {
       setTimeout(() => {
         this.showSpinner = false;
         this.showGenDyCompareReport = true;
-      }, 900);
+      }, 1000);
     } else {
       this.showGenDyCompareReport = false;
       this.msgs = [];
@@ -1775,7 +1775,7 @@ export class ChartistJsComponent {
 
         setTimeout(() => {
           this.showGenCompareReport = true;
-        }, 500);
+        }, 1000);
 
       } else {
         this.showGenCompareReport = false;
@@ -1953,7 +1953,7 @@ export class ChartistJsComponent {
 
         setTimeout(() => {
           this.showGenCompareReport = true;
-        }, 500);
+        }, 1000);
       } else {
         this.showGenCompareReport = false;
         // alert('please select District to Compare');
@@ -2075,7 +2075,7 @@ export class ChartistJsComponent {
 
         setTimeout(() => {
           this.showGenSelectReport = true;
-        }, 500);
+        }, 1000);
 
       } else {
         this.showGenSelectReport = false;
@@ -2193,7 +2193,7 @@ export class ChartistJsComponent {
 
         setTimeout(() => {
           this.showGenSelectReport = true;
-        }, 500);
+        }, 1000);
       } else {
         this.showGenSelectReport = false;
         // alert('please select District to Compare');
