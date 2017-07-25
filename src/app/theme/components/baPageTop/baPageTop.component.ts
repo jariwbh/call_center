@@ -6,6 +6,7 @@ import { UserloginService } from './../../../core/services/userlogin/userlogin.s
 import { Component } from '@angular/core';
 
 import { GlobalState } from '../../../global.state';
+import { SettingsService } from './../../../core/services/settings/settings.service';
 
 @Component({
   selector: 'ba-page-top',
@@ -20,10 +21,17 @@ export class BaPageTop {
   public profilePicPath: string;
   public serverPath: string;
   public currUser: any;
-  constructor(private _state: GlobalState, private userloginService: UserloginService,
-   private _router: Router, private authService: AuthService,
-   private _commonDataService: CommonDataService,
-  private _configuration: Configuration ) {
+  _websiteTittle: any;
+  
+  constructor(
+    private _state: GlobalState, 
+    private userloginService: UserloginService,
+    private _router: Router, 
+    private authService: AuthService,
+    private _commonDataService: CommonDataService,
+    private _configuration: Configuration,
+    private _settingsService: SettingsService ) {
+
     this._state.subscribe('menu.isCollapsed', (isCollapsed) => {
       this.isMenuCollapsed = isCollapsed;
       this.serverPath = this._configuration.Server;
@@ -41,8 +49,21 @@ export class BaPageTop {
     this._commonDataService.updatePData.subscribe(data => {
         this.profilePicPath = this._commonDataService.profilePicPath;
     });
+
+    this.getTitle();
   }
 
+  getTitle() {
+      this._settingsService
+        .GetAllSetting()
+        .subscribe(data => {
+          if (data) {
+            if (data.websiteTitle) {
+              this._websiteTittle = data.websiteTitle;
+            }
+          }
+      });
+  }
   public toggleMenu() {
     this.isMenuCollapsed = !this.isMenuCollapsed;
     this._state.notifyDataChanged('menu.isCollapsed', this.isMenuCollapsed);

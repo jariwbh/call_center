@@ -159,7 +159,7 @@
                               [formControlName]="fields.labelname" 
                               [(ngModel)]="fields.value">
                             <option value="">--- Select ---</option>
-                            <option *ngFor="let opt of fields.lookupdata" [value]="opt.key">{{opt.value}}</option>
+                            <option *ngFor="let opt of fields.lookupdata" [value]="opt.value">{{opt.value}}</option>
                           </select>
                       </div>
                   </div>
@@ -169,7 +169,7 @@
                         [formControlName]="fields.labelname" 
                         [(ngModel)]="fields.value"
                         multiple>
-                      <option *ngFor="let opt of fields.lookupdata" [value]="opt.key">{{opt.value}}</option>
+                      <option *ngFor="let opt of fields.lookupdata" [value]="opt.value">{{opt.value}}</option>
                     </select>
                   </div>
                   <div *ngSwitchCase="'checkbox'">

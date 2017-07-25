@@ -254,7 +254,15 @@ export class FormComponent {
                   group[element.labelname] = new FormControl('', Validators.required);
                 }
               } else {
-                group[element.labelname] = new FormControl('');
+                if (element.labelname == 'points') {
+                  group[element.labelname] = new FormControl('', OnlyNumberValidator.insertonlynumber);
+                  if (!this.bindId) {
+                    element.value = 0;
+                  }
+                } else {
+                  group[element.labelname] = new FormControl('');
+                }
+                
               }
             });
             this.dynamicForm = this.fb.group(group);
