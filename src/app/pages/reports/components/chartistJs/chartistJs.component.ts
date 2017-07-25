@@ -271,7 +271,7 @@ export class ChartistJsComponent {
       });
   }
   switchView(view: string) {
-
+    this.showSpinner = false;
     this.selectType = '';
     this.compareTwo = '';
     this.firstProvince = '';
@@ -363,6 +363,7 @@ export class ChartistJsComponent {
   }
 
   onChangeFieldToCompare(fieldsToCompare) {
+    this.showSpinner = false;
     this.showGenCompareReport = false;
     this.firstProvince = '';
     this.secondProvince = '';
@@ -376,6 +377,7 @@ export class ChartistJsComponent {
 
   }
   onChangeFieldforSelectReport(selectedField) {
+    this.showSpinner = false;
     this.showGenSelectReport = false;
     this.selectProvince = '';
     this.selectDistrict = '';
@@ -626,29 +628,35 @@ export class ChartistJsComponent {
   }
 
   onChangeFirstProvince(firstProvince) {
+    this.showSpinner = false;
     this.showGenCompareReport = false;
     this.firstProvince = firstProvince;
     // this.resetAllCharts();
   }
   onChangeSecondProvince(secondProvince) {
+    this.showSpinner = false;
     this.showGenCompareReport = false;
     this.secondProvince = secondProvince;
     // this.resetAllCharts();
   }
   onChangeFirstDistrict(firstDistrict) {
+    this.showSpinner = false;
     this.showGenCompareReport = false;
     this.firstDistrict = firstDistrict;
   }
   onChangeSecondDistrict(secondDistrict) {
+    this.showSpinner = false;
     this.showGenCompareReport = false;
     this.secondDistrict = secondDistrict;
   }
 
   onChangeSelectProvince(selectProvince) {
+    this.showSpinner = false;
     this.showGenSelectReport = false;
     this.selectProvince = selectProvince;
   }
   onChangeSelectDistrict(selectDistrict) {
+    this.showSpinner = false;
     this.showGenSelectReport = false;
     this.selectDistrict = selectDistrict;
   }
@@ -1648,7 +1656,7 @@ export class ChartistJsComponent {
         let seriesArrBP: number[] = [];
         let settingCountA: number = 0;
         let settingCountB: number = 0;
-
+        this.showSpinner = true;
         this._Settings.GetAllSetting().subscribe(data1 => {
           if (data1 !== null) {
             if (data1.noOfUserInProvince !== null) {
@@ -1774,6 +1782,7 @@ export class ChartistJsComponent {
         this.dataCompareResultHistory.series.push(seriesArrD);
 
         setTimeout(() => {
+          this.showSpinner = false;
           this.showGenCompareReport = true;
         }, 1000);
 
@@ -1796,7 +1805,7 @@ export class ChartistJsComponent {
         let seriesArrBP: number[] = [];
         let settingCountA: number = 0;
         let settingCountB: number = 0;
-
+        this.showSpinner = true;
         this._Settings.GetAllSetting().subscribe(data1 => {
           if (data1 !== null) {
             if (data1.noOfUserInProvince !== null) {
@@ -1952,6 +1961,7 @@ export class ChartistJsComponent {
 
 
         setTimeout(() => {
+          this.showSpinner = false;
           this.showGenCompareReport = true;
         }, 1000);
       } else {
@@ -1974,7 +1984,7 @@ export class ChartistJsComponent {
         let seriesArrB: number[] = [];
         let seriesArrAP: number[] = [];
         let settingCount: number = 0;
-
+        this.showSpinner = true;
         this._Settings.GetAllSetting().subscribe(data1 => {
           if (data1 !== null) {
             if (data1.noOfUserInProvince !== null) {
@@ -2074,6 +2084,7 @@ export class ChartistJsComponent {
 
 
         setTimeout(() => {
+          this.showSpinner = false;
           this.showGenSelectReport = true;
         }, 1000);
 
@@ -2092,7 +2103,7 @@ export class ChartistJsComponent {
         let seriesArrB: number[] = [];
         let seriesArrAP: number[] = [];
         let settingCount: number = 0;
-
+        this.showSpinner = true;
         this._Settings.GetAllSetting().subscribe(data1 => {
           if (data1 !== null) {
             if (data1.noOfUserInProvince !== null) {
@@ -2192,6 +2203,7 @@ export class ChartistJsComponent {
 
 
         setTimeout(() => {
+          this.showSpinner = false;
           this.showGenSelectReport = true;
         }, 1000);
       } else {

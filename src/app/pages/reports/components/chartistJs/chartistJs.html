@@ -129,6 +129,9 @@
         </ba-card>
       </div>
       <!--</div>-->
+      <div class="col-md-12 text-center" *ngIf="!showGenCompareReport && showSpinner">
+              <img alt="img" src="assets/img/loadingf.gif" class="thumb-lg img-circle img-width-130">
+      </div>
       <div class="col-md-12" *ngIf="showGenCompareReport">
         <div class="row">
           <div class="col-md-6 ">
@@ -330,6 +333,9 @@
         </ba-card>
       </div>
       <!--</div>-->
+      <div class="col-md-12 text-center" *ngIf="!showGenSelectReport && showSpinner">
+              <img alt="img" src="assets/img/loadingf.gif" class="thumb-lg img-circle img-width-130">
+      </div>
       <div class="col-md-12" *ngIf="showGenSelectReport">
         <div class="row">
           <div class="col-md-6 ">
