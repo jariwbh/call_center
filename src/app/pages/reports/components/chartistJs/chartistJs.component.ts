@@ -1138,11 +1138,12 @@ export class ChartistJsComponent {
       }
     }
     
-    // if (this.fieldValueModelList.length < 2) {
-    //   this.msgs = [];
-    //   this.msgs.push({ severity: 'warn', 
-    // summary: 'Warn Message', detail: 'please select 2 FieldValues to Compare' });
-    // }
+    if (this.fieldValueModelList.length > 5) {
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', 
+        summary: 'Warn Message', detail: 'please select maximum 5 FieldValues to Compare' });
+        return;
+    }
     if (this.fieldDyCompareReport.labelname !== '' && this.fieldValueModelList.length > 0) {
       // this.userHistoryDySearch.searchvalue.push(this.fieldValueModel);
       //  this.userHistoryDySearch.searchvalue = this.fieldValueModelList;
