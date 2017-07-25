@@ -226,19 +226,20 @@ export class ManagePeopleComponent {
 
             setTimeout(() => {
               if ( this.peoplelist.length > 0) {
+                  //initialize to page 1
+                  this.setPage(1);
                   this._countPerson = true;
               } else {
                   this._countPerson = false;
               }
-            }, 100);
+            }, 500);
 
             if (this.peoplelist.length > 0) {
               this.showPeopleList = false;
             } else {
               this.showPeopleList = true;
             }
-            //initialize to page 1
-              this.setPage(1);
+            
         });
     }
 
@@ -300,15 +301,17 @@ export class ManagePeopleComponent {
           });
           //this._countPerson = this.peoplelist.length;
           if (this.peoplelist.length > 0) {
+            
             this.showPeopleList = false;
             this._countPerson = true;
+            //initialize to page 1
+            this.setPage(1);
           } else {
             this.showPeopleList = true;
             this._countPerson = false;
           }
           
-          //initialize to page 1
-          this.setPage(1);
+          
 
           //this.cardViewVisibilty = false;
           if (this._CommonDataService.filterDataBy === 'province' || this._CommonDataService.filterDataBy === 'social') {
@@ -330,22 +333,25 @@ export class ManagePeopleComponent {
       .subscribe(
       data => {
         if (data) {
+
           this.peoplelist = [];
           this.pagedItems = [];
+
           data.forEach(element => {
             if (element.person) {
               element.person.id = element._id;
               this.peoplelist.push(element.person);
             }
           });
-          
           setTimeout(() => {
             if ( this.peoplelist.length > 0) {
                 this._countPerson = true;
+                //initialize to page 1
+                this.setPage(1);
             } else {
                 this._countPerson = false;
             }
-          }, 100);
+          }, 500);
 
           if (this.peoplelist.length > 0) {
             this.showPeopleList = false;
@@ -353,8 +359,7 @@ export class ManagePeopleComponent {
             this.showPeopleList = true;
           }
 
-          //initialize to page 1
-          this.setPage(1);
+          
 
           if (this.successMsg == 'points') {
             this.msgs = [];
