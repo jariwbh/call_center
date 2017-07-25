@@ -130,7 +130,7 @@
       </div>
       <!--</div>-->
       <div class="col-md-12 text-center" *ngIf="!showGenCompareReport && showSpinner">
-              <img alt="img" src="assets/img/loadingf.gif" class="thumb-lg img-circle img-width-130">
+        <img alt="img" src="assets/img/loadingf.gif" class="thumb-lg img-circle img-width-130">
       </div>
       <div class="col-md-12" *ngIf="showGenCompareReport">
         <div class="row">
@@ -334,7 +334,7 @@
       </div>
       <!--</div>-->
       <div class="col-md-12 text-center" *ngIf="!showGenSelectReport && showSpinner">
-              <img alt="img" src="assets/img/loadingf.gif" class="thumb-lg img-circle img-width-130">
+        <img alt="img" src="assets/img/loadingf.gif" class="thumb-lg img-circle img-width-130">
       </div>
       <div class="col-md-12" *ngIf="showGenSelectReport">
         <div class="row">
@@ -430,7 +430,7 @@
       <div class="col-md-12">
         <ba-card title="Scope" baCardClass="with-scroll">
           <div class="row">
-             <!-- <div class="col-sm-4">
+            <!-- <div class="col-sm-4">
               <select class="form-control" id="dyprovince" (change)="onChangeDyProvince($event.target.value)">
                     <option value="">--Select Province--</option>
                     <option [value]="p.name" *ngFor="let p of provinceList">{{p.name}}</option>
@@ -448,7 +448,7 @@
                     <option [value]="p.area" *ngFor="let p of areaListforDD">{{p.area}}</option>
                   </select>
             </div> -->
-             <div class="col-sm-3">
+            <div class="col-sm-3">
               <select class="form-control" id="dyprovince" (change)="onChangeDyProvince($event.target.value)">
                     <option value="">--Select Province--</option>
                     <option [value]="p.name" *ngFor="let p of provinceList">{{p.name}}</option>
@@ -465,8 +465,8 @@
                     <option value="">--Select Area--</option>
                     <option [value]="p.area" *ngFor="let p of areaListforDD">{{p.area}}</option>
                   </select>
-            </div> 
-             <div class="col-sm-2">
+            </div>
+            <div class="col-sm-2">
               <select id="dynamic" class="form-control" value="" (change)="onChangeDyField($event.target.value)">
                             <option value="">--- Select Field ---</option>
                             <option [value]="p.labelname" *ngFor="let p of fieldDyList">{{p.displayname}}</option>
@@ -479,7 +479,7 @@
                             <option [value]="p" *ngFor="let p of fieldValueDyDDList">{{p}}</option>
                             
               </select>
-            </div> 
+            </div>
           </div>
         </ba-card>
         <div class="row">
@@ -603,7 +603,7 @@
                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyCountUserHistory"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
-                     <div *ngIf="chartType == 'Bar' || chartTypeAll">
+                    <div *ngIf="chartType == 'Bar' || chartTypeAll">
                       <h5 class="col-md-12 chartHeading">Bar Chart</h5>
                       <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyCountUserHistory"
                         [baChartistChartOptions]="data['simpleBarOptions']">
@@ -617,9 +617,27 @@
                     </div>
                     <div *ngIf="chartType == 'Pie' || chartTypeAll">
                       <h5 class="col-md-12 chartHeading">Pie Chart</h5>
-                      <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyCountUserHistoryPie"
-                        [baChartistChartOptions]="dataDyCountUserHistoryPieOptions">
-                      </ba-chartist-chart>
+                      <div class="row">
+                        <div class="col-md-7">
+                          <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyCountUserHistoryPie"
+                            [baChartistChartOptions]="dataDyCountUserHistoryPieOptions">
+                          </ba-chartist-chart>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="row">
+                            <div class="col-sm-1">
+                              <button class="btn btn-block btn-danger btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-4 custom-margin" style="word-wrap: break-word;">{{xAxisFieldValue}}</span>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1">
+                              <button class="btn btn-block btn-success btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-4 custom-margin" style="word-wrap: break-word;">Other</span>
+                          </div>
+                        </div>
+                      </div>
                       <!--<h5 translate>{{'chart.pie_with_labels'}}</h5>
                              <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar"
                                baChartistChartType="Pie"
@@ -747,7 +765,7 @@
                     <!-- <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Line" [baChartistChartData]="dataDyBestUserHistory"
                       [baChartistChartOptions]="data['simpleLineOptions']">
                     </ba-chartist-chart> -->
-                     <div *ngIf="chartType == 'Bar' || chartTypeAll">
+                    <div *ngIf="chartType == 'Bar' || chartTypeAll">
                       <h5 class="col-md-12 chartHeading">Bar Chart</h5>
                       <ba-chartist-chart baChartistChartClass="ct-chart" baChartistChartType="Bar" [baChartistChartData]="dataDyBestUserHistory"
                         [baChartistChartOptions]="data['simpleBarOptions']">
@@ -761,9 +779,45 @@
                     </div>
                     <div *ngIf="chartType == 'Pie' || chartTypeAll">
                       <h5 class="col-md-12 chartHeading">Pie Chart</h5>
+                       <div class="row">
+                        <div class="col-md-7">
                       <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyBestUserHistoryPie"
                         [baChartistChartOptions]="dataDyBestUserHistoryPieOptions">
                       </ba-chartist-chart>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="dataDyBestUserHistoryPie.labels[0] != undefined">
+                              <button class="btn btn-block btn-danger btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{dataDyBestUserHistoryPie.labels[0]}}</span>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="dataDyBestUserHistoryPie.labels[1] != undefined">
+                              <button class="btn btn-block btn-success btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{dataDyBestUserHistoryPie.labels[1]}}</span>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="dataDyBestUserHistoryPie.labels[2] != undefined">
+                              <button class="btn btn-block btn-primary btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{dataDyBestUserHistoryPie.labels[2]}}</span>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="dataDyBestUserHistoryPie.labels[3] != undefined">
+                              <button class="btn btn-block btn-warning btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{dataDyBestUserHistoryPie.labels[3]}}</span>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="dataDyBestUserHistoryPie.labels[4] != undefined">
+                              <button class="btn btn-block btn-info btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{dataDyBestUserHistoryPie.labels[4]}}</span>
+                          </div>
+                        </div>
+                       </div>
                       <!--<h5 translate>{{'chart.pie_with_labels'}}</h5>
                              <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar"
                                baChartistChartType="Pie"
@@ -815,13 +869,13 @@
                         </ng-template>
                       </p-column>
                       <div *ngIf="fieldStatus == 1">
-                      <p-column [field]="dynamicLabelNameFields" [filter]="true" filterMatchMode="in">
-                        <ng-template pTemplate="filter" let-col>
-                          <p-multiSelect [options]="dynamicFieldLists" defaultLabel="All {{dynamicLabelNameFieldsdisplayName}}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
-                            styleClass="ui-column-filter">
-                          </p-multiSelect>
-                        </ng-template>
-                      </p-column>
+                        <p-column [field]="dynamicLabelNameFields" [filter]="true" filterMatchMode="in">
+                          <ng-template pTemplate="filter" let-col>
+                            <p-multiSelect [options]="dynamicFieldLists" defaultLabel="All {{dynamicLabelNameFieldsdisplayName}}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                              styleClass="ui-column-filter">
+                            </p-multiSelect>
+                          </ng-template>
+                        </p-column>
                       </div>
                     </p-dataTable>
                   </ba-card>
@@ -1028,9 +1082,45 @@
                     </div>
                     <div *ngIf="chartType == 'Pie' || chartTypeAll">
                       <h5 class="col-md-12 chartHeading">Pie Chart</h5>
-                      <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyCompareUserHistoryPie"
-                        [baChartistChartOptions]="dataDyCompareUserHistoryPieOptions">
-                      </ba-chartist-chart>
+                      <div class="row">
+                        <div class="col-md-7">
+                          <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar" baChartistChartType="Pie" [baChartistChartData]="dataDyCompareUserHistoryPie"
+                            [baChartistChartOptions]="dataDyCompareUserHistoryPieOptions">
+                          </ba-chartist-chart>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="fieldValueModelList[0] != undefined">
+                              <button class="btn btn-block btn-danger btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{fieldValueModelList[0]}}</span>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="fieldValueModelList[1] != undefined">
+                              <button class="btn btn-block btn-success btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{fieldValueModelList[1]}}</span>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="fieldValueModelList[2] != undefined">
+                              <button class="btn btn-block btn-primary btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{fieldValueModelList[2]}}</span>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="fieldValueModelList[3] != undefined">
+                              <button class="btn btn-block btn-warning btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{fieldValueModelList[3]}}</span>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1" *ngIf="fieldValueModelList[4] != undefined">
+                              <button class="btn btn-block btn-info btn-rounded" disabled><span>&nbsp;&nbsp;</span></button>
+                            </div>
+                            <span class="col-sm-7 custom-margin" style="word-wrap: break-word;">{{fieldValueModelList[4]}}</span>
+                          </div>
+                        </div>
+                      </div>
                       <!--<h5 translate>{{'chart.pie_with_labels'}}</h5>
                              <ba-chartist-chart baChartistChartClass="ct-chart stacked-bar"
                                baChartistChartType="Pie"
