@@ -69,20 +69,8 @@
                           </div>
                       </div>
                       <div *ngIf="fields.labelname !== 'points'">
-                        <div *ngIf="fields.labelname !== 'email'">
+                        <div>
                           <input class="form-control" type="text" [formControlName]="fields.labelname" [(ngModel)]="fields.value">
-                        </div>
-                        <div *ngIf="fields.labelname == 'email'">
-                          <input 
-                            type="email" 
-                            class="form-control" 
-                            [formControlName]="fields.labelname"
-                            [(ngModel)]="fields.value"
-                            placeholder="Email"
-                            pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-                          <div *ngIf="emailVisibility" class="alert alert-danger">
-                              Email Already Exist.
-                          </div>
                         </div>
                       </div>
                   </div>
