@@ -269,8 +269,10 @@ export class FormComponent {
 
             if (this.bindId) {
               this.getPersonDetailBasedonID(this.bindId);
+            } else {
+              this._spinner.hide();
             }
-            this._spinner.hide();
+            
         });
   }
 
@@ -323,6 +325,8 @@ export class FormComponent {
     this._managepeopleService
       .GetById(id)
       .subscribe( data => {
+        let fieldLength = this.fieldLists.length;
+        let cnt = 0;
         this.fieldLists.forEach(element => {
           //console.log(element);
           element.value = data.person[element.labelname];
@@ -347,8 +351,13 @@ export class FormComponent {
               }
             }
           }
+          cnt++;
+          if (cnt == fieldLength) {
+            this._spinner.hide();
+          }
+          
         });
-        this._spinner.hide();
+        
       });
   }
   editFields(id: any) {

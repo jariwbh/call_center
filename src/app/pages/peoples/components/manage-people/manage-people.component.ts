@@ -85,7 +85,7 @@ export class ManagePeopleComponent {
         this.getAllPeopleWithFilter('social', _CommonDataService.filterData);
       }
     } else {
-      this.getAllPeople();
+      this.getAllPeople('new');
     }
 
   }
@@ -152,7 +152,7 @@ export class ManagePeopleComponent {
   onChangeProvince(value: any) {
         this.peoplelist = [];
         if (value == '') {
-            this.getAllPeople();
+            this.getAllPeople('new');
         } else {
             this.FilteredUsers('province', value);
         }
@@ -172,7 +172,7 @@ export class ManagePeopleComponent {
             if (proviceValue) {
                 this.FilteredUsers('province', proviceValue.value);
             } else {
-                this.getAllPeople();
+                this.getAllPeople('new');
             }
         } else {
             this.FilteredUsers('district', value);
@@ -187,7 +187,7 @@ export class ManagePeopleComponent {
             if (proviceValue) {
                 this.FilteredUsers('province', proviceValue.value);
             } else {
-                this.getAllPeople();
+                this.getAllPeople('new');
             }
         } else {
             this.FilteredUsers('area', value);
@@ -327,7 +327,7 @@ export class ManagePeopleComponent {
       });
   }
 
-  getAllPeople() {
+  getAllPeople(val: any) {
     this._managepeopleService
       .GetAll()
       .subscribe(
@@ -346,20 +346,22 @@ export class ManagePeopleComponent {
           setTimeout(() => {
             if ( this.peoplelist.length > 0) {
                 this._countPerson = true;
+                this.showPeopleList = false;
                 //initialize to page 1
                 this.setPage(1);
             } else {
                 this._countPerson = false;
+                this.showPeopleList = true;
+            }
+            if (val == 'delete') {
+                  this.msgs = [];
+                  this.msgs.push({ 
+                  severity: 'success', 
+                  summary: 'Delete Message', 
+                  detail: 'People deleted Successfully!!',
+                });
             }
           }, 500);
-
-          if (this.peoplelist.length > 0) {
-            this.showPeopleList = false;
-          } else {
-            this.showPeopleList = true;
-          }
-
-          
 
           if (this.successMsg == 'points') {
             this.msgs = [];
@@ -418,13 +420,13 @@ export class ManagePeopleComponent {
               this._managepeopleService
                 .Delete(person.id, this.authId)
                 .subscribe( data => {
-                  this.getAllPeople();
-                  this.msgs = [];
-                  this.msgs.push({ 
-                  severity: 'success', 
-                  summary: 'Delete Message', 
-                  detail: 'People deleted Successfully!!',
-                });
+                  this.getAllPeople('delete');
+                //   this.msgs = [];
+                //   this.msgs.push({ 
+                //   severity: 'success', 
+                //   summary: 'Delete Message', 
+                //   detail: 'People deleted Successfully!!',
+                // });
               });
             }
             
