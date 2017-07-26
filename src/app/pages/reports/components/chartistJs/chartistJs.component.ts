@@ -911,7 +911,7 @@ export class ChartistJsComponent {
       setTimeout(() => {
         this.showSpinner = false;
         this.showGenDyCountReport = true;
-      }, 1500);
+      }, 3500);
     } else {
       this.showGenDyCountReport = false;
       this.msgs = [];
@@ -1120,7 +1120,7 @@ export class ChartistJsComponent {
       setTimeout(() => {
         this.showSpinner = false;
         this.showGenDyBestReport = true;
-      }, 1500);
+      }, 3500);
     } else {
       this.showGenDyBestReport = false;
       this.msgs = [];
@@ -1632,7 +1632,7 @@ export class ChartistJsComponent {
       setTimeout(() => {
         this.showSpinner = false;
         this.showGenDyCompareReport = true;
-      }, 1500);
+      }, 3500);
     } else {
       this.showGenDyCompareReport = false;
       this.msgs = [];
@@ -1787,7 +1787,7 @@ export class ChartistJsComponent {
         setTimeout(() => {
           this.showSpinner = false;
           this.showGenCompareReport = true;
-        }, 1500);
+        }, 3500);
 
       } else {
         this.showGenCompareReport = false;
@@ -1966,7 +1966,7 @@ export class ChartistJsComponent {
         setTimeout(() => {
           this.showSpinner = false;
           this.showGenCompareReport = true;
-        }, 1500);
+        }, 3500);
       } else {
         this.showGenCompareReport = false;
         // alert('please select District to Compare');
@@ -2089,7 +2089,7 @@ export class ChartistJsComponent {
         setTimeout(() => {
           this.showSpinner = false;
           this.showGenSelectReport = true;
-        }, 1500);
+        }, 3500);
 
       } else {
         this.showGenSelectReport = false;
@@ -2208,7 +2208,7 @@ export class ChartistJsComponent {
         setTimeout(() => {
           this.showSpinner = false;
           this.showGenSelectReport = true;
-        }, 1500);
+        }, 3500);
       } else {
         this.showGenSelectReport = false;
         // alert('please select District to Compare');
