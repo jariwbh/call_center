@@ -245,7 +245,7 @@ export class Settings {
     this.provinceCountSettingsList.forEach(element => {
       if (this.provinceCountSettingsList.indexOf(provinceset) === this.provinceCountSettingsList.indexOf(element)) {
         const idx = this.provinceCountSettingsList.indexOf(provinceset);
-        this.provinceCountSettingsList.splice(idx);
+        this.provinceCountSettingsList.splice(idx, 1);
       }
     });
   }
@@ -253,7 +253,7 @@ export class Settings {
     this.districtCountSettingsList.forEach(element => {
       if (this.districtCountSettingsList.indexOf(districtset) === this.districtCountSettingsList.indexOf(element)) {
         const idx = this.districtCountSettingsList.indexOf(districtset);
-        this.districtCountSettingsList.splice(idx);
+        this.districtCountSettingsList.splice(idx, 1);
       }
     });
   }
@@ -261,7 +261,7 @@ export class Settings {
     this.areaCountSettingsList.forEach(element => {
       if (this.areaCountSettingsList.indexOf(areaset) === this.areaCountSettingsList.indexOf(element)) {
         const idx = this.areaCountSettingsList.indexOf(areaset);
-        this.areaCountSettingsList.splice(idx);
+        this.areaCountSettingsList.splice(idx, 1);
       }
     });
   }
